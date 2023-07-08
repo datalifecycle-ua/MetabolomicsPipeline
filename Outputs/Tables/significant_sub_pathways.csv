@@ -1,0 +1,100 @@
+"","sub_pathway","model","combined_fisher_p_val"
+"1","Acetylated Peptides","Parallel",0.04
+"2","Alanine and Aspartate Metabolism","Interaction",0
+"3","Aminosugar Metabolism","Interaction",0
+"4","Ascorbate and Aldarate Metabolism","Interaction",0
+"5","Benzoate Metabolism","Parallel",0
+"6","Biotin Metabolism","Parallel",0.0485982997405689
+"7","Ceramides","Interaction",0
+"8","Chemical","Interaction",0
+"9","Creatine Metabolism","Interaction",0
+"10","Diacylglycerol","Interaction",0
+"11","Dihydroceramides","Single",0.04
+"12","Dihydrosphingomyelins","Interaction",0
+"13","Dipeptide","Interaction",0.01
+"14","Dipeptide Derivative","Parallel",0
+"15","Disaccharides and Oligosaccharides","Interaction",0.0287216774232001
+"16","Docosanoid","Parallel",0.00134857280811608
+"17","Drug - Other","Parallel",0.0486464556136867
+"18","Drug - Topical Agents","Parallel",0
+"19","Eicosanoid","Parallel",0
+"20","Endocannabinoid","Interaction",0
+"21","Fatty Acid Metabolism (Acyl Carnitine, Dicarboxylate)","Interaction",0.01
+"22","Fatty Acid Metabolism (Acyl Carnitine, Hydroxy)","Interaction",0
+"23","Fatty Acid Metabolism (Acyl Carnitine, Long Chain Saturated)","Interaction",0
+"24","Fatty Acid Metabolism (Acyl Carnitine, Medium Chain)","Interaction",0
+"25","Fatty Acid Metabolism (Acyl Carnitine, Monounsaturated)","Interaction",0
+"26","Fatty Acid Metabolism (Acyl Carnitine, Polyunsaturated)","Interaction",0
+"27","Fatty Acid Metabolism (Acyl Glycine)","Interaction",0
+"28","Fatty Acid Metabolism (also BCAA Metabolism)","Interaction",0.04
+"29","Fatty Acid, Amino","Interaction",0
+"30","Fatty Acid, Branched","Interaction",0
+"31","Fatty Acid, Dicarboxylate","Interaction",0
+"32","Fatty Acid, Dihydroxy","Interaction",0
+"33","Fatty Acid, Monohydroxy","Interaction",0
+"34","Food Component/Plant","Interaction",0
+"35","Fructose, Mannose and Galactose Metabolism","Interaction",0.03
+"36","Gamma-glutamyl Amino Acid","Interaction",0
+"37","Glutamate Metabolism","Interaction",0
+"38","Glutathione Metabolism","Interaction",0
+"39","Glycerolipid Metabolism","Interaction",0
+"40","Glycine, Serine and Threonine Metabolism","Interaction",0.01
+"41","Glycogen Metabolism","Parallel",0.000544338543109799
+"42","Glycolysis, Gluconeogenesis, and Pyruvate Metabolism","Interaction",0
+"43","Glycosyl PE","Interaction",0.00342334937431644
+"44","Guanidino and Acetamido Metabolism","Parallel",0
+"45","Hemoglobin and Porphyrin Metabolism","Parallel",0
+"46","Hexosylceramides (HCER)","Interaction",0
+"47","Histidine Metabolism","Interaction",0.02
+"48","Ketone Bodies","Interaction",0.0336609104577091
+"49","Lactoyl Amino Acid","Interaction",0
+"50","Leucine, Isoleucine and Valine Metabolism","Interaction",0
+"51","Long Chain Monounsaturated Fatty Acid","Interaction",0
+"52","Long Chain Polyunsaturated Fatty Acid (n3 and n6)","Interaction",0
+"53","Long Chain Saturated Fatty Acid","Interaction",0
+"54","Lysine Metabolism","Interaction",0
+"55","Lysophospholipid","Interaction",0
+"56","Lysoplasmalogen","Interaction",0
+"57","Medium Chain Fatty Acid","Interaction",0
+"58","Methionine, Cysteine, SAM and Taurine Metabolism","Interaction",0
+"59","Mevalonate Metabolism","Interaction",0.04
+"60","Monoacylglycerol","Interaction",0
+"61","Nicotinate and Nicotinamide Metabolism","Interaction",0.01
+"62","Oxidative Phosphorylation","Single",0.0264583701594891
+"63","Partially Characterized Molecules","Interaction",0
+"64","Pentose Metabolism","Interaction",0
+"65","Pentose Phosphate Pathway","Interaction",0.000107730609646684
+"66","Phenylalanine Metabolism","Interaction",0.02
+"67","Phosphatidylcholine (PC)","Interaction",0
+"68","Phosphatidylethanolamine (PE)","Interaction",0
+"69","Phosphatidylglycerol (PG)","Single",0.00147179163806167
+"70","Phosphatidylinositol (PI)","Interaction",0
+"71","Phosphatidylserine (PS)","Parallel",0
+"72","Phospholipid Metabolism","Interaction",0
+"73","Plasmalogen","Interaction",0
+"74","Polyamine Metabolism","Interaction",0
+"75","Primary Bile Acid Metabolism","Interaction",0
+"76","Purine Metabolism, (Hypo)Xanthine/Inosine containing","Interaction",0
+"77","Purine Metabolism, Adenine containing","Interaction",0
+"78","Purine Metabolism, Guanine containing","Interaction",0
+"79","Purine and Pyrimidine Metabolism","Parallel",0.0441554279763437
+"80","Pyrimidine Metabolism, Cytidine containing","Interaction",0
+"81","Pyrimidine Metabolism, Orotate containing","Interaction",0
+"82","Pyrimidine Metabolism, Thymine containing","Parallel",0
+"83","Pyrimidine Metabolism, Uracil containing","Interaction",0
+"84","Riboflavin Metabolism","Interaction",0.04
+"85","Secondary Bile Acid Metabolism","Interaction",0
+"86","Sphingolipid Synthesis","Interaction",0.01
+"87","Sphingomyelins","Interaction",0
+"88","Sphingosines","Interaction",0.01
+"89","Sterol","Interaction",0
+"90","TCA Cycle","Interaction",0
+"91","Tetrahydrobiopterin Metabolism","Parallel",0
+"92","Thiamine Metabolism","Interaction",0.01
+"93","Tocopherol Metabolism","Interaction",0
+"94","Tryptophan Metabolism","Interaction",0
+"95","Tyrosine Metabolism","Interaction",0.01
+"96","Unknown Metabolite","Interaction",0
+"97","Urea cycle; Arginine and Proline Metabolism","Interaction",0
+"98","Vitamin A Metabolism","Interaction",0
+"99","Vitamin B6 Metabolism","Interaction",0
