@@ -1,8 +1,3 @@
--   [Overview](#overview)
--   [Installation](#installation)
--   [renv](#renv)
--   [Folder Structure](#folder-structure)
-
 ## Overview
 
 The purpose of this pipeline is to provide additional analysis to
