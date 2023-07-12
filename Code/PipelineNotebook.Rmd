@@ -23,9 +23,8 @@ library(tidyverse)
 library(openxlsx)
 library(kableExtra)
 library(table1)
-library(data.table)
 library(flextable)
-
+library(reshape2)
 
 # Heat Map
 library(pheatmap)
@@ -210,11 +209,290 @@ head(chem_data)
 head(peak_data[,1:10])
 ```
 
+## Normalization and Standardization
+In its raw form, the peak data contain counts for each metabolite in each sample.
+Standardization and normalization are important steps to improve the 
+signal-to-noise ratio. In the next section, we are implementing the same 
+standardization and normalization methods used by Metabolon. First we will load
+the raw peak data into R. To start we:
+
+1. Provide a path with the file name to the Data tables .xlsx file provided by
+Metabolon. You may need to change this file path to reflect the name of the data
+tables .xlsx file for your project. 
+
+2. Read in the "Peak Area Data" tab from the .xlsx file provided above.
+
+
+```{r load Raw peak data}
+# Provide a path to Metabolon .xlsx file. 
+metabolon_path <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+
+
+# 2. Load raw peak data
+peak_data <- read.xlsx(metabolon_path, sheet = "Peak Area Data")
+```
+
+### Median Standardization
+The first step in the Metabolon normalization process is median standardization. 
+This step will ensure that each metabolite in the dataset has the same median 
+value. To show this we will show the box plots for 5 metabolites before and after
+median normalization. Below is the box plots before median standardization where 
+we:
+
+1. Select the first five metabolites for the box plot. 
+
+2. Create the boxplot data
+
+3. Plot the box plots for each of the five metabolites. 
+
+```{r before median standardization}
+# 1. Select the first five metabolites for the box plot. 
+metabolites <- names(peak_data)[2:6]
+
+
+# 2. Create the boxplot data
+plot_data <- peak_data %>%
+  reshape2::melt(id.vars="PARENT_SAMPLE_NAME") %>%
+  filter(variable %in% metabolites)
+
+
+# 3. Plot the box plots for each of the five metabolites. 
+ggplot(plot_data,aes(x=variable,y=value)) +
+  geom_boxplot() +
+  theme_bw()
+```
+Now we perform median standardization by:
+
+1. Initializing a new peak_data_norm matrix
+
+2. Create a data set containing the median value for each metabolite
+
+3. Divide each value by the median metabolite value. 
+
+```{r median standardization}
+# 1. Initialize a new peak_data_med matrix
+peak_data_norm <-  peak_data 
+
+
+# 2. Create a matrix containing the median value for each metabolite 
+peak_data_med <- peak_data_norm %>%
+  select(-PARENT_SAMPLE_NAME) %>%
+  summarise_all(median, na.rm = T)
+
+
+# 3. Divide each value for each metabolite by the median value of that metabolite
+for(i in colnames(peak_data_med)){
+  peak_data_norm[,i] <- peak_data_norm[,i]/peak_data_med[,i]
+}
+
+```
+
+Now we can look at those same metabolites from before. We will notice that the 
+median value for all metabolites are now lined up at 1. 
+
+```{r after median standardization}
+# 1. Select the first five metabolites for the box plot. 
+metabolites <- names(peak_data)[2:6]
+
+
+# 2. Create the boxplot data
+plot_data <- peak_data_norm %>%
+  reshape2::melt(id.vars="PARENT_SAMPLE_NAME") %>%
+  filter(variable %in% metabolites)
+
+
+# 3. Plot the box plots for each of the five metabolites. 
+ggplot(plot_data,aes(x=variable,y=value)) +
+  geom_boxplot() +
+  theme_bw()
+```
+
+
+### Minimum value imputation
+Once we standardize each metabolite by the median value,
+we impute the missing values for each metabolite with the minimum value for that
+metabolite. We do this in the following steps.
+
+1. Initialize the new peak_data_imputed matrix
+
+2. Find the minimum value for each metabolite.
+
+3. Create a for loop such that if a metabolite has a missing observation, then
+ the minimum value for that metabolite is imputed. 
+
+
+```{r replace missing observations}
+# 1. Initialize the new peak_data_imputed matrix
+peak_data_imputed <- peak_data_norm
+
+
+# 2. Find the minimum value for each metabolite and compute 1/5 of that value
+peak_data_mins <- peak_data_imputed %>%
+  select(-PARENT_SAMPLE_NAME) %>%
+  summarise_all(min, na.rm = T) 
+
+
+# 3. Impute the value
+for(i in colnames(peak_data_mins)){
+  if(length(peak_data_imputed[,i][is.na(peak_data_imputed[,i])]) > 0){
+    peak_data_imputed[which(is.na(peak_data_imputed[,i])),i] <- as.numeric(peak_data_mins[i])
+  }
+}
+```
+
+
+### Log Transformation
+The final step is to take a natural log transformation of each of the values.   
+
+
+1. Log transform all of the values
+
+```{r log19 Normalization}
+# 1. Log transform all of the values
+peak_data_log <- peak_data_imputed %>%
+  mutate_if(is.numeric, log)
+```
+
+
+
+### Save data
+Now that we have imputed and normalized our data, we need to save the data for 
+subsequent sections. We will save peak_data_log in the "Data/Processed" Folder 
+under the file name "Log_transformed_data.csv".
+
+```{r save-data 1}
+# 1. Save log transformed data.
+write.csv(peak_data_log, file = "../Data/Processed/Log_transformed_data.csv",
+          row.names = F)
+```
+
+## Analysis Data Creation
+For the downstream analysis we will need merge the sample metadata and the log 
+transformed peak data to create one analysis dataset. In the normalization and 
+standardization section we took the raw peak data and performed median value 
+standardization, minimum value imputation and natural log transformation. Metabolon
+does these preprocessing steps for their customers and provides the log transformed
+data for their customers in a .xlsx. We recommend utilizing the preprocessed log
+transformed provided by Metabolon. By utilizing the Log Transformed data derived
+by Metabolon, we can ensure the down stream supplemental analysis are utilizing 
+the same data.
+
+We need to merge the sample metadata and the Log normalized data together. 
+Additionally, we want to replace the column names with the names of the 
+metabolites. To do this we are going to read in the sample metadata and the log
+normalized data. We will do this by:
+
+1. Provide a path to the metabolon .xlsx file. 
+
+2. Read in the sample metadata under the "Sample Meta Data" tab.
+
+3. Read in the Log transformed data from the "Log Transformed Data" tab. 
+
+```{r read in analysis data}
+# 1. Metabolon excel file 
+met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+
+
+# 2. Read in sample metadata
+meta_data <- read.xlsx(met_excel,sheet = "Sample Meta Data")
+
+
+# 3. Read Log transformed data
+peak_data_log <- read.xlsx(met_excel,sheet = "Log Transformed Data")
+```
+
+
+If there are additional variables that need to be included into the analysis, you
+can place these variables in a .xlsx file. You must include a variable called 
+"PARENT_SAMPLE_NAME" that links the metadata to each of the samples. 
+
+In the following chunk we merge the additional metadata variables to the current
+metadata. We do this in the following steps. 
+
+1. Provide a path to the additional metadata variables. If you do not have any 
+additional metadata variables, you can set the "additional_meta=NULL".
+
+2. If there are additional meta data variables, then merge the additional metadata 
+variables with the metadata from Metabolon.
+
+```{r merge additional vars}
+# 1. Provide path to additional metadata
+additional_meta <- "../Data/Metabolon/AdditionalVars.xlsx"
+
+
+# 2. Merge additional vars to the meta data
+if(!is.null(additional_meta)){
+  meta_data <- read.xlsx(additional_meta) %>%
+    left_join(meta_data,"PARENT_SAMPLE_NAME")
+}
+```
+
+To create the analysis data, we want the metadata and the log transformed peak 
+data merged so each row of the analysis data set is a different sample and the
+columns contain the sample metadata and the log transformed peak data. To do this 
+we:
+
+1. Select the metadata variables need for down stream analysis. The metadata provided
+by Metabolon includes variables which may not be necessary for the analysis. 
+In this section will select the variables in the metadata that are necessary for
+downstream analysis. To do this we will need to identify the variables we want to
+keep. This will include the PARENT_SAMPLE_NAME and the experiment group variables.
+Additionally, if your experiment includes males and females, we recommend including
+a Sex/Gender variable and stratify the analysis. 
+
+2. Merge the metadata and the log transformed data together while keeping only
+the metadata variables needed for the analysis. 
+
+```{r merge analysis data}
+# 1. Select metadata variables
+metadata_variables <- c("PARENT_SAMPLE_NAME", 
+                        "GROUP_NAME",
+                        "TIME1",
+                        "Gender")
+
+
+# 2. Create analysis data
+analysis_data <- meta_data %>%
+  select(all_of(metadata_variables)) %>%
+  left_join(peak_data_log,"PARENT_SAMPLE_NAME")
+```
+
+
+
+
+Once we have the analysis data, we want to save it so we can use it for the 
+downstream analysis. We will save this in the "Data/Processed" folder under the
+file name "analysis_data.csv"
+
+```{r save_analysis data}
+# Save analysis data
+write.csv(analysis_data,"../Data/Processed/analysis_data.csv", row.names = F)
+```
+
+
+## Data Exploration
+
+In data exploration, we use several methods to help us better understand the 
+underlying patterns in the data without using a formal hypothesis test. In this
+pipeline, we are going to focus on two methods for data exploration:
+
+A.) Principal component analysis
+
+B.) Heat maps
+
+Before diving into the data exploration, we need read the analysis data set. Note,
+we use check.names=F since column names of the analysis data are numeric. 
+
+```{r load-data2}
+# 1. Read analysis dataset
+analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
+```
+
 ### Table 1
 
 The goal of this section is to design a table that resembles the study design of
 your experiment. This step allows us to see descriptive statistics of the samples
-in our data. For this, we are using the metadata to define a table with a similar
+in our data. For this, we are using the analysis data to define a table with a similar
 structure as the table below.
 
 |         | Strat 1      |Strat 2    |
@@ -224,18 +502,18 @@ structure as the table below.
 | *Var 3* | XX    | XX   |
 
 
-Alternatively, we can define a table with only the number of observations within
-each experimental group. The following code will create the desired table 1 for
-both scenarios.
+Alternatively, we can define a table non-stratified table with only the number of
+observations within each experimental group. The following code will create the
+desired table 1 for both scenarios.
 
 
-In this chunk, we will label the metadata's variable names. Labeling the variable
+In this chunk, we will label the analysis data variable names. Labeling the variable
 names will allow the tables to display your chosen variable names while maintaining
 the original variable name within the data. We do this in two steps.
 
-1. Choose the metadata variable name.
+1. Choose the variable name.
   + Change the name assigned to var1 to match the name of the variable in the
-  data set which you want to include in the table
+  analysis data set which you want to include in the table.
   
   + Repeat this for as many variables as needed.
   
@@ -259,13 +537,13 @@ stratified_var = "Gender"
 
 
 # 3. Assign the variable a label name
-label(meta_data[,var1]) <- "Treatment Group" 
+label(analysis_data[,var1]) <- "Treatment Group" 
 
-label(meta_data[,var2]) <- "Time"
+label(analysis_data[,var2]) <- "Time"
 
 
-# 4. Assign a stratified varibale a label name for the table. 
-label(meta_data[,stratified_var]) = "Gender"
+# 4. Assign a stratified variable a label name for the table. 
+label(analysis_data[,stratified_var]) = "Gender"
 ```
 
 
@@ -275,7 +553,7 @@ arguments depending on what you want the table to display. For example:
 * *Table 1 without interaction*: 
 
 $$
-table1(\sim \underbrace{var_1 + var_2 ...}_{\text{Variable names for rows}},   \ \text{data = meta_data}  )
+table1(\sim \underbrace{var_1 + var_2 ...}_{\text{Variable names for rows}},   \ \text{data = analysis_data}  )
 $$
 
 
@@ -283,7 +561,7 @@ $$
 * *Table 1 with interaction*
 
 $$
-table1(\sim \underbrace{var_1 + var_2 ...}_{\text{Variable names for rows}} \underbrace{| \ stratified\_var}_{\text{Statified Variable}},  \ \text{data = meta_data} )
+table1(\sim \underbrace{var_1 + var_2 ...}_{\text{Variable names for rows}} \underbrace{| \ stratified\_var}_{\text{Statified Variable}},  \ \text{data = analysis_data} )
 $$
 Above is how you change the table1 function to display the table with and without
 a stratified variable. In the next chunk, we utilize the following steps.
@@ -298,7 +576,7 @@ in the above chunk within the table1 function.
 ```{r table one}
 # 1. Creates table1
 tbl1 <- table1(~ TIME1 + GROUP_NAME| Gender
-               , data = meta_data)
+               , data = analysis_data)
 
 
 # 2. Displays table 1
@@ -311,253 +589,6 @@ t1flex(tbl1) %>%
 ```
 
 
-## Normalization and Standardization
-In its raw form, the peak data contain counts for each metabolite in each sample.
-Standardization and normalization are important steps to improve the 
-signal-to-noise ratio. In the next section, we are implementing the same 
-standardization and normalization methods used by Metabolon.
-
-### Missing Peak data
-As part of the Metabolon workflow, the raw peak data goes through a series of 
-processing steps to prepare the data for analysis. The first part of this process
-involves handling the missing peak data in two stages.
-
-1.) Remove chemicals with more than 50% of the observations missing.
-
-2.) For the remaining chemicals with missing data, impute the missing values with
-1/5 of the minimum positive value. 
-
-
-For the first step, we will summarize the missingness for the metabolites in a 
-table to show us which metabolites will exclude in the analysis. In the following
-chunk we:
-
-
-1. Create a data set with  the number of missing observations for each metabolite. 
-As part of this step, we are also filtering so that only metabolites are included
-that have more than 50% of the observations missing. 
-
-2. Filter the columns of the peak data to exclude the metabolites identified in step
-1. 
-
-
-3. Create a table that shows the metabolites excluded with the proportion of missing
-observations for each metabolite. 
-
-4. Display the table of excluded metabolites
-
-5. Save table in the "Outputs/Tables" folder with the filename "MissingChemicals"
-
-
-```{r remove missing features}
-# 1. Create a dataset with  the number of missing observations for each metabolite. 
-missing_variables <- peak_data %>%
-  mutate(across(everything(), ~ifelse(is.na(.), 1, 0))) %>%
-  summarise_all(sum) %>%
-  pivot_longer(cols = everything(), names_to = "CHEM_ID", values_to = "number_missing") %>%
-  left_join(select(chem_data, CHEM_ID, CHEMICAL_NAME) %>%
-              mutate(CHEM_ID = as.character(CHEM_ID)),
-            by = "CHEM_ID") %>%
-  arrange(number_missing) %>%
-  filter(number_missing > 0.5*(nrow(peak_data)))
-
-
-# 2. Filter the columns of the peak data to exclude the metabolites identified in step 1.
-peak_data_filter <- peak_data %>%
-  select(-missing_variables$CHEM_ID)
-
-
-# 3. Create a table that shows the metabolites excluded
-miss_tabl<- missing_variables %>%
-              select(CHEMICAL_NAME, number_missing) %>%
-              mutate( prop_missing = round(number_missing/nrow(peak_data), digits = 3)) %>%
-              flextable() %>%
-              set_header_labels(CHEMICAL_NAME="Chemical Name", number_missing="Number Missing", number_missing = "Proportion Missing") %>%
-              set_table_properties(layout = "autofit") %>%
-              theme_vanilla()
-
-
-# 4. Display Table
-miss_tabl
-
-
-# 5. Save table
-save_as_docx(miss_tabl,path = "../Outputs/Tables/MissingChemicals.docx")
-
-```
-
-
-Once we remove the metabolites with more than 50% of the observations missing, 
-we impute 1/5 of the minimum value for the remainder with missing values. We do 
-this in the following steps.
-
-1. Initialize the new peak_data_imputed matrix
-
-2. Find the minimum value for each metabolite and compute 1/5 of that value
-
-3. Create a for loop such that if a metabolite has a missing observation, then
-1/5 of the minimum value for that metabolite is imputed. 
-
-
-```{r replace missing observations}
-# 1. Initialize the new peak_data_imputed matrix
-peak_data_imputed <- peak_data_filter
-
-
-# 2. Find the minimum value for each metabolite and compute 1/5 of that value
-peak_data_mins <- peak_data_imputed %>%
-  select(-PARENT_SAMPLE_NAME) %>%
-  summarise_all(min, na.rm = T) %>%
-  mutate(across(everything(), ~(./5)))
-
-
-# 3. Impute the value
-for(i in colnames(peak_data_mins)){
-  if(length(peak_data_imputed[,i][is.na(peak_data_imputed[,i])]) > 0){
-    peak_data_imputed[which(is.na(peak_data_imputed[,i])),i] <- as.numeric(peak_data_mins[i])
-  }
-}
-```
-
-
-### Normalization
-
-Once we impute the missing data, the Metabolon workflow follows a three-step 
-process for normalization.
-
-A. Each metabolite's peak data is standardized by the median value of the 
-metabolites observations. 
-
-B. Each observation is log10 transformed
-
-C. Each chemical is autoscaled by subtracting the mean from each value and
-dividing by the standard deviation. 
-
-The next two chunks will perform these three steps to produce a dataset called 
-"peak_data_scale". Peak_data_scale will be the data set used for data exploration
-in the next section.
-
-In the first chunk we:
-
-1. Initialize a new peak_data_norm matrix
-
-2. Create a matrix containing the median value for each metabolite 
-
-3. Divide each value for each metabolite by the median value of that metabolite 
-
-4. Log10 transform all of the values
-
-
-```{r median normalization}
-# 1. Initialize a new peak_data_norm matrix
-peak_data_norm <- peak_data_imputed 
-
-
-# 2. Create a matrix containing the median value for each metabolite 
-peak_data_med <- peak_data_norm %>%
-  select(-PARENT_SAMPLE_NAME) %>%
-  summarise_all(median, na.rm = T)
-
-
-# 3. Divide each value for each metabolite by the median value of that metabolite
-for(i in colnames(peak_data_med)){
-  peak_data_norm[,i] <- peak_data_norm[,i]/peak_data_med[,i]
-}
-
-
-# 4. Log10 transform all of the values
-peak_data_log <- peak_data_norm %>%
-  mutate_if(is.numeric, log10)
-```
-
-
-For the next chunk, we "auto-scale" the features. We will do this in two steps:
-
-1. Initialize the new matrix peak_data_scale, this is the matrix that we will use
-in down stream tasks. 
-
-2. Auto-scale by subtracting the mean and dividing by the standard deviation of
-each metabolite. 
-
-
-```{r autoscale variables}
-# 1. Initialize the new matrix peak_data_scale
-peak_data_scale <- peak_data_log
-
-
-# 2. Auto-scale
-for(i in colnames(peak_data_log)[-1]){
-  peak_data_scale[,i] <- (peak_data_scale[,i]-mean(peak_data_scale[,i]))/sd(peak_data_scale[,i])
-}
-```
-
-
-### Save data
-Now that we have imputed and normalized our data, we need to save the data for subsequent sections. The data which we will use downstream are:
-
-1. Meta data (meta_data)
-
-2. Peak Scaled Data (peak_data_scale)
-
-3. Chemical Annotation data (chem_data)
-
-We will save these data sets to the "Data/Processed" folder. 
-
-```{r save-data 1}
-
-# 1. Save meta data
-write.csv(meta_data, file = "../Data/Processed/meta_data.csv", row.names = F)
-
-
-# 2. Save peak scaled data
-write.csv(peak_data_scale, "../Data/Processed/peak_data_scale.csv",row.names = F)
-
-
-# 3. save chemical annotaion data
-write.csv(chem_data, file = "../Data/Processed/chem_data.csv", row.names = F)
-
-```
-
-
-## Data Exploration
-
-In data exploration, we use several methods to help us better understand the 
-underlying patterns in the data without using a formal hypothesis test. In this
-pipeline, we are going to focus on two methods for data exploration:
-
-A.) Principal component analysis
-
-B.) Heatmaps
-
-Before diving into the data exploration, we need to read the processed data from
-the Normalization and Standardization Section. We will need to read the following
-files
-
-1. Meta data: We will need to call this meta_data by default for the other down-
-stream tasks. If you make any changes to this variable name then you will have to
-make changes in down-stream chunks.
-
-2. Scales peak data: We will need to call this peak_data_scale by default for the
-other down stream-tasks. If you make any changes to this variable name then you 
-will have to make changes in down-stream chunks.
-
-3. Chemical annotation data: We will need to call this chem_data by default for 
-the other down-stream tasks. If you make any changes to this variable name then 
-you will have to make changes in down-stream chunks.
-
-
-```{r load-data2}
-# 1. Read meta-data
-meta_data <- read.csv("../Data/Processed/meta_data.csv", check.names = F)
-
-# 2. Read scaled peak data
-peak_data_scale <- read.csv("../Data/Processed/peak_data_scale.csv", check.names = F)
-
-# 3. Read chemical annotations
-chem_data <- read.csv("../Data/Processed/chem_data.csv", check.names = F)
-```
-
-
 ###  Principal Component Analysis
 
 In general, Principal component analysis (PCA) reduces the number of variables 
@@ -566,7 +597,8 @@ a high level, PCA is constructed such that the first principal component account
 for the largest possible amount of variance within the data. The second principal
 component accounts for the largest amount of remaining variance, and so on. 
 Additionally, each of the principal components produced by PCA is uncorrelated 
-with each of the other principal components.
+with each of the other principal components. At a high level, PCA allows us to 
+visualize sources of variation in the data.
 
 Here, we will graph the first two principal components of our dataset. In the 
 PCA plot, we can label each point based on variables from the metadata.
@@ -574,61 +606,51 @@ PCA plot, we can label each point based on variables from the metadata.
 The following chunk runs PCA on the scale_peak_data matrix in the following 
 steps:
 
-1. Set the meta analysis variables from the metadata that will be used 
-to categorize points on the PCA plot. You must always include the variable
-name that maps the observations from the scaled_peak_data to the meta_data. This
-is typically the variable name "PARENT_SAMPLE_NAME". 
+1.Create a vector of non metabolite variables that are in the the analysis data
+set. These variables include information about the experimental conditions. 
 
-2. Merge the peak_data_scale and the meta_data matrices together to define the 
-pca_dat
+2. Create a data set for the principle component analysis which only includes 
+information on the metabolites. 
 
-3. Create a list of all of the metabolite names in the newly generated pca_dat
-matrix. 
+3. Run PCA of the pca_dat matrix containing only the metabolites. 
 
-4. Run PCA of the pca_dat matrix containing only the metabolites. 
+4. Define the plot labels. This is a character string matching the name of one of 
+the variables in the analysis_data which will be used to label points on the PCA
+graph. 
 
-5. Define the plot labels. This is a character string matching the name of one of 
-the variables in the meta data. 
+5. Create and display the PCA plot.
 
-6. Create and display the PCA plot
-
-7. Save the PCA plot in the "Outputs/Plots" folder with the file name PCA.pdf
+6. Save the PCA plot in the "Outputs/Plots" folder with the file name PCA.pdf
 
 
 ```{r pca plots}
-# 1. Set the meta analysis variables 
-meta_analysis_variables <- c("PARENT_SAMPLE_NAME",
+# 1. Create the non-metabolite vector. 
+non_metabolite <- c("PARENT_SAMPLE_NAME",
                              "GROUP_NAME",
                              "TIME1",
                              "Gender")
 
 
-# 2. Merge the peak_data_scale and the meta_data matrices together
-pca_dat <- peak_data_scale %>%
-  left_join(meta_data[,meta_analysis_variables], 
-            by = "PARENT_SAMPLE_NAME") %>%
-  select(all_of(meta_analysis_variables),everything())
+# 2. Create PCA data containing only metabolite data
+pca_dat <- analysis_data[,!names(analysis_data) %in% non_metabolite]
 
 
-# 3. Create a list of all of the metabolite names
-chems <- names(pca_dat)[(names(pca_dat)%in% chem_data$CHEM_ID)]
-
-
-# 4. Run PCA of the pca_dat matrix containing only the metabolites.   
-res.pca <- PCA(pca_dat[chems], 
+# 3. Run PCA of the pca_dat matrix containing only the metabolites.   
+res.pca <- PCA(pca_dat, 
                graph = F)
 
 
-# 5. Define labels
+# 4. Define labels
 meta_var = "Gender"
 
 
-# 6. Create figure 
+# 5. Create figure 
 fviz_pca_ind(res.pca, 
              label = "none",
-             habillage = as.factor(pca_dat[,meta_var])) 
+             habillage = as.factor(analysis_data[,meta_var])) 
 
-# 7. Save figure
+
+# 6. Save figure
 ggsave(paste0("../Outputs/Plots/","PCA.pdf"), width = 10, height = 10)
 ```
 
@@ -642,23 +664,25 @@ analysis by male and female.
 
 ### Heatmaps
 
-Another exploratory analysis tool we can use is heatmaps, a gridded plot based on
-the x-axis- and y-axis labels. The color of the spot on the grid is based on the 
+Another exploratory analysis tool we can use is heatmaps, whih is a gridded plot
+based on the x-axis- and y-axis labels. The color of the spot on the grid is based on the 
 value's intensity. For our heatmap, the x-axis will be the samples, and the y-axis
-will be the metabolites. The values determining the colors will be the log10 
-scaled peak value for each chemical in each observation. We can order our observations 
-to see intensity patterns based on our experimental conditions. To do this, we 
+will be the metabolites. The values determining the colors will be the log 
+peak value for each chemical in each observation. We can order our observations 
+to see intensity patterns based on our experimental conditions. This is another
+way of visualizing sources of variation within our data. To do this, we 
 need to merge the chemical annotation, meta, and scaled peak data. Then we need 
-to arrange the data based on our experimental conditions. We have developed an R
-function (create_heatmap) that does this in one step. The create_heatmap function
-takes the following arguments.
+to arrange the data based on our experimental conditions. The create_heatmap_Data
+function in the R folder will help us prepare the data for the heatmap. To do this
+the create_heatmap_Data function takes three arguments.
 
 
-* Peak scaled data (peak_data_scale)
-* Chemical Annotation data (chem_data)
-* Meta data (meta_data)
-* Meta analyis variables
-* ... 
+* Analysis data (analysis_data) 
+
+* Heatmap Variables (heatmap_variables) - defines the variables used to order
+the samples.
+
+* ... -  
 
 The first three arguments of the function are data frames (data frame names are 
 in parenthesis). The meta-analysis variables are specified in the
@@ -694,14 +718,13 @@ and the labels of the heatmap.
 
 ```{r overall heatmap}
 # 1. define meta analysis variables
-meta_analysis_variables <- meta_analysis_variables <- c("PARENT_SAMPLE_NAME",
-                             "GROUP_NAME",
+heatmap_variables <-   c("GROUP_NAME",
                              "TIME1",
                              "Gender")
 
 
 # 2. Create heatmap data
-heatmap_data <- create_heatmap(peak_data_scale,chem_data,meta_data, meta_analysis_variables,
+heatmap_data <- create_heatmap_Data(analysis_data,heatmap_variables = heatmap_variables ,
                                Gender, GROUP_NAME, desc(TIME1)) # Arranges data frame for heatmap (...)
 
 
@@ -714,7 +737,7 @@ palette <- colorRampPalette(rev(brewer.pal(10, "RdBu")))(256)
 # 4. Values for heatmap
 vals = heatmap_data$heatmap_data_vals
 
-meta = heatmap_data$heatmap_meta_data
+meta = heatmap_data$heatmap_variables
 
 
 # 5. Create heatmap and save. 

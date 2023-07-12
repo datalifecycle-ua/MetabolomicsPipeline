@@ -1,0 +1,112 @@
+---
+title: "Analysis_Data_Creation"
+author: "Joel Parker"
+date: "2023-07-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Analysis Data Creation
+For the downstream analysis we will need merge the sample metadata and the log 
+transformed peak data to create one analysis dataset. In the normalization and 
+standardization section we took the raw peak data and performed median value 
+standardization, minimum value imputation and natural log transformation. Metabolon
+does these preprocessing steps for their customers and provides the log transformed
+data for their customers in a .xlsx. We recommend utilizing the preprocessed log
+transformed provided by Metabolon. By utilizing the Log Transformed data derived
+by Metabolon, we can ensure the down stream supplemental analysis are utilizing 
+the same data.
+
+We need to merge the sample metadata and the Log normalized data together. To do
+this we are going to read in the sample metadata and the log normalized data. We
+will do this by:
+
+1. Provide a path to the metabolon .xlsx file. 
+
+2. Read in the sample metadata under the "Sample Meta Data" tab.
+
+3. Read in the Log transformed data from the "Log Transformed Data" tab. 
+
+```{r read in analysis data}
+# 1. Metabolon excel file 
+met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+
+
+# 2. Read in sample metadata
+meta_data <- read.xlsx(met_excel,sheet = "Sample Meta Data")
+
+
+# 3. Read Log transformed data
+peak_data_log <- read.xlsx(met_excel,sheet = "Log Transformed Data")
+```
+
+
+If there are additional variables that need to be included into the analysis, you
+can place these variables in a .xlsx file. You must include a variable called 
+"PARENT_SAMPLE_NAME" that links the metadata to each of the samples. 
+
+In the following chunk we merge the additional metadata variables to the current
+metadata. We do this in the following steps. 
+
+1. Provide a path to the additional metadata variables. If you do not have any 
+additional metadata variables, you can set the "additional_meta=NULL".
+
+2. If there are additional meta data variables, then merge the additional metadata 
+variables with the metadata from Metabolon.
+
+```{r merge additional vars}
+# 1. Provide path to additional metadata
+additional_meta <- "../Data/Metabolon/AdditionalVars.xlsx"
+
+
+# 2. Merge additional vars to the meta data
+if(!is.null(additional_meta)){
+  meta_data <- read.xlsx(additional_meta) %>%
+    left_join(meta_data,"PARENT_SAMPLE_NAME")
+}
+```
+
+To create the analysis data, we want the metadata and the log transformed peak 
+data merged so each row of the analysis data set is a different sample and the
+columns contain the sample metadata and the log transformed peak data. To do this 
+we:
+
+1. Select the metadata variables need for down stream analysis. The metadata provided
+by Metabolon includes variables which may not be necessary for the analysis. 
+In this section will select the variables in the metadata that are necessary for
+downstream analysis. To do this we will need to identify the variables we want to
+keep. This will include the PARENT_SAMPLE_NAME and the experiment group variables.
+Additionally, if your experiment includes males and females, we recommend including
+a Sex/Gender variable and stratify the analysis. 
+
+2. Merge the metadata and the log transformed data together while keeping only
+the metadata variables needed for the analysis. 
+
+```{r merge analysis data}
+# 1. Select metadata variables
+metadata_variables <- c("PARENT_SAMPLE_NAME", 
+                        "GROUP_NAME",
+                        "TIME1",
+                        "Gender")
+
+
+# 2. Create analysis data
+analysis_data <- meta_data %>%
+  select(all_of(metadata_variables)) %>%
+  left_join(peak_data_log,"PARENT_SAMPLE_NAME")
+
+```
+
+
+Once we have the analysis data, we want to save it so we can use it for the 
+downstream analysis. We will save this in the "Data/Processed" folder under the
+file name "analysis_data.csv"
+
+```{r save_analysis data}
+# Save analysis data
+write.csv(analysis_data,"../Data/Processed/")
+```
+
