@@ -1,4 +1,4 @@
-ancova_function <- function(.data, chem_data, meta_analysis_variables,
+subpathway_analysis <- function(.data, chem_data, meta_analysis_variables,
                             additive_vars=meta_analysis_variables,
                             treatment.only =F,
                             interaction_vars = NULL,
