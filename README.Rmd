@@ -8,15 +8,9 @@ output:
 
 ## Overview
 The purpose of this pipeline is to provide additional analysis to complement the
-analysis by Metabolon, where they identified biochemicals (metabolites) that 
-differed significantly across experimental groups. In the Metabolon data, each 
+analysis by Metabolon. In the Metabolon data, each 
 "sub-pathway" classifies a collection of metabolites, and each "super-pathway" 
-classifies a collection of sub-pathways. Hypothesis testing at the sub-pathway 
-level can provide valuable insight into how the experimental conditions affect 
-metabolic profiles. We also provide a section that focuses on looking at pairwise comparisons at the
-metabolite level which is stratified by sex. 
-
-The below figure highlights the steps we will be taking, which 
+classifies a collection of sub-pathways. The below figure highlights the steps we will be taking, which 
 highlight the main sections of this pipeline by: 
 
 
@@ -24,8 +18,16 @@ highlight the main sections of this pipeline by:
 
 In the diagram above we outline the steps to for data normalization which is provided
 by Metabolon. However, Metabolon provides this data in their .xlsx data tables. 
-In the subsequent sections, we use the normalized data derived by Metabolon.
+In the subsequent sections, we use the normalized data derived by Metabolon in the
+.xlsx file provided by Metabolon. This work flow provide additional tools for:
 
+1. Exploratory Peak Analysis
+
+2. Sub-pathway Analysis 
+
+3. Pairwise Comparisons at the metabolite level.
+
+4. Metabolite box plots and line plots within sub-pathways.
 
 ## Installation
 
@@ -44,6 +46,21 @@ devtools::install_github("JoelParkerUofA/Metabolomics-Pipeline")
 
 Once the pipeline has finished downloading, you can open the R project by opening
 the "Metabolomic Pipeline.Rproj" to run this pipeline on your local computer. 
+
+## Getting Started
+
+#### Demo Data Set
+The workflow comes with a dataset in the Data/Metabolon folder which contains metaboloic
+profiles across several treatment groups and time points of ALS in mice. To get started, 
+the vignette folder has a file called WorkflowVignette.Rmd. This file walks through
+all steps of the pipeline using the ALS data. 
+
+#### Your Own Data
+If you have data from Metabolon, you can simply place the .xlsx file from Metabolon
+in the "Data/Metabolon" folder and run the "Analysis_data_creation.Rmd" .Rmd file
+in the "Code" folder to create the analysis data. Once the analysis data is created,
+you can run any of the analysis sections in the "Code" folder independently. 
+
 
 ## renv 
 This pipeline utilizes the [renv](https://rstudio.github.io/renv/articles/renv.html#reproducibility)

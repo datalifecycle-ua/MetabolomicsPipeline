@@ -5,11 +5,6 @@ output:
     toc: true
     df_print: paged
 date: "`r Sys.Date()`"
-knit: (function(inputFile, encoding) {
-      out_dir <- "../Outputs/Reports";
-      rmarkdown::render(inputFile,
-                        encoding=encoding,
-                        output_dir=file.path(dirname(inputFile), out_dir))})
 ---
 
 
@@ -48,13 +43,15 @@ library(magick)
 ## Pairwise comparisons
 library(emmeans)
 
-# Source R scripts 
-source("../R/Metabolomics_R_code.R")
+# Metabolomics Pipeline source files
+files.sources = list.files("../R")
+sapply(paste0("../R/",files.sources), source)
+
 ```
 
 ## Introduction
 The purpose of this pipeline is to provide a set of additional analyses to 
-complement the analysis done by Metabolon. These additional analyisis are broken
+complement the analysis done by Metabolon. These additional analysis are broken
 down into four main sections. 
 
 1. Data Exploration
@@ -267,7 +264,7 @@ does these preprocessing steps for their customers and provides the log transfor
 data for their customers in a .xlsx. We recommend utilizing the preprocessed log
 transformed provided by Metabolon. By utilizing the Log Transformed data derived
 by Metabolon, we can ensure the down stream supplemental analysis are utilizing 
-the same data.
+the same data as Metabolon.
 
 We need to merge the sample metadata and the Log normalized data together. 
 Additionally, we want to replace the column names with the names of the 
@@ -947,7 +944,7 @@ single model is displayed.
 if a sub-pathway shows a significant p-value for the interaction model and the parallel
 model, then the sub-pathway model type is only "interaction". 
 
-```{r table of significant subpathways}
+```{r table of significant subpathways,results='asis'}
 # 1. Read in Results from the analysis step. 
 results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
                   "../Data/Results/Stratified_Female_subpathway_results.csv")
@@ -991,7 +988,7 @@ for (i in 1:length(strata)) {
      
      
      # 7. Display table
-     print(sig_subPaths)
+     print(sig_subPaths, preview = "html")
     
      
      # 8. Save table
@@ -1098,7 +1095,7 @@ for(i in 1:length(strata)){
   
   
   # 7. Display table
-  print(superPath)
+  print(superPath, preview="html")
   
   
   # 8. Save table
@@ -1131,7 +1128,7 @@ for the model type with the the pathways that were non-significant filtered out.
 
 8. Save table in the "Outputs/Tables" folder with the name "SigSubpathwayTable_{{strata}}"
 
-```{r table of counts for each subpathway}
+```{r table of counts for each subpathway, results='asis'}
 # 1. Read in Results from the analysis step. 
 results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
                   "../Data/Results/Stratified_Female_subpathway_results.csv")
@@ -1188,7 +1185,7 @@ for (i in 1:length(strata)){
   
   
   # 7. Display table
-  print(path_tab)
+  print(path_tab, preview="html")
   
   
   # Save table
@@ -1239,7 +1236,7 @@ Create a second for loop which:
 "Metabolite_model_pvalues_{{pathway}}_{{strata}}"
 
 
-```{r table of counts for each subpathway top five}
+```{r table of counts for each subpathway top five, results='asis'}
 # 1. Read in Results from the analysis step. 
 results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
                   "../Data/Results/Stratified_Female_subpathway_results.csv")
@@ -1319,12 +1316,12 @@ for(i in 1:length(strata)){
                                                    strata[i],")."))
     
       # 10. Display table 
-      print(top_paths_table)
+      print(top_paths_table, preview="html")
       
       
       # 11. Save table 
     save_as_docx(top_pathway_table, 
-                 path = paste0("../Outputs/Tables/Metabolite_model_pvalues_",pathways[j],"_",strata[i],".docx"))
+                 path = paste0("../Outputs/Tables/Metabolite_model_pvalues_",gsub("[^A-Za-z0-9 ]","",pathways[j]),"_",strata[i],".docx"))
       
     }
 }  
@@ -1424,18 +1421,20 @@ for (i in 1:length(stratas)) {
 
 
 #### P-Value Heatmaps
-To visualize the pvalues in a heatmap by having the metabolites in the row and 
+We will visualize the p-values in a heatmap by having the metabolites in the row and 
 the pairwise comparisons in the columns. The values that make up the heatmap
-will be the -log10 transformed pvalue. This will allow the smaller pvalue to have
-a higher intensity in the heatmap. To generate the heatmap that following code
+will be the -log10 transformed p-value. This will allow the smaller pvalue to have
+a higher intensity in the heatmap. To generate the heatmap, the following code
 uses [plotly](https://plotly.com/r/) which gives us the capability to make interactive
-plots. The heatmap the is generated will allow us to hover over the heatmap and 
-see information about the metabolite including the metabolite name and the sub-pathway. 
+plots. The heatmap that is generated will allow us to hover over the heatmap and 
+see information about the metabolite including the metabolite name and the sub-pathway
+and the p-value from the overall F-test. 
 Additionally, we group the metabolites by sub-pathway to make it easier to see 
 if multiple metabolites within a sub-pathway are significant. To do this we:
 
 1. Read in the results from the pairwise comparisons. If you stratified the analysis,
-you may want to copy this chunk and rerun for each strata. 
+you may want to copy this chunk and rerun for each strata. Additionally, we will need
+to read in the chemical annotation file.
 
 2. Merge the chemical annotation fill with the results from the pairwise comparisons. 
 
@@ -1454,62 +1453,54 @@ Since this plot is interactive, it will be save as an html file that can be open
 in a web browser. 
 
 ```{r pvalue heatmap}
-# define folder with pairwise comparisons.
-pair_path <- dir("../Data/Results/Pairwise_Comparisons")
 
-# Get stratas
-stratas <- gsub("Pairwise_","",gsub(".csv","",pair_path))
-
+# 1. Read in pairwise results
+results_pair <-read.csv("../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv", check.names = F)
+ 
 # Read chemical annotation file
 met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
 chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
+
+ 
+
+# 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
+data <- chem_data %>%
+  select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>%
+  merge(results_pair, by.x = "CHEM_ID",by.y = "Metabolite") %>%
+  arrange(SUB_PATHWAY)
   
 
-for (i in 1:length(pair_path)) {
-  
-  # 1. Read in pairwise results
-    results_pair <-read.csv(paste0("../Data/Results/Pairwise_Comparisons/",pair_path[i]), check.names = F)
-    
-  
-  # 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
-  data <- chem_data %>%
-    select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>%
-    merge(results_pair, by.x = "CHEM_ID",by.y = "Metabolite") %>%
-    arrange(SUB_PATHWAY)
-    
-  
-  # 3. Create the heatmap data
-  heatmap_dat <- apply(data[,grepl("PVALS",names(data))],MARGIN = 2,
-                       FUN = function(x){-log10(x)})
-  
-  # 4. Create a matrix of "hover data"
-  hover_text <- matrix(rep(paste0("Subpathway: ",data$SUB_PATHWAY, ", ",
-                                  "Metabolite: ", data$CHEMICAL_NAME,
-                                  ", Overall P-value: ", round(data$Overall_pval,3)),
-                           ncol(heatmap_dat)),nrow=length(data$SUB_PATHWAY))
-  
-  
-  # 5. Generate heatmap using plotly
-  p <- plot_ly(x=colnames(heatmap_dat), y=as.character(data$CHEMICAL_NAME), 
-              z =as.matrix( heatmap_dat), 
-              type = "heatmap",
-              showscale = T, 
-              hoverinfo = 'text',
-              text = hover_text,
-              ) %>%
-    layout(title = paste0("P-value Pairwise Comparisons Heatmap (",
-                          stratas[i],")"))
-  
-  
-  # 6. Display heatmap
-  print(p)
-  
-  
-  
-  # 7. Save.
-  htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/PaiwiseComp_pvalue_heatmap_",
-                                   stratas[i],".html"))
-}
+# 3. Create the heatmap data
+heatmap_dat <- apply(data[,grepl("PVALS",names(data))],MARGIN = 2,
+                     FUN = function(x){-log10(x)})
+
+# 4. Create a matrix of "hover data"
+hover_text <- matrix(rep(paste0("Subpathway: ",data$SUB_PATHWAY, ", ",
+                                "Metabolite: ", data$CHEMICAL_NAME,
+                                ", Overall P-value: ", round(data$Overall_pval,3)),
+                         ncol(heatmap_dat)),nrow=length(data$SUB_PATHWAY))
+
+
+# 5. Generate heatmap using plotly
+
+p <- plot_ly(x=colnames(heatmap_dat), y=as.character(data$CHEMICAL_NAME), 
+            z =as.matrix( heatmap_dat), 
+            type = "heatmap",
+            showscale = T, 
+            hoverinfo = 'text',
+            text = hover_text,
+            ) %>%
+  layout(title = "P-value Pairwise Comparisons Heatmap")
+
+
+# 6. Display heatmap
+p
+
+
+
+# 7. Save.
+htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/PaiwiseComp_pvalue_heatmap_",".html"))
+
 ```
 
 Additionally we can create a heatmap which focuses on the metabolites that had a
@@ -1518,9 +1509,11 @@ the heatmap to show which metabolites had a significant amount of variance expla
 by the treatment groups prior to looking at the pairwise comparisons. For each metabolite,
 if the overall pvalue from the F statistic was less than 0.05 AND the pairwise 
 comparison p-value was less than 0.05, then the heatmap value is set to 1 and 
-0 otherwise. In the following code, for each pairwise analysis strata we.
+0 otherwise. In the following code we:
 
-1. Read in the results from the pairwise comparisons.  
+1. Read in the results from the pairwise comparisons. If you stratified the analysis,
+you may want to copy this chunk and rerun for each strata. Additionally, we will need
+to read in the chemical annotation file.
 
 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
 In this step we group the metabolites by pathway.
@@ -1540,69 +1533,61 @@ Since this plot is interactive, it will be save as an html file that can be open
 in a web browser. 
 
 ```{r sig heatmap}
-# define folder with pairwise comparisons.
-pair_path <- dir("../Data/Results/Pairwise_Comparisons")
-
-# Get stratas
-stratas <- gsub("Pairwise_","",gsub(".csv","",pair_path))
-
+# 1. Read in pairwise results
+results_pair <-read.csv("../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv", check.names = F)
+  
 # Read chemical annotation file
 met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
 chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
   
 
-for (i in 1:length(pair_path)) {
+# 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
+pval_col_names <- names(results_pair)[grepl("PVALS",as.character(names(results_pair)))]
+data <- chem_data %>%
+  select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>%
+  merge(results_pair, by.x = "CHEM_ID",by.y = "Metabolite") %>%
+  arrange(SUB_PATHWAY)
   
-# 1. Read in pairwise results
-  results_pair <-read.csv(paste0("../Data/Results/Pairwise_Comparisons/",pair_path[i]), check.names = F)
-  
-  
-  # 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
-  pval_col_names <- names(results_pair)[grepl("PVALS",as.character(names(results_pair)))]
-  data <- chem_data %>%
-    select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>%
-    merge(results_pair, by.x = "CHEM_ID",by.y = "Metabolite") %>%
-    arrange(SUB_PATHWAY)
-    
-  
-  # 3. Create the heatmap data
-  heatmap_dat <- data %>%
-    mutate(across(all_of(pval_col_names),~ ifelse(.x <0.05& Overall_pval<0.05,1,0))) %>%
-    select(all_of(pval_col_names))
-  
-  # 4. Create a matrix of "hover data"
-  hover_text <- matrix(rep(paste0("Subpathway: ",data$SUB_PATHWAY, ", ",
-                                  "Metabolite: ", data$CHEMICAL_NAME,
-                                  ", Overall P-value: ", round(data$Overall_pval,3)),
-                           ncol(heatmap_dat)),nrow=length(data$SUB_PATHWAY))
-  
-  
-  # 5. Generate heatmap using plotly
-  p <- plot_ly(x=colnames(heatmap_dat), y=as.character(data$CHEMICAL_NAME), 
-              z =as.matrix( heatmap_dat), 
-              type = "heatmap",
-              showscale = T, 
-              hoverinfo = 'text',
-              text = hover_text,
-              showscale=F) %>%
-    layout(title = paste0("Significant Pairwise Comparisons Heatmap (",
-                          stratas[i],")"))
-  
-  
-  # 6. Display heatmap
-  print(p) 
 
-  # 7. Save heatmap
-  htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/SigPaiwiseComp_pvalue_heatmap_",
-  stratas[i],".html"))
-}
+# 3. Create the heatmap data
+heatmap_dat <- data %>%
+  mutate(across(all_of(pval_col_names),~ ifelse(.x <0.05& Overall_pval<0.05,1,0))) %>%
+  select(all_of(pval_col_names))
+
+# 4. Create a matrix of "hover data"
+hover_text <- matrix(rep(paste0("Subpathway: ",data$SUB_PATHWAY, ", ",
+                                "Metabolite: ", data$CHEMICAL_NAME,
+                                ", Overall P-value: ", round(data$Overall_pval,3)),
+                         ncol(heatmap_dat)),nrow=length(data$SUB_PATHWAY))
+
+
+# 5. Generate heatmap using plotly
+p <- plot_ly(x=colnames(heatmap_dat), y=as.character(data$CHEMICAL_NAME), 
+            z =as.matrix( heatmap_dat), 
+            type = "heatmap",
+            showscale = T, 
+            hoverinfo = 'text',
+            text = hover_text,
+            showscale=F) %>%
+  layout(title = "Significant Pairwise Comparisons Heatmap")
+
+
+# 6. Display heatmap
+p
+
+# 7. Save heatmap
+htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/SigPaiwiseComp_pvalue_heatmap_"
+                                 ,".html"))
+
 ```
 
 
 
-## Plots
-Visualizations of the data can help us see the underlying trends. One useful visualization
-is boxplots and line graphs. 
+## Box Plots and Line Plots
+Visualizations of the data can help us see the underlying trends. Two useful visualization
+is boxplots and line graphs. Metabolon provides customers with similar box plots,
+but the following will allow to look at the boxplots specifically with a sub-pathway. 
+
 
 ### Boxplots
 

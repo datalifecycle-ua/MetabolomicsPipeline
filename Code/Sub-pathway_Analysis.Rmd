@@ -1,0 +1,656 @@
+---
+title: "Sub-pathway Analysis"
+author: "Joel Parker"
+date: "2023-07-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Set global chunk obptions
+knitr::opts_chunk$set(fig.width=12, fig.height=12)
+
+# Data 
+library(tidyverse)
+library(openxlsx)
+library(kableExtra)
+library(table1)
+library(flextable)
+library(reshape2)
+
+
+# Heat Map
+library(pheatmap)
+library(RColorBrewer)
+library(rstatix)
+library(plotly)
+
+# PCA
+library(factoextra)
+library(FactoMineR)
+
+
+## Combining plots
+library(ggpubr)
+
+
+## Image package
+library(magick)
+
+## Pairwise comparisons
+library(emmeans)
+
+# Metabolomics Pipeline source files
+files.sources = list.files("../R")
+sapply(paste0("../R/",files.sources), source)
+
+```
+
+
+## Sub-pathway Analysis
+
+Before diving in, lets load the matrices that we will need for the Sub-pathway Analysis
+section. The two matrices we will need are:
+
+1. Analysis data 
+
+2. Chemical annotation data (chem_data): Contains all of the information about the
+metabolites, including which sub-pathway and super-pathway they belong to. 
+
+```{r load-dataPrimary analysis}
+# 1. Path to Metabolon .xlsx file.
+met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+
+# 2. Analysis Data
+analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
+
+
+# 3. Read chemical annotations
+chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
+```
+
+In the chemical annotation file, we will see that each metabolite is within a 
+sub-pathway, and each sub-pathway is within a super-pathway. There are several 
+metabolites within each sub-pathways and several sub-pathways within each 
+Super-pathway. We can utilize an Analysis of variance (ANOVA) model to test for 
+a difference in peak intensities between the treatment groups at the metabolite 
+level, which is already part of the Metabolon analysis. However, since multiple 
+metabolites are within a sub-pathway, it is challenging to test if the treatment 
+affected the peak data at the sub-pathway level. For this, we will be utilizing 
+a combined fisher test. The combined Fisher test combines the p-values for each 
+metabolite within a sub-pathway to test the same hypothesis at the sub-pathway 
+level.
+
+To test our hypothesis at the sub-pathway level, we first have to form our 
+hypothesis at the metabolite level. For each metabolite, we test three models.
+
+1.) Interaction: $log Peak = Treatment + block + Treatment*block$
+
+2.) Parallel: $log Peak = Treatment + block$
+
+3.) Single: $log Peak =  Treatment$
+
+For the interaction model, we are focusing only on the interaction term 
+"Treatment*block" for this to test if there is a  significant interaction between our 
+treatment and the block variable. The parallel model is testing if the block
+variable is explaining a significant amount of the metabolite variance,
+and the treatment model is testing if the treatment explains a 
+significant proportion of the variance for each metabolite.
+
+After running these three models for each metabolite, we will test at the 
+sub-pathway level by combining the p-values for each metabolite within the sub-pathway
+for each model. We compute a chi-squared statistic to test at the 
+sub-pathway level. For each model, we compute the chi-squared statistic by:
+
+$$
+\tilde{X} = -2\sum_{i=1}^k ln(p_i)
+$$
+where $k$ is the number of metabablites in the sub-pathway. We can get a p-value
+from $P(X \geq\tilde{X})$, knowing that $\tilde{X}\sim \chi^2_{2k}$. 
+
+#### Assumptions 
+Since we are first testing each metabolite utilizing ANOVA, we make the following
+assumptions for each metabolite,
+
+* *Independence:* Each observation is independent of all other observations. 
+Therefore, if you have collected multiple samples from the same subject then this
+assumption may be violated. 
+
+* *Normality:* The metabolite log-scaled intensities follow a normal distribution 
+within each of the treatment groups. 
+
+* *Homoscedasticity:* Equal variance between treatment groups. 
+
+In addition to the assumptions in the ANOVA models at the metabolite level, the
+Fisher's Combined probability places an independence assumptions for each metabolite
+being tested within the sub-pathway. For example, when we test the interaction
+model at the sub-pathway level, the p-values for interaction test are independent 
+for each metabolite within the sub-pathway. 
+
+### Combined Fisher Analysis
+Now that we have our analysis data, we test the metabolomic data at the sub-pathway
+level utilizing the `pathway_analysis` function defined in the R script. This 
+function takes the following arguments:
+
+* Ananlysis data (analysis_data): This is a a data frame created in the "Analysis
+data creation" module which combines the metadata and the peak data into one 
+analysis data set. 
+
+* Chemical Annotation data (chem_data) provided by Metabolon.
+
+* Treatment variable (treat_var): This is the name of the variable in the 
+analysis data that is the main variable of interest. 
+
+* Block Variable (block_var): Is the name of the blocking variable in the dataset.
+If the the experimental design does not include a blocking variable, then the 
+value of block_var=NULL.
+
+*Note:* Metabolites with a large number of missing values may have unreliable results
+since the missing values were imputed with the minimum of the non-missing values
+of the metabolite. 
+
+To run this analysis, we utilize the following steps. 
+
+1. Run the subpathway_analysis function. 
+
+2. Save the pathway analysis results to the "Data/Results" folder with the name
+"NonStratified_Full_pathway_results"
+
+```{r run ancova}
+# 1. Run the ancova function
+path_dat <- subpathway_analysis(analysis_data,
+                            chem_data = chem_data,
+                                  block_var = "TIME1",
+                                  treat_var = "GROUP_NAME")
+
+
+
+
+# 2. Save results
+write.csv(path_dat,file = "../Data/Results/NonStratified_Full_ancova_results.csv", row.names = F)
+```
+
+
+
+### Stratified analysis
+
+We may notice that we need to stratify our analysis if we believe the effects of
+the model are different between the levels of the stratified variable. For 
+example, we may notice that sex is a dominant source of variation in the metabolite
+data, and wemay want to look at males and females separately. One way to do this is to subset
+the data prior to running the  subpathway_analysis function.
+
+In the following chunk you can specify a variable to stratify by. For each level
+of the stratified variable, we:
+
+
+1.) Subset the analysis data based on the stratified variable. 
+
+2.) Run the subpathay_analysis function with the subsetted data.
+
+3.) Save the stratified data in "Data/Results" as "analysis_data_{Val}" where
+{Val} is the value of the stratified variable. For example, if we stratified by sex 
+then the data will be saved as "analysis_data_female for the females. 
+
+4.) Save the results in "Data/Results" and the file will be saved as "Statified_{Val}_subpathway_results.csv"
+where {Val} is the value of the variable we stratified by. For example, if we stratified by sex, 
+then the results for females would be saved as "Stratified_female_subpathway_results.csv"
+
+*Note:* Metabolites with a large number of missing values may have unreliable results
+since the missing values were imputed with the minimum of the non-missing values
+of the metabolite. 
+
+```{r stratifed analysis}
+# 1. Name of the variable to stratify by.
+stratified_var = "Gender"
+
+
+# 3. Find unique values of this variable
+uni_vals <- unique(analysis_data[,stratified_var])
+
+
+# For each value perform the four steps listed above.
+for(i in uni_vals){
+  
+  # 1. Subset analysis data
+  strat_data = analysis_data[analysis_data[,stratified_var]==i,]
+  
+  
+  # 2. Run ancova function on the subsetted data
+  strat_path_results <- subpathway_analysis(strat_data,
+                                        chem_data = chem_data,
+                                  block_var = "TIME1",
+                                  treat_var = "GROUP_NAME")
+  
+  # 3 Save stratified data
+  write.csv(strat_data, paste0("../Data/Processed/analysis_data_",i,".csv"), row.names = F)
+  
+  # 4 Save results
+  write.csv(strat_path_results, paste0("../Data/Results/Stratified_",i,"_subpathway_results.csv"), row.names = F)
+  
+  
+}
+
+
+```
+
+
+#### Number of significant subpathways by model type
+
+Once we have the Overall Analysis results, we will have tested all metabolites 
+with an interaction, parallel and Single model. We then obtain a p-values through
+the combined fisher analysis for each sub-pathway. In the next few chunks, we 
+will summarize the results with a few different tables. The first summary will
+show the number of significant sub-pathways for each model type. To do
+this we:
+
+1. List the paths to the results files generated in the previous chunks.
+
+2. Provide a list to the of strata names that correspond to the path files listed
+in step 1. If you did not stratify your results you can call this "Non-Stratified".
+
+Create a for loop that does the following: 
+
+3. Read in the results table from the path defined in step 1. 
+
+4. Structure the names of the levels for the model types in the table. 
+
+5. Create the table data used to count the number of significant sub-pathways for each 
+model type. 
+
+6. Create the table by counting the number of sub-pathways for each model type. 
+
+7. Display the table
+
+8. Save the table in "Outputs/Tables" folder under the file name "NumberOfSigPathwaysByModelType_{{strata}}".
+You may want to change this name to reflect the strata you are summarizing. 
+
+*Note:* If you only tested the sub-pathways for the Single model then only the
+single model is displayed. 
+
+*Note:* The model type for each sub-pathway is determined hiearchically. For instance, 
+if a sub-pathway shows a significant p-value for the interaction model and the parallel
+model, then the sub-pathway model type is only "interaction". 
+
+```{r table of significant subpathways, results='asis'}
+# 1. Read in Results from the analysis step. 
+results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
+                  "../Data/Results/Stratified_Female_subpathway_results.csv")
+
+
+# 2. Define the names of the strata
+strata <- c("Male", "Female")
+
+
+for (i in 1:length(strata)) {
+  
+    # 3. Read in results data
+    path_data <- read.csv(results_path[i], check.names = F)
+    
+    
+    # 4. Structure levels
+    if(sum(grepl("interaction",names(path_data)))==0){
+      levs <- c("Single","None")
+    }
+    if(!sum(grepl("interaction",names(path_data)))==0){
+      levs =  c("Interaction", "Parallel", "Single", "None")
+    }
+    
+    
+    # 5. Create table data
+    table_data <- path_data %>%
+      mutate(model = factor(model, levels = levs)) %>%
+      select(sub_pathway, ends_with("_fisher"), model) %>%
+      distinct()
+    
+    
+    # 6. Create table
+     sig_subPaths <- count(table_data, model) %>%
+                        arrange((model)) %>%
+                        flextable() %>%
+                       set_header_labels(model = "Model Type", n="Count")%>%
+                       theme_vanilla() %>%
+                       set_table_properties(layout = "autofit") %>%
+                      set_caption(caption = paste0("Sigificant Pathways by Model (",
+                                                   strata[i],")."))
+     
+     
+     # 7. Display table
+     cat(knitr::knit_print(sig_subPaths))
+    
+     
+     # 8. Save table
+     save_as_docx(sig_subPaths,path=paste0(
+       "../Outputs/Tables/NumberOfSigPathwaysByModelType_",strata[i],".docx"))
+}     
+```
+
+#### Proportion of significant subpathways within super pathways:
+
+Additionally, we can summarize the results by looking at the number of significant
+sub-pathways within a super-pathway for each model type. This summary is done by:
+
+1. List the paths to the results files generated in the previous chunks.
+
+2. Provide a list to the of strata names that correspond to the path files listed
+in step 1. If you did not stratify your results you can call this "Non-Stratified".
+
+Create a for loop that does the following: 
+
+3. Read the results for the given strata.
+
+4. Structure the levels for the model types based on the types of model ran. 
+
+5. Create the table data that has the combined fisher p-values for all models and
+the model type. 
+
+4. Formulating the superpath data by:
+  
+  - Filtering all subpathways that did not have a significant subpathway. 
+  
+  - Join the results with the chemical annoation data to group by the superpathway. 
+  
+  - Summarize the percent of subpathways within superpathways that are significant. 
+  
+5. Display table 
+
+6. Save table in the "Outputs/Tables" folder under the name "SigSuperPathwayPecentages_{{strata}}"
+
+
+*Note:* The model type for each sub-pathway is determined hierarchically. For instance, 
+if a sub-pathway shows a significant p-value for the interaction model and the parallel
+model, then the sub-pathway model type is only "interaction". 
+```{r proportion in super pathways, results='asis'}
+# 1. Read in Results from the analysis step. 
+results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
+                  "../Data/Results/Stratified_Female_subpathway_results.csv")
+
+
+# 2. Define the names of the strata
+strata <- c("Male", "Female")
+
+
+for(i in 1:length(strata)){
+  
+  # 3 Read results for the strata
+  path_data <- read.csv(results_path[i], check.names = F)
+  
+  
+  # 4. Structure levels
+    if(sum(grepl("interaction",names(path_data)))==0){
+      levs <- c("Single","None")
+      
+      cases <- expression( case_when(model == "Single" ~ single_fisher))
+    }
+    if(!sum(grepl("interaction",names(path_data)))==0){
+      levs =  c("Interaction", "Parallel", "Single", "None")
+      
+      cases <- expression( case_when(model == "Interaction" ~ interaction_fisher,
+                                          model == "Parallel" ~ parallel_fisher,
+                                          model == "Single" ~ single_fisher))
+    }
+  
+  
+   # 5. Create table data
+  table_data <- path_data %>%
+    mutate(model = factor(model, levels = levs)) %>%
+    select(sub_pathway, ends_with("_fisher"), model) %>%
+    distinct()
+  
+  
+    # 6. Formulate the Super-pathway results table.
+  superPath <- table_data %>% 
+                  filter(model != "None") %>%
+                  mutate(pval = eval(cases)) %>%
+                  select(sub_pathway, pval) %>%
+                  right_join(chem_data %>% select(SUPER_PATHWAY, SUB_PATHWAY) %>% distinct(),
+                            by = c("sub_pathway" = "SUB_PATHWAY"))  %>%
+                  filter(!is.na(sub_pathway)) %>%
+                  mutate(sig = ifelse(is.na(pval), 0, 1)) %>%
+                  group_by(SUPER_PATHWAY) %>%
+                  summarise(percent_significant = round(mean(sig) * 100, 2),
+                            number_significant = sum(sig),
+                            pathway_count = n()) %>%
+                  ungroup() %>% arrange(-percent_significant) %>%
+                  transmute(SUPER_PATHWAY, percent_significant = paste0(number_significant, " / ", pathway_count, 
+                                                                        " (", percent_significant, "%)")) %>%
+                  flextable() %>%
+                  set_header_labels(SUPER_PATHWAY="Super Pathway", percent_significant = "Percent Significant") %>%
+                  set_table_properties(layout = "autofit") %>%
+                  set_caption(caption = paste0("Proportion of significant subpathways within super-pathways (",
+                                                   strata[i],").")) %>%
+                  theme_vanilla()
+  
+  
+  # 7. Display table
+  cat(knitr::knit_print(superPath))
+  
+  
+  # 8. Save table
+  save_as_docx(superPath,path = paste0("../Outputs/Tables/SigSuperPathwayPecentages_",strata[i],".docx"))
+}     
+```
+
+#### List of subpathways that were found to have significant Fisher method p-values.
+
+The next table we create will show all of the significant sub-pathways and their
+model type. We do this by. 
+
+1. List the paths to the results files generated in the previous chunks.
+
+2. Provide a list to the of strata names that correspond to the path files listed
+in step 1. If you did not stratify your results you can call this "Non-Stratified".
+
+Create a for-loop that does the following:
+
+3. Reads in the results from the path listed
+
+4. Structure model type levels.
+
+5. Create pathway data that contains the sub-pathway, model type and the p-value 
+for the model type with the the pathways that were non-significant filtered out. 
+
+6. Format table
+
+7. Display table
+
+8. Save table in the "Outputs/Tables" folder with the name "SigSubpathwayTable_{{strata}}"
+
+```{r table of counts for each subpathway, results='asis'}
+# 1. Read in Results from the analysis step. 
+results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
+                  "../Data/Results/Stratified_Female_subpathway_results.csv")
+
+
+# 2. Define the names of the strata
+strata <- c("Male", "Female")
+
+
+# Create for loop
+for (i in 1:length(strata)){
+  
+  
+  # 3 Read Path data
+  path_data <- read.csv(results_path[i])
+  
+  
+  # 4. Structure levels
+  if(sum(grepl("interaction",names(path_data)))==0){
+    levs <- c("Single","None")
+    
+    cases <- expression( case_when(model == "Single" ~ single_fisher))
+  }
+  if(!sum(grepl("interaction",names(path_data)))==0){
+    levs =  c("Interaction", "Parallel", "Single", "None")
+    
+    cases <- expression( case_when(model == "Interaction" ~ interaction_fisher,
+                                        model == "Parallel" ~ parallel_fisher,
+                                        model == "Single" ~ single_fisher))
+  }
+
+  
+
+  # 5. Create pathway table
+  pathway_table <- path_data %>%
+    mutate(model = factor(model, levels = levs)) %>%
+    select(sub_pathway, ends_with("_fisher"), model) %>%
+    distinct() %>% 
+    filter(model != "None") %>%
+    mutate(pval = eval(cases)) %>%
+    select(sub_pathway, model, pval) %>%
+    arrange(model, pval)
+  
+  
+  # 6. Format table
+  path_tab = pathway_table %>%
+    flextable() %>%
+    set_header_labels(sub_pathway="Subpathway", model = "Model Type", pval = "P-value") %>%
+    set_table_properties(layout = "autofit") %>%
+    colformat_double(digits = 3) %>%
+    theme_vanilla() %>%
+    set_caption(caption = paste0("Significant Subpathways (",
+                                                   strata[i],")."))
+  
+  
+  # 7. Display table
+  cat(knitr::knit_print(path_tab))
+  
+  
+  # Save table
+  save_as_docx(path = paste0("../Outputs/Tables/SigSubpathwayTable_",strata[i],".docx"))
+}
+```
+
+
+#### Metabolites within significant subpathways
+
+Now we will looks at the metabolites within significant sub-pathways, and the p-values
+for the significant model. In this section we will look at all of the metabolites
+within the top two sub-pathways based on p-values. To do this we will:
+
+1. List the paths to the results files generated from the sub-pathway analysis.
+
+2. Provide a list to the of strata names that correspond to the path files listed
+in step 1. If you did not stratify your results you can call this "Non-Stratified".
+
+3. Name the model type that we are interested in looking at. The options are
+"Interaction", "Parallel" or "Single". This is case sensitive and must match the 
+options. 
+
+Create a for-loop that does the following:
+
+
+4. Read in the sub-pathways analysis results for the given strata. 
+
+5. Structure the levels for the model type in the results. 
+
+6. Create the data used for the tables which includes sub-pathway, the fisher p-values,
+and the model type for the sub-pathway. 
+
+7. Create the top sub-pathways data which will group by model type and order by 
+the sub-pathways based on p-value. In this code we are only going to focus on the
+top two sub-pathways. If you want to focus on more sub-pathways you can edit the
+"slice" function. 
+
+8. Create a list of the top two sub-pathways for the specified model type. 
+
+Create a second for loop which:
+
+9. Create the table which shows all the metabolite p-values for the model type. 
+
+10. Diplay the table 
+
+11. Save the table in "Outputs/Tables" with the file name 
+"Metabolite_model_pvalues_{{pathway}}_{{strata}}"
+
+
+```{r table of counts for each subpathway top five, results='asis'}
+# 1. Read in Results from the analysis step. 
+results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
+                  "../Data/Results/Stratified_Female_subpathway_results.csv")
+
+
+# 2. Define the names of the strata
+strata <- c("Male", "Female")
+
+
+# 3 Model type (Interaction, Parallel, Single)
+mod = "Interaction"
+
+
+# Create for loop
+for(i in 1:length(strata)){
+  # 4. Read in table data and results from overall analysis. 
+  path_data <- read.csv(results_path[i], check.names = F)
+
+
+ 
+  # 5. Structure levels
+  if(sum(grepl("interaction",names(path_data)))==0){
+    levs <- c("Single","None")
+    
+    cases <- expression( case_when(model == "Single" ~ single_fisher))
+  }
+  if(!sum(grepl("interaction",names(path_data)))==0){
+    levs =  c("Interaction", "Parallel", "Single", "None")
+    
+    cases <- expression( case_when(model == "Interaction" ~ interaction_fisher,
+                                        model == "Parallel" ~ parallel_fisher,
+                                        model == "Single" ~ single_fisher))
+  }
+
+
+   # 6. Create table data
+  table_data <- path_data %>%
+    mutate(model = factor(model, levels = levs)) %>%
+    select(sub_pathway, ends_with("_fisher"), model) %>%
+    distinct()
+
+
+
+  # 7. Create top pathways table 
+  top_pathway_table <- table_data %>% 
+    filter(model != "None") %>%
+    mutate(pval = eval(cases)) %>%
+    select(sub_pathway, model, pval) %>%
+    arrange(model, pval) %>%
+    filter(model == mod) %>%
+    group_by(model) %>% slice(1:2) %>% ungroup() %>%
+    left_join(select(path_data, sub_pathway, chem_name, ends_with("_pval")),
+              by = "sub_pathway") %>%
+    distinct()
+
+
+  # 8. list the top two subpathways. 
+  pathways <- unique(top_pathway_table$sub_pathway)
+  
+    # Create pathways for look
+    for(j in 1:length(pathways)){
+      
+      
+      # 9. Create table for specific model type
+      top_paths_table <- top_pathway_table %>% 
+            filter(sub_pathway == pathways[j]) %>%
+            select(chem_name, all_of(paste0(tolower(mod),"_pval"))) %>%
+            arrange(all_of(paste0(tolower(mod),"p_val"))) %>%
+            flextable() %>%
+            set_header_labels(chem_name="Metabolite") %>%
+            set_table_properties(layout = "autofit") %>%
+            add_header_row(values = c(pathways[j]),colwidths = 2) %>%
+            theme_vanilla() %>%
+            align(i=1,align = "center", part = "header") %>%
+            colformat_double(digits = 3) %>%
+            set_caption(caption = paste0("Metabolites Within Pathways of Significant ",mod, " Model(",
+                                                   strata[i],")."))
+    
+      # 10. Display table 
+      cat(knitr::knit_print(top_paths_table))
+      
+      
+      # 11. Save table 
+    save_as_docx(top_pathway_table, 
+                 path = paste0("../Outputs/Tables/Metabolite_model_pvalues_",gsub("[^A-Za-z0-9 ]","",pathways[j]),"_",strata[i],".docx"))
+      
+    }
+}  
+```
+
