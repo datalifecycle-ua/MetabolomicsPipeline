@@ -26,11 +26,11 @@ library(table1)
 library(flextable)
 library(reshape2)
 
+
 # Heat Map
 library(pheatmap)
 library(RColorBrewer)
 library(rstatix)
-
 
 
 # PCA
@@ -41,34 +41,30 @@ library(FactoMineR)
 ## Combining plots
 library(ggpubr)
 
+
 ## Image package
 library(magick)
+
+## Pairwise comparisons
+library(emmeans)
+
 # Source R scripts 
 source("../R/Metabolomics_R_code.R")
 ```
 
 ## Introduction
-The purpose of this pipeline is to provide additional analysis to complement the
-analysis by Metabolon, where they identified biochemicals (metabolites) that 
-differed significantly across experimental groups. In the Metabolon data, each 
-"sub-pathway" classifies a collection of metabolites, and each "super-pathway" 
-classifies a collection of sub-pathways. Hypothesis testing at the sub-pathway 
-level can provide valuable insight into how the experimental conditions affect 
-metabolic profiles.
-This pipeline walks through how to perform hypothesis testing on the metabolomics
-data at the sub-pathway level and provides useful tables and figures to aid our 
-understanding. The below figure highlights the steps we will be taking, which 
-highlight the main sections of this pipeline by: 
+The purpose of this pipeline is to provide a set of additional analyses to 
+complement the analysis done by Metabolon. These additional analyisis are broken
+down into four main sections. 
 
-1. Normalization and Standardization
+1. Data Exploration
 
-2. Data Exploration
+2. Sub-pathway Analysis
 
-3. Subpathway Analysis
+3. Pairwise comparisons
 
-4. Pairwise comparisons
+4. Plots
 
-5. Plots
 
 ```{r workflow}
 img = image_read("../Workflow.png")
@@ -104,110 +100,6 @@ tables generated from this pipeline. Additionally, you can run this pipeline as
 a report and save it as a .pdf or .html. The report saves to the "Outputs/Reports"
 folder.
 
-
-
-## Data loading
-
-We will use the Sample Meta Data, Peak Area Data, and the chemical annotation 
-provided in the Data Tables Excel file from Metabolon for the analysis. We can 
-also add Sample Meta Data not captured in the Metabolon Excel file. Therefore, 
-we will need links to the following files
-
-1.  Metabolon Excel file
-2.  Additional sample meta data (with a unique ID for each sample
-    allowing us to link it to each observation)
-    
-If there are no additional variables, then you can set the additional_vars
-value to NULL.
-
-```{r data links}
-# 1. Metabolome excel file 
-met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
-
-
-# 2. Path to additional variables. Please make this NULL if there are not any additional
-# Files
-additional_vars = "../Data/Metabolon/AdditionalVars.xlsx"
-```
-
-Once you provide a path to the data, we can load the data into R. This chunk 
-will access the Metabolon Excel file specified above and pull out three data sets
-within the Excel file. Below is a table that shows the data that we pull from the
-Excel file and the tab within the Metabolon Excel sheet.
-
-| Data Accessed       | Tab                 |
-|:-------------------:|:-------------------:|
-| Raw Peak            | Peak Area Data      |
-| Meta Data           | Sample Meta Data    |
-| Chemical Annotation | Chemical Annotation |
-
-If the names of the tabs containing this data are different in your Excel file, 
-there are two solutions. You can change the name of the tabs to match those 
-listed above, or you can replace the "sheet" variable in the "read.xlsx" 
-function to match the naming convention within your Metabomon Excell workbook.
-
-In the following chunk we are:
-
-1. Loading the peak data from the Metabolon .xlsx file. 
-
-2. Load the meta data from the Metabolon .xlsx file. If any additional variables
-are provided in the links above, these variables will be added to the meta data. 
-
-3. Loading in the chemical annotation data. 
-```{r load data}
-# 1. load peak data Peak area data
-peak_data <- read.xlsx(met_excel,
-                sheet = "Peak Area Data")
-
-
-# 2. Load metadata with no additional variables
-if(is.null(additional_vars)){
-    meta_data <-  read.xlsx(met_excel,
-                             sheet = "Sample Meta Data")
-}   
-
-
-# Load meta_data with additional variables
-if(!is.null(additional_vars)){
-    meta_data <-  read.xlsx(met_excel,
-                             sheet = "Sample Meta Data")
-
-    additional <- read.xlsx(additional_vars)
-    
-    meta_data <- merge(additional
-                       ,meta_data, by="PARENT_SAMPLE_NAME")
-}
-
-
-# 3. Chemical names key
-chem_data <- read.xlsx(met_excel,
-                       sheet = "Chemical Annotation")
-```
-
-
-After reading the data, we want to inspect the loaded data to ensure everything 
-is stored properly. In the following chunk we will view the first 6 rows of the 
-metadata, chemical annotation data, and the first 6 row and ten columns of the 
-peak data. Therefore, the steps we are taking are,
-
-1. First 6 rows of metadata
-
-2. First 6 rows of the chemical annotation data
-
-3. First 6 rows and 10 columns of the peak data. 
-
-```{r check data frames}
-# 1. First 6 rows of meta data
-head(meta_data) 
-
-
-# 2. First 6 rows of the chemical annotation data
-head(chem_data)
-
-
-# First 6 rows and 10 columns of the peak data. 
-head(peak_data[,1:10])
-```
 
 ## Normalization and Standardization
 In its raw form, the peak data contain counts for each metabolite in each sample.
@@ -951,8 +843,6 @@ path_dat <- subpathway_analysis(analysis_data,
 
 # 2. Save results
 write.csv(path_dat,file = "../Data/Results/NonStratified_Full_ancova_results.csv", row.names = F)
-
-
 ```
 
 
@@ -1218,681 +1108,356 @@ for(i in 1:length(strata)){
 
 #### List of subpathways that were found to have significant Fisher method p-values.
 
-We may also be interested in obtaining a table which contains all of the sub-pathways
-that had a significant model regardless of model type. To do this we create a table
-in the following steps. 
+The next table we create will show all of the significant sub-pathways and their
+model type. We do this by. 
 
-1. Read in the table data
+1. List the paths to the results files generated in the previous chunks.
 
-2. Structure model type levels.
+2. Provide a list to the of strata names that correspond to the path files listed
+in step 1. If you did not stratify your results you can call this "Non-Stratified".
 
-3. Create pathway data that contains the sub-pathway, model type and the p-value 
+Create a for-loop that does the following:
+
+3. Reads in the results from the path listed
+
+4. Structure model type levels.
+
+5. Create pathway data that contains the sub-pathway, model type and the p-value 
 for the model type with the the pathways that were non-significant filtered out. 
 
-4. Format table
+6. Format table
 
-5. Display table
+7. Display table
 
-6. Save table in the "Outputs/Tables" folder with the name "SigSubpathwayTable"
+8. Save table in the "Outputs/Tables" folder with the name "SigSubpathwayTable_{{strata}}"
 
 ```{r table of counts for each subpathway}
-# 1. Read in table data
-table_data <- read.csv("../Outputs/Tables/Table_data.csv")
+# 1. Read in Results from the analysis step. 
+results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
+                  "../Data/Results/Stratified_Female_subpathway_results.csv")
 
 
-# 2. Structure model type levels 
-if(sum(grepl("interaction",names(table_data))==0)){
-  cases <- expression( case_when(model == "Single" ~ single_fisher))
-}
+# 2. Define the names of the strata
+strata <- c("Male", "Female")
 
-if(sum(grepl("interaction",names(table_data)))>0){
-  cases <- expression( case_when(model == "Interaction" ~ interaction_fisher,
+
+# Create for loop
+for (i in 1:length(strata)){
+  
+  
+  # 3 Read Path data
+  path_data <- read.csv(results_path[i])
+  
+  
+  # 4. Structure levels
+  if(sum(grepl("interaction",names(path_data)))==0){
+    levs <- c("Single","None")
+    
+    cases <- expression( case_when(model == "Single" ~ single_fisher))
+  }
+  if(!sum(grepl("interaction",names(path_data)))==0){
+    levs =  c("Interaction", "Parallel", "Single", "None")
+    
+    cases <- expression( case_when(model == "Interaction" ~ interaction_fisher,
                                         model == "Parallel" ~ parallel_fisher,
                                         model == "Single" ~ single_fisher))
+  }
+
+  
+
+  # 5. Create pathway table
+  pathway_table <- path_data %>%
+    mutate(model = factor(model, levels = levs)) %>%
+    select(sub_pathway, ends_with("_fisher"), model) %>%
+    distinct() %>% 
+    filter(model != "None") %>%
+    mutate(pval = eval(cases)) %>%
+    select(sub_pathway, model, pval) %>%
+    arrange(model, pval)
+  
+  
+  # 6. Format table
+  path_tab = pathway_table %>%
+    flextable() %>%
+    set_header_labels(sub_pathway="Subpathway", model = "Model Type", pval = "P-value") %>%
+    set_table_properties(layout = "autofit") %>%
+    colformat_double(digits = 3) %>%
+    theme_vanilla() %>%
+    set_caption(caption = paste0("Significant Subpathways (",
+                                                   strata[i],")."))
+  
+  
+  # 7. Display table
+  print(path_tab)
+  
+  
+  # Save table
+  save_as_docx(path = paste0("../Outputs/Tables/SigSubpathwayTable_",strata[i],".docx"))
 }
-
-
-# 3. Create pathway table
-pathway_table <- table_data %>% 
-  filter(model != "None") %>%
-  mutate(pval = eval(cases)) %>%
-  select(sub_pathway, model, pval) %>%
-  arrange(model, pval)
-
-
-# 5. Format table
-path_tab = pathway_table %>%
-  flextable() %>%
-  set_header_labels(sub_pathway="Subpathway", model = "Model Type", pval = "P-value") %>%
-  set_table_properties(layout = "autofit") %>%
-  colformat_double(digits = 3) %>%
-  theme_vanilla()
-
-
-# Display table
-path_tab
-
-
-# Save table
-save_as_docx(path = "../Outputs/Tables/SigSubpathwayTable.docx")
 ```
 
-For the subpathways with a significant model, it can also be useful to look at 
-the results for the significant model for each metabolite within the significant
-subpathway. In the following chunk we look at the metabolites within the top 2 
-most significant sub-pathways for the interaction model and the parallel model. 
-In the following chunk we:
 
-1. Read in the table data and results from the overall analysis.
+#### Metabolites within significant subpathways
 
-2. Structure model type levels.
+Now we will looks at the metabolites within significant sub-pathways, and the p-values
+for the significant model. In this section we will look at all of the metabolites
+within the top two sub-pathways based on p-values. To do this we will:
+
+1. List the paths to the results files generated from the sub-pathway analysis.
+
+2. Provide a list to the of strata names that correspond to the path files listed
+in step 1. If you did not stratify your results you can call this "Non-Stratified".
+
+3. Name the model type that we are interested in looking at. The options are
+"Interaction", "Parallel" or "Single". This is case sensitive and must match the 
+options. 
+
+Create a for-loop that does the following:
 
 
-3. Create the "top_pathway_table" which filters the table data to only focus on
-metabolites with a significant model. Orders the data by model type and pvalue and then
-selects the top five sub-pathways. Finally, we join this with the results from the
-overall model to add metabolites and p-values for each of the top five significant
-sub-pathways. 
+4. Read in the sub-pathways analysis results for the given strata. 
 
-4. For the top two sub-pathways with a significant interaction and parallel model
-we do the following steps:
+5. Structure the levels for the model type in the results. 
 
-  - Select the top two sub-pathways. If you want  specific sub-pathways you can
-  provide a list of the interested sub-pathways by changing inter_paths and par_paths to 
-  c("subpathway_1", "subpathway_2", ...).
-  
-  - Filter the "top_pathway_table" on each of the selected sub-pathways. 
-  
-  - Display the metabolite name and p-value for the model
-  
-  - Each table will be displayed and saved to the "Outputs/Tables" folder under 
-  the name metabolitesInTop{{model type}}Pathway.
-  
+6. Create the data used for the tables which includes sub-pathway, the fisher p-values,
+and the model type for the sub-pathway. 
+
+7. Create the top sub-pathways data which will group by model type and order by 
+the sub-pathways based on p-value. In this code we are only going to focus on the
+top two sub-pathways. If you want to focus on more sub-pathways you can edit the
+"slice" function. 
+
+8. Create a list of the top two sub-pathways for the specified model type. 
+
+Create a second for loop which:
+
+9. Create the table which shows all the metabolite p-values for the model type. 
+
+10. Diplay the table 
+
+11. Save the table in "Outputs/Tables" with the file name 
+"Metabolite_model_pvalues_{{pathway}}_{{strata}}"
+
+
 ```{r table of counts for each subpathway top five}
-# 1. Read in table data and results from overall analysis. 
-table_data <- read.csv("../Outputs/Tables/Table_data.csv")
+# 1. Read in Results from the analysis step. 
+results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
+                  "../Data/Results/Stratified_Female_subpathway_results.csv")
 
-path_data <- read.csv("../Data/Results/Stratified_Male_ancova_results.csv", check.names = F)
+
+# 2. Define the names of the strata
+strata <- c("Male", "Female")
 
 
-# 2. Structure model type levels 
-if(sum(grepl("interaction",names(table_data))==0)){
-  cases <- expression( case_when(model == "Single" ~ single_fisher))
-}
+# 3 Model type (Interaction, Parallel, Single)
+mod = "Interaction"
 
-if(sum(grepl("interaction",names(table_data)))>0){
-  cases <- expression( case_when(model == "Interaction" ~ interaction_fisher,
+
+# Create for loop
+for(i in 1:length(strata)){
+  # 4. Read in table data and results from overall analysis. 
+  path_data <- read.csv(results_path[i], check.names = F)
+
+
+ 
+  # 5. Structure levels
+  if(sum(grepl("interaction",names(path_data)))==0){
+    levs <- c("Single","None")
+    
+    cases <- expression( case_when(model == "Single" ~ single_fisher))
+  }
+  if(!sum(grepl("interaction",names(path_data)))==0){
+    levs =  c("Interaction", "Parallel", "Single", "None")
+    
+    cases <- expression( case_when(model == "Interaction" ~ interaction_fisher,
                                         model == "Parallel" ~ parallel_fisher,
                                         model == "Single" ~ single_fisher))
-}
-
-# 3. Create top pathways table
-top_pathway_table <- table_data %>% 
-  filter(model != "None") %>%
-  mutate(pval = eval(cases)) %>%
-  select(sub_pathway, model, pval) %>%
-  arrange(model, pval) %>%
-  group_by(model) %>% slice(1:5) %>% ungroup() %>%
-  left_join(select(path_data, sub_pathway, chem_name, ends_with("_pval")),
-            by = "sub_pathway") %>%
-  distinct()
+  }
 
 
-# 4. Create and save tables
-
-# Get top two pathways
-inter_paths = unique(top_pathway_table[top_pathway_table$model=="Interaction",]$sub_pathway)[1:2]
-
-# Top pathway (Display and Save)
-top_pathway_table %>% 
-  filter(sub_pathway == inter_paths[1]) %>%
-  select(chem_name, interaction_pval) %>%
-  arrange(interaction_pval) %>%
-  flextable() %>%
-  set_header_labels(chem_name="Metabolite", interaction_pval="Interaction P-Value") %>%
-  set_table_properties(layout = "autofit") %>%
-  add_header_row(values = c(inter_paths[1]),colwidths = 2) %>%
-  theme_vanilla() %>%
-  align(i=1,align = "center", part = "header") %>%
-  colformat_double(digits = 3)
-
-top_pathway_table %>% 
-  filter(sub_pathway == inter_paths[1]) %>%
-  select(chem_name, interaction_pval) %>%
-  arrange(interaction_pval) %>%
-  flextable() %>%
-  set_header_labels(chem_name="Metabolite", interaction_pval="Interaction P-Value") %>%
-  set_table_properties(layout = "autofit") %>%
-  add_header_row(values = c(inter_paths[1]),colwidths = 2) %>%
-  theme_vanilla() %>%
-  align(i=1,align = "center", part = "header") %>%
-  colformat_double(digits = 3) %>%
-  save_as_docx(path = "../Outputs/Tables/metabolitesInTop1InteractionPathway.docx")
-
-
-# Second Pathway
-top_pathway_table %>% 
-  filter(sub_pathway == inter_paths[2]) %>%
-  select(chem_name, interaction_pval) %>%
-  arrange(interaction_pval) %>%
-  flextable() %>%
-  set_header_labels(chem_name="Metabolite", interaction_pval="Interaction P-Value") %>%
-  set_table_properties(layout = "autofit") %>%
-  add_header_row(values = c(inter_paths[2]),colwidths = 2) %>%
-  theme_vanilla() %>%
-  align(i=1,align = "center", part = "header") %>%
-  colformat_double(digits = 3)
-
-top_pathway_table %>% 
-  filter(sub_pathway == inter_paths[2]) %>%
-  select(chem_name, interaction_pval) %>%
-  arrange(interaction_pval) %>%
-  flextable() %>%
-  set_header_labels(chem_name="Metabolite", interaction_pval="Interaction P-Value") %>%
-  set_table_properties(layout = "autofit") %>%
-  add_header_row(values = c(inter_paths[1]),colwidths = 2) %>%
-  theme_vanilla() %>%
-  align(i=1,align = "center", part = "header") %>%
-  colformat_double(digits = 3) %>%
-  save_as_docx(path = "../Outputs/Tables/metabolitesInTop2InteractionPathway.docx")
-
-
-# parallel --------- Top 2 paralell
-
-par_paths = unique(top_pathway_table[top_pathway_table$model=="Parallel",]$sub_pathway)[1:2]
-
-# Top 1 Parallel
-top_pathway_table %>% 
-  filter(sub_pathway == par_paths[1]) %>%
-  select(chem_name, parallel_pval) %>%
-  arrange(parallel_pval) %>%
-  flextable() %>%
-  set_header_labels(chem_name="Metabolite", parallel_pval="Parallel P-Value") %>%
-  set_table_properties(layout = "autofit") %>%
-  add_header_row(values = c(par_paths[1]),colwidths = 2) %>%
-  theme_vanilla() %>%
-  align(i=1,align = "center", part = "header") %>%
-  colformat_double(digits = 3)
-
-top_pathway_table %>% 
-  filter(sub_pathway == par_paths[1]) %>%
-  select(chem_name, parallel_pval) %>%
-  arrange(parallel_pval) %>%
-  flextable() %>%
-  set_header_labels(chem_name="Metabolite", interaction_pval="Parallel P-Value") %>%
-  set_table_properties(layout = "autofit") %>%
-  add_header_row(values = c(par_paths[1]),colwidths = 2) %>%
-  theme_vanilla() %>%
-  align(i=1,align = "center", part = "header") %>%
-  colformat_double(digits = 3) %>%
-  save_as_docx(path = "../Outputs/Tables/metabolitesInTop1ParallelPathway.docx")
-
-
-# Top 2 parallel
-
-top_pathway_table %>% 
-  filter(sub_pathway == par_paths[2]) %>%
-  select(chem_name, parallel_pval) %>%
-  arrange(parallel_pval) %>%
-  flextable() %>%
-  set_header_labels(chem_name="Metabolite", parallel_pval="Parallel P-Value") %>%
-  set_table_properties(layout = "autofit") %>%
-  add_header_row(values = c(par_paths[2]),colwidths = 2) %>%
-  theme_vanilla() %>%
-  align(i=1,align = "center", part = "header") %>%
-  colformat_double(digits = 3)
-
-top_pathway_table %>% 
-  filter(sub_pathway == par_paths[2]) %>%
-  select(chem_name, parallel_pval) %>%
-  arrange(parallel_pval) %>%
-  flextable() %>%
-  set_header_labels(chem_name="Metabolite", interaction_pval="Parallel P-Value") %>%
-  set_table_properties(layout = "autofit") %>%
-  add_header_row(values = c(par_paths[2]),colwidths = 2) %>%
-  theme_vanilla() %>%
-  align(i=1,align = "center", part = "header") %>%
-  colformat_double(digits = 3) %>%
-  save_as_docx(path = "../Outputs/Tables/metabolitesInTop2ParallelPathway.docx")
+   # 6. Create table data
+  table_data <- path_data %>%
+    mutate(model = factor(model, levels = levs)) %>%
+    select(sub_pathway, ends_with("_fisher"), model) %>%
+    distinct()
 
 
 
+  # 7. Create top pathways table 
+  top_pathway_table <- table_data %>% 
+    filter(model != "None") %>%
+    mutate(pval = eval(cases)) %>%
+    select(sub_pathway, model, pval) %>%
+    arrange(model, pval) %>%
+    filter(model == mod) %>%
+    group_by(model) %>% slice(1:2) %>% ungroup() %>%
+    left_join(select(path_data, sub_pathway, chem_name, ends_with("_pval")),
+              by = "sub_pathway") %>%
+    distinct()
+
+
+  # 8. list the top two subpathways. 
+  pathways <- unique(top_pathway_table$sub_pathway)
+  
+    # Create pathways for look
+    for(j in 1:length(pathways)){
+      
+      
+      # 9. Create table for specific model type
+      top_paths_table <- top_pathway_table %>% 
+            filter(sub_pathway == pathways[j]) %>%
+            select(chem_name, all_of(paste0(tolower(mod),"_pval"))) %>%
+            arrange(all_of(paste0(tolower(mod),"p_val"))) %>%
+            flextable() %>%
+            set_header_labels(chem_name="Metabolite") %>%
+            set_table_properties(layout = "autofit") %>%
+            add_header_row(values = c(pathways[j]),colwidths = 2) %>%
+            theme_vanilla() %>%
+            align(i=1,align = "center", part = "header") %>%
+            colformat_double(digits = 3) %>%
+            set_caption(caption = paste0("Metabolites Within Pathways of Significant ",mod, " Model(",
+                                                   strata[i],")."))
+    
+      # 10. Display table 
+      print(top_paths_table)
+      
+      
+      # 11. Save table 
+    save_as_docx(top_pathway_table, 
+                 path = paste0("../Outputs/Tables/Metabolite_model_pvalues_",pathways[j],"_",strata[i],".docx"))
+      
+    }
+}  
 ```
-
-
-Finally, we would like to save a csv file with all of the significant sub-pathways.
-
-1. Read in the table data
-
-2. Structure the model levels
-
-3. Filter table only on the significant subpathways
-
-4. Save the file in the "Outputs/Tables" folder under the name "signifiant_subpathways". 
-```{r save significant pathways in csv}
-# 1. Read in the table data
-table_data <- read.csv("../Outputs/Tables/Table_data.csv")
-
-
-# 2. Structure the cases
-if(sum(grepl("interaction",names(table_data))==0)){
-  cases <- expression( case_when(model == "Single" ~ single_fisher))
-}
-
-if(sum(grepl("interaction",names(table_data)))>0){
-  cases <- expression( case_when(model == "Interaction" ~ interaction_fisher,
-                                        model == "Parallel" ~ parallel_fisher,
-                                        model == "Single" ~ single_fisher))
-}
-
-
-# 3. Filter table only on the significant subpathways
-sig_data <- table_data %>%
-  filter(model != "None") %>%
-  mutate(combined_fisher_p_val = eval(cases)) %>%
-  select(sub_pathway, model, combined_fisher_p_val) %>%
-  arrange(sub_pathway)
-
-
-# 4. Save the file
-write.csv(sig_data, file = "../Outputs/Tables/significant_sub_pathways.csv")
-
-```
-
 
 ## Pairwise Compairisons
-
-In the above analysis, we tested the interaction, parallel, and treatment models
-for all sub-pathways. In this step, we tested if the sub-pathways were affected 
-by any of the treatment groups. By first testing for all treatment groups, we can
-preserve the family-wise error rate of 0.05. However, we may be interested in 
-specific pairwise comparisons, and running multiple tests for each comparison of
-interest increases our chances of making a type 1 error. If we subset the data to
-only focus on the subpathways with a significant p-value when testing all 
-treatment groups, then we can help preserve the family-wise error rate at 0.05.
-
-1.) Reading in the data used in the analysis above. You will need to make changes
-to the path to reflect the analysis data you want to use. For example the stratified
-or non stratified analysis data. 
-
-2.) Reading in the results from the analysis above. For example the stratified
-or non stratified results.
-
-3.) Sub-setting the analysis data to only include the sub-pathways that were found 
-to be significant. This first step is to find the significant sub-pathways. By default
-we are first going to look at the sub-pathways that had a significant interaction model. 
-
-**Note:** Our code is currently set up to look at the results withing the male stratum
-from the stratified analyse. You will want to change the file names to reflect the
-names of the files generated from the results and analysis data above.
+At the metabolite level, we can look at the pairwise comparisons for all experimental 
+groups. In the following section we will look at the pairwise comparisons using the
+metabolite_pairwise function defined in the R scripts. We will first read in the 
+analysis data needed for this analysis. Since the column names of the analysis
+data are numeric, we should convert all of the column names to to characters.
 
 ```{r get significant sub pathways}
 # 1. Read in data from the analysis above
-analysis_data <- read.csv("../Data/Processed/analysis_data_Male.csv", check.names = F)
+analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
 
-
-# 2. Read in results from analysis above. 
-path_data <- read.csv("../Data/Results/Stratified_Male_ancova_results.csv", check.names = F)
-
-
-# 3. Filter data on pathways that showed a significant interaction.
-significant_subpathways <- filter(path_data, model == "Interaction", !is.na(interaction_pval))
-
-new_analysis_data <- analysis_data %>%
-  select(PARENT_SAMPLE_NAME, GROUP_NAME, TIME1, Gender, significant_subpathways$chem_name)
-  
+# 2. Make the variable names charactors
+names(analysis_data) <- as.character(names(analysis_data))
 ```
 
+Once we have the analysis data loaded in, we can now look at the pairwise comparisons
+for each of our experimental groups. To do this we will be using the
+metabolite_pairwise function defined in the R scripts. This function will analyze 
+each metabolite individually. For each metabolite, the the metabolite_pairwise function
+will first test if any of the experimental groups explained a significant proportion
+of the variance in the metabolite using an F-test. Since we will be looking at 
+multiple comparisons for the metabolite it is good practice to first look at the
+over-all p-value from the F-test before looking at the pairwise comparisons.
 
-The new analysis data will only include the sub-pathways with a significant 
-interaction model. Now we want to look at all pairwise comparisons of our 
-treatment variable. In the following chuck we are:
+The metabolite_pairwise function then looks at all pairwise comparisons utilizing
+the [emmeans](https://cran.r-project.org/web/packages/emmeans/index.html) package. 
+The metabolite_pairwise function returns a data frame with the metabolite, overall
+p-value, estimated difference in means for all experimental groups, and the p-value
+which test if the difference the groups is significantly different. 
 
-1.) Defining all of the meta data variables to include in the ancova_function. These
-values can stay the same throughout the whole pipeline. 
+The metabolite_pairwise function has three arguments:
 
-2.) Defining all pairwise groups of the treatment variable. This is done with 
-the get_compairisons function in dplyr. To make changes to this code you will need
-to change the variable name within this function.
+* form: This is a character string the resembles the right hand side of a 
+simple linear regression model in R. For example form = "Group1 + Group2". 
 
+* data: The analysis data we will use for the pairwise comparisons. 
 
-For each pair of values, we will add an additional argument to the ancova function
-that will subset the data so that the analysis is only focused on the specified 
-comparison. Within the for loop we are:
+* Metabolites: A list of metabolites that we want to be analyzed. 
 
-3.) Runnning the pairwise analysis. Any changes that are made to the arguments
-of the anocova_function will also need to be made in the for loop. 
+In the next chunk we will stratify the analysis by running the metabolite_pairwise
+function for each stata in our analysis data set. To do this we:
 
-4.) Saving the pairwise results to Data/Results/Pairwise_Compairisons with the
-default file name, "PairwiseCompairison_{var1}_and_{var2} where {var1} and {var2}
-are the names of the values being compared.
+1. Define the variable in the analysis data that we want to stratify our analysis 
+by. 
 
-Given the steps above, you will need to change the variable name in step 2 and
-the variable name inside the for loop in step 3. 
+2. Define the form variable for the metabolite_pairwise function. 
 
+3. Create a list of metabolites that we want to pairwise analysis for. By default,
+we are going to use all metabolites in the analysis data. 
 
-```{r run ancova analysis on significant pathways}
+Create a for look that:
 
-# 1. Define all meta data variables to use in the analysis. 
-meta_analysis_variables <- meta_analysis_variables <- c("PARENT_SAMPLE_NAME",
-                              "GROUP_NAME",
-                              "TIME1",
-                              "Gender")
+4. Filters the analysis_data to focus on a single strata.
 
+5. Run the metabolite_pairwise function for that strata.
 
+6. Save results in the "../Data/Results/Pairwise_Comparisons" folder with the 
+file name "Pairwise_{{strata}}.
 
-# 2. Define all pairwise groups of the treatment variable
-pairs <- new_analysis_data %>%
-  get_comparisons("GROUP_NAME") # Change argument as needed
+```{r run ancova analysis on significant pathways, warning=FALSE}
+# 1. Define the variable in the analysis data that we want to stratify 
+strata_var <- "Gender"
 
 
+# 2. Define the form variable
+form <- "GROUP_NAME*TIME1"
 
 
-# Run for loop for all of the pairwise compairsons
-for (i in 1:length(pairs)){
+# Create a list of metabolites
+analysis_variables <- c("PARENT_SAMPLE_NAME", "GROUP_NAME",
+                                           "TIME1", "Gender")
+metabolites <- names(analysis_data)[!names(analysis_data) %in% analysis_variables ]
+
+stratas <- unique(analysis_data[,strata_var])
+for (i in 1:length(stratas)) {
   
-  # 3. Run pairwise ancova_function
-  pair <- pairs[[i]]
+  # 4. Filter analysis data
+  dat <- analysis_data[analysis_data[,strata_var]==stratas[i],]
   
   
-  pairwise_path_results <- ancova_function(new_analysis_data,
-                                           chem_data = chem_data,
-                                                  meta_analysis_variables = meta_analysis_variables,
-                                                  treatment.only = F,
-                                                  additive_vars=c("GROUP_NAME","TIME1"),
-                                                  interaction_vars =c("GROUP_NAME*TIME1"),
-                                                  treat_var = "GROUP_NAME", 
-                                                  GROUP_NAME %in% pair) # Pairwise comparison 
-                                                                        # Change variable name 
-                                                                        # To a name within the meta data
-  # 4. Save the pairwise comparison.
-  write.csv(pairwise_path_results, paste0("../Data/Results/Pairwise_Compairisons/PairwiseCompairison_",
-                                          pair[1], "_and_",pair[2],".csv"), row.names = FALSE)
+  # 5. Run the metabolite_pairwise function for the strata
+  strat_results <- metabolite_pairwise(form = form,
+                                       data=dat,
+                                       metabolites = metabolites)
   
-}
+  # 6. Save results
+  write.csv(strat_results, file = paste0("../Data/Results/Pairwise_Comparisons/Pairwise_",
+                                         stratas[i],".csv"), row.names = F)
+  
+  }
 ```
-
-In the chunk above, we tested each sub-pathway for several pairwise comparisons.
-We now want to see which models were significant at the sub-pathway level for 
-each comparison and which models were significant. The following code:
-
-1.) Finds all of the saved pairwise results from the previous step.
-
-2.) Gets the name of each pairwise comparison based on the file name.
-
-3.) Create an initial table for the first comparison showing the number of 
-sub-pathways that were significant for each model type. 
-
-4.) Run a for loop for each pairwise comparison which creates the save table and
-merges the number of sub-pathways that were significant for each model into one table.
-
-5.) Format table and save. 
-
-```{r pairwise table}
-
-# 1. Find saved pairwise results
-pairwise_files <- list.files("../Data/Results/Pairwise_Compairisons/")
-
-
-# 2. Get the name of the each compairison based on the file name. 
-pairs <- sub("PairwiseCompairison_","",sub(".csv","",pairwise_files))
-
-# 3. Create initial table for first pairwise compairison
-tablePair <- read.csv(paste0("../Data/Results/Pairwise_Compairisons/",pairwise_files[1]), check.names = F) %>% 
-  select(sub_pathway, ends_with("_fisher"), model) %>%
-  distinct() %>% 
-  count(model, name = pairs[1]) 
-
-
-# 4. For loop merging pairwise compairison results. 
-for(i in 2:length(pairwise_files)){
-  
-  tablePair <- tablePair %>%
-    full_join(read.csv(paste0("../Data/Results/Pairwise_Compairisons/",pairwise_files[i]), check.names = F) %>%
-              select(sub_pathway, ends_with("_fisher"), model) %>%
-              distinct() %>%
-              count(model, name= pairs[i]),
-            by = "model") 
-  
-}
-
-# 5. Display and save table
-tablePair %>%
-  mutate(model = factor(model, levels = c("Interaction", "Parallel", "Single", "None")),
-         across(-model, ~ifelse(is.na(.), 0, .))) %>%
-  arrange((model)) %>%
-  flextable() %>%
-  set_header_labels(model="Model Type") %>%
-  set_table_properties(layout = "autofit") %>%
-  theme_vanilla()
-
-tablePair %>%
-  mutate(model = factor(model, levels = c("Interaction", "Parallel", "Single", "None")),
-         across(-model, ~ifelse(is.na(.), 0, .))) %>%
-  arrange((model)) %>%
-  flextable() %>%
-  set_header_labels(model="Model Type") %>%
-  set_table_properties(layout = "autofit") %>%
-  theme_vanilla() %>%
-  save_as_docx(path = "../Outputs/Tables/SigPathsByModelType_pairwise.docx")
-
-```
-
-
-## Comparing all pairwise models
-
-After running all of the pairwise comparisons and adding them to the 
-Data/Results/Pairwise_Comparisons folder, we may want to look at the Fisher 
-p-value for a specific model type for each pairwise comparison. For example, we 
-may want to look at the interaction Fisher p-value across all comparisons for 
-each sub-pathway.
-
-In the following chunk we use a function called strat1_path_comparisons from the
-.R file in the R script folder. This function takes the following arguments:
-
-1. Path: A path to the folder storing the results for all pairwise comparisons.
-
-2. Model: The column of the results that you would like to compare. For example,
-we could compare interaction_fisher, parallel_fisher, or single_fisher across 
-all pairwise comparisons.
-
-The result will be a table with each row representing different sub pathways and
-each column is the fisher p-value for the specified model. 
-
-
-
-```{r pairwise comparisons}
-# 1. Provide path
-path = "../Data/Results/Pairwise_Compairisons/"
-
-
-# 2. Create table compairing specified pvalues
-strat1_path_comparisons <- sub_path_pairwise_comparison(path = path, interaction_fisher)
-```
-
-
-#### Comparison 1
-
-Utilizing the table above, we can summarize our results in several ways. The next few chunks will be an example of how we can summarize the results. First, let's look at the names of the headers in the stratified pathways comparisons table we created above.
-
-```{r names of strat table}
-# Names of Strat1_path_comparisons.
-names(strat1_path_comparisons)[-1]
-
-```
-
-Above are the names of the headers in the table comparing all pairwise comparisons
-for a specific model. In the first table, we are creating a table that only
-contains sub-pathways that show a significant p-value in the first comparison. 
-To do this, will:
-
-1. Filter the table so that only sub-pathways that were significant in the first 
-comparison are displayed. To do this you will need to edit the code so that the 
-correct comparison is used.
-
-2. Select the sub_pathway and the specific comparison column. To do this you will 
-need to edit the code so that the correct comparison is used. 
-
-3. Rename to displayed header name to the desired header.
-
-```{r compairison 1}
-# Display sig. pathways for Comparison 1
-comp1 <-strat1_path_comparisons %>%
-  # 1. Filter on subpathways on the first comparison.
-  filter(`1902_and_Control_interaction_fisher` < 0.05) %>%
-  # 2. Select subpathway and comparison. 
-  select(sub_pathway, `1902_and_Control_interaction_fisher`  ) %>%
-  arrange(sub_pathway) %>%
-  flextable() %>%
-  # 3. Change header name to something more readable. 
-  set_header_labels(sub_pathway="Sub Pathway", `1902_and_Control_interaction_fisher` ="Combined Fisher Prob P-val") %>%
-  colformat_double(digits = 3) %>%
-  set_table_properties(layout = "autofit") %>%
-  theme_vanilla()
-  
-
-# Display table
-comp1
-  
-# Save table
-comp1 %>%
-  save_as_docx(path = "../Outputs/Tables/SigPathwaysPairwiseComparison1.docx")
-
-```
-
-#### Comparison 2
-Now that we know how many sub-pathways are significant for the first comparison, 
-we might want to check which sub-pathways were not significant in the first 
-sub-pathway but were significant in the second comparison. Similar to the table above, we are
-going to:
-
-
-1. Filter the table so that only sub-pathways that were not significant in the first 
-comparison and significant in the second comparison are displayed. To do this you
-will need to edit the code so that the correct comparisons are used.
-
-2. Select the sub_pathway and the specific comparison column.To do this you will
-need to edit the code so that the correct comparison is used. 
-
-3. Rename to displayed header name to the desired label. 
-
-
-```{r comparison 2}
-# Table displays non-significant comparison 1 and significant comparison 2
-comp2 <- strat1_path_comparisons %>%
-  # 1. Filter on subpathways on the first comparison.
-  filter(`1902_and_Control_interaction_fisher`  >= 0.05, `1902_and_WT_interaction_fisher`  < 0.05) %>%
-  # 2. Select subpathway and comparison. 
-  select(sub_pathway, `1902_and_WT_interaction_fisher` ) %>%
-  arrange(sub_pathway) %>%
-  flextable() %>%
-  # 3. Change header name to something more readable.
-  set_header_labels(sub_pathway="Sub Pathway", `1902_and_WT_interaction_fisher` ="Combined Fisher Prob P-val") %>%
-  colformat_double(digits = 3) %>%
-  set_table_properties(layout = "autofit") %>%
-  theme_vanilla()
-  
-# Display table
-comp2
-  
-
-# Save table
-comp2 %>%
-  save_as_docx(path = "../Outputs/Tables/SigPathwaysPairwiseComparison2.docx" )
-  
-
-
-```
-
-#### Comparison 3
-
-Now that we know how many sub-pathways are significant for the first two comparisons, 
-we might want to check which sub-pathways were significant in the third sub-pathway
-but not the first two. This pattern can go on for as many comparisons as necessary.
-Additionally, we can augment the "filter" arguments to display the table as desired.
-Similar to the table above, we are going to:
-
-
-1. Filter the table so that only sub-pathways that were not significant in the first 
-comparison and significant in the second comparison are displayed. To do this you
-will need to edit the code so that the correct comparisons are used.
-
-2. Select the sub_pathway and the specific comparison column.To do this you will need to edit the code so that the 
-correct comparison is used. 
-
-3. Rename to displayed header name to the desired label. 
 
 ```{r}
-# Table displays non-significant comparison 1 and 2 and significant comparison 3
-comp3 <- strat1_path_comparisons %>%
-  # 1. Filter on subpathways on the first comparison.
-  filter(`1902_and_Control_interaction_fisher`  >= 0.05, `1902_and_WT_interaction_fisher` >= 0.05,
-          Control_and_WT_interaction_fisher < 0.05) %>%
-   # 2. Select subpathway and comparison
-  select(sub_pathway, Control_and_WT_interaction_fisher) %>%
-  arrange(sub_pathway) %>%
-  flextable() %>%
-  # 3. Change header name to something more readable.
-  set_header_labels(sub_pathway="Sub Pathway", Control_and_WT_interaction_fisher="Combined Fisher Prob P-val") %>%
-  colformat_double(digits = 3) %>%
-  set_table_properties(layout = "autofit") %>%
-  theme_vanilla()
+library(heatmaply)
+library(plotly)
+# Read in pairwise results
+results_pair <- read.csv("../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv", check.names = F)
+
+
+met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+# 3. Read chemical annotations
+chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
+
+data <- chem_data %>%
+  select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>%
+  merge(results_pair, by.x = "CHEM_ID",by.y = "Metabolite") %>%
+  arrange(SUB_PATHWAY)
   
 
-# Display table
-comp3
+heatmap_dat <- apply(data[,grepl("PVALS",names(data))],MARGIN = 2,
+                     FUN = function(x){-log10(x)})
 
-# Save table
-comp3 %>%
-  save_as_docx(path = "../Outputs/Tables/SigPathwaysPairwiseComparison3.docx")
+# Create hover text with subpathway information
+hover_text <- matrix(rep(paste0("Subpathway: ",data$SUB_PATHWAY, ", ",
+                                "Metabolite: ", data$CHEMICAL_NAME),
+                         ncol(heatmap_dat)),nrow=length(data$SUB_PATHWAY))
+
+p <- plot_ly(x=colnames(heatmap_dat), y=as.character(data$CHEMICAL_NAME), 
+            z =as.matrix( heatmap_dat), 
+            type = "heatmap",
+            showscale = T, 
+            hoverinfo = 'text',
+            text = hover_text)
+p
 
 
+head(heatmap_dat)
 ```
-
-
-
-
-#### All comparisons
-We may want to look at specific sub-pathways for each comparison and all models. 
-In the chunk below we use the sub_path_pairwise function defined in the R scripts
-folder. This function takes two arguments. 
-
-* path: The path the pairwise comparison results folder.
-
-* ... This is a masking parameter that allows you to filter the sub_pathway to the
-specific subpathway of interest. 
-
-In the example below we:
-
-1. Provide a path to the Pairwise comparison results.
-
-2. Create the table with all fisher p-values for the selected subpathways. 
-
-3. Displays the table
-
-4. Saves table in ../Outputs/Tables/ with the file name SubpathwaysFisherProbs_allModels.
-
-
-```{r subpathway all comparisons}
-
-# 1. Establish path to pairwise results
-path =   "../Data/Results/Pairwise_Compairisons/"
-
-  
-
-# 2. Create the table with all fisher p-values for the selected subpathways.
-tab_all <- sub_path_pairwise_comparison_all(path =path, sub_pathway %in%  c("Vitamin B6 Metabolism", "Creatine Metabolism", "Pentose Metabolism"))
-
-#2. Create the table with all fisher p-values for the selected subpathways
-tab_all
-
-# 4. Saves table in ../Outputs/Tables/ with the file name SubpathwaysFisherProbs_allModels.
-tab_all %>%
-  save_as_docx(path = "../Outputs/Tables/SubpathwaysFisherProbs_allModels.docx")
-
-
-```
-
 
 ## Plots
 Visualizations of the data can help us see the underlying trends. One useful visualization
