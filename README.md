@@ -13,7 +13,7 @@ In the diagram above we outline the steps to for data normalization
 which is provided by Metabolon. However, Metabolon provides this data in
 their .xlsx data tables. In the subsequent sections, we use the
 normalized data derived by Metabolon in the .xlsx file provided by
-Metabolon. This work flow provide additional tools for:
+Metabolon. This work flow provides additional tools for:
 
 1.  Exploratory Peak Analysis
 
