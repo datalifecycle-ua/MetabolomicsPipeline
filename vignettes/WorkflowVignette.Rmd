@@ -63,7 +63,7 @@ down into four main sections.
 4. Plots
 
 
-```{r workflow}
+```{r workflow, fig.height=20, fig.width=16}
 img = image_read("../Workflow.png")
 
 image_trim(img)
@@ -359,7 +359,7 @@ write.csv(analysis_data,"../Data/Processed/analysis_data.csv", row.names = F)
 ```
 
 
-## Data Exploration
+## Exploratory Analysis
 
 In data exploration, we use several methods to help us better understand the 
 underlying patterns in the data without using a formal hypothesis test. In this
@@ -828,8 +828,8 @@ To run this analysis, we utilize the following steps.
 2. Save the pathway analysis results to the "Data/Results" folder with the name
 "NonStratified_Full_pathway_results"
 
-```{r run ancova}
-# 1. Run the ancova function
+```{r run subpathway analysis}
+# 1. Run the subpathway function
 path_dat <- subpathway_analysis(analysis_data,
                             chem_data = chem_data,
                                   block_var = "TIME1",
@@ -839,7 +839,7 @@ path_dat <- subpathway_analysis(analysis_data,
 
 
 # 2. Save results
-write.csv(path_dat,file = "../Data/Results/NonStratified_Full_ancova_results.csv", row.names = F)
+write.csv(path_dat,file = "../Data/Results/NonStratified_Full_subpathway_results.csv", row.names = F)
 ```
 
 
@@ -888,7 +888,7 @@ for(i in uni_vals){
   strat_data = analysis_data[analysis_data[,stratified_var]==i,]
   
   
-  # 2. Run ancova function on the subsetted data
+  # 2. Run subpathway function on the subsetted data
   strat_path_results <- subpathway_analysis(strat_data,
                                         chem_data = chem_data,
                                   block_var = "TIME1",
@@ -1386,7 +1386,7 @@ Create a for look that:
 6. Save results in the "../Data/Results/Pairwise_Comparisons" folder with the 
 file name "Pairwise_{{strata}}.
 
-```{r run ancova analysis on significant pathways, warning=FALSE}
+```{r run subpathway analysis on significant pathways, warning=FALSE}
 # 1. Define the variable in the analysis data that we want to stratify 
 strata_var <- "Gender"
 
@@ -1489,7 +1489,7 @@ p <- plot_ly(x=colnames(heatmap_dat), y=as.character(data$CHEMICAL_NAME),
             showscale = T, 
             hoverinfo = 'text',
             text = hover_text,
-            ) %>%
+            xaxis = list(ntick= ncol(heatmap_dat))) %>%
   layout(title = "P-value Pairwise Comparisons Heatmap")
 
 
@@ -1499,7 +1499,7 @@ p
 
 
 # 7. Save.
-htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/PaiwiseComp_pvalue_heatmap_",".html"))
+#htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/PaiwiseComp_pvalue_heatmap_",".html"))
 
 ```
 
@@ -1568,7 +1568,8 @@ p <- plot_ly(x=colnames(heatmap_dat), y=as.character(data$CHEMICAL_NAME),
             showscale = T, 
             hoverinfo = 'text',
             text = hover_text,
-            showscale=F) %>%
+            showscale=F,
+            xaxis = list(ntick= ncol(heatmap_dat))) %>%
   layout(title = "Significant Pairwise Comparisons Heatmap")
 
 
@@ -1576,8 +1577,8 @@ p <- plot_ly(x=colnames(heatmap_dat), y=as.character(data$CHEMICAL_NAME),
 p
 
 # 7. Save heatmap
-htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/SigPaiwiseComp_pvalue_heatmap_"
-                                 ,".html"))
+#htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/SigPaiwiseComp_pvalue_heatmap_"
+ #                                ,".html"))
 
 ```
 

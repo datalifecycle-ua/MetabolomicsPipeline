@@ -7,7 +7,7 @@ output:
 ---
 
 ## Overview
-The purpose of this pipeline is to provide additional analysis to complement the
+The purpose of this pipeline is to provide additional analyses to complement the
 analysis by Metabolon. In the Metabolon data, each 
 "sub-pathway" classifies a collection of metabolites, and each "super-pathway" 
 classifies a collection of sub-pathways. The below figure highlights the steps we will be taking, which 
