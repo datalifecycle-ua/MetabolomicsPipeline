@@ -1,0 +1,306 @@
+---
+title: "Pairwise Comparisons"
+author: "Joel Parker"
+date: "2023-07-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Set global chunk obptions
+knitr::opts_chunk$set(fig.width=12, fig.height=12)
+
+# Data 
+library(tidyverse)
+library(openxlsx)
+library(kableExtra)
+library(table1)
+library(flextable)
+library(reshape2)
+
+
+# Heat Map
+library(pheatmap)
+library(RColorBrewer)
+library(rstatix)
+library(plotly)
+
+# PCA
+library(factoextra)
+library(FactoMineR)
+
+
+## Combining plots
+library(ggpubr)
+
+
+## Image package
+library(magick)
+
+## Pairwise comparisons
+library(emmeans)
+
+# Metabolomics Pipeline source files
+files.sources = list.files("../R")
+sapply(paste0("../R/",files.sources), source)
+
+```
+
+
+
+
+
+
+## Pairwise Compairisons
+At the metabolite level, we can look at the pairwise comparisons for all experimental 
+groups. In the following section we will look at the pairwise comparisons using the
+metabolite_pairwise function defined in the R scripts. We will first read in the 
+analysis data needed for this analysis. Since the column names of the analysis
+data are numeric, we should convert all of the column names to to characters.
+
+```{r get significant sub pathways}
+# 1. Read in data from the analysis above
+analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
+
+# 2. Make the variable names charactors
+names(analysis_data) <- as.character(names(analysis_data))
+```
+
+Once we have the analysis data loaded in, we can now look at the pairwise comparisons
+for each of our experimental groups. To do this we will be using the
+metabolite_pairwise function defined in the R scripts. This function will analyze 
+each metabolite individually. For each metabolite, the the metabolite_pairwise function
+will first test if any of the experimental groups explained a significant proportion
+of the variance in the metabolite using an F-test. Since we will be looking at 
+multiple comparisons for the metabolite it is good practice to first look at the
+over-all p-value from the F-test before looking at the pairwise comparisons.
+
+The metabolite_pairwise function then looks at all pairwise comparisons utilizing
+the [emmeans](https://cran.r-project.org/web/packages/emmeans/index.html) package. 
+The metabolite_pairwise function returns a data frame with the metabolite, overall
+p-value, estimated difference in means for all experimental groups, and the p-value
+which test if the difference the groups is significantly different. 
+
+The metabolite_pairwise function has three arguments:
+
+* form: This is a character string the resembles the right hand side of a 
+simple linear regression model in R. For example form = "Group1 + Group2". 
+
+* data: The analysis data we will use for the pairwise comparisons. 
+
+* Metabolites: A list of metabolites that we want to be analyzed. 
+
+In the next chunk we will stratify the analysis by running the metabolite_pairwise
+function for each stata in our analysis data set. To do this we:
+
+1. Define the variable in the analysis data that we want to stratify our analysis 
+by. 
+
+2. Define the form variable for the metabolite_pairwise function. 
+
+3. Create a list of metabolites that we want to pairwise analysis for. By default,
+we are going to use all metabolites in the analysis data. 
+
+Create a for look that:
+
+4. Filters the analysis_data to focus on a single strata.
+
+5. Run the metabolite_pairwise function for that strata.
+
+6. Save results in the "../Data/Results/Pairwise_Comparisons" folder with the 
+file name "Pairwise_{{strata}}.
+
+```{r run subpathway analysis on significant pathways, warning=FALSE}
+# 1. Define the variable in the analysis data that we want to stratify 
+strata_var <- "Gender"
+
+
+# 2. Define the form variable
+form <- "GROUP_NAME*TIME1"
+
+
+# Create a list of metabolites
+analysis_variables <- c("PARENT_SAMPLE_NAME", "GROUP_NAME",
+                                           "TIME1", "Gender")
+metabolites <- names(analysis_data)[!names(analysis_data) %in% analysis_variables ]
+
+stratas <- unique(analysis_data[,strata_var])
+for (i in 1:length(stratas)) {
+  
+  # 4. Filter analysis data
+  dat <- analysis_data[analysis_data[,strata_var]==stratas[i],]
+  
+  
+  # 5. Run the metabolite_pairwise function for the strata
+  strat_results <- metabolite_pairwise(form = form,
+                                       data=dat,
+                                       metabolites = metabolites)
+  
+  # 6. Save results
+  write.csv(strat_results, file = paste0("../Data/Results/Pairwise_Comparisons/Pairwise_",
+                                         stratas[i],".csv"), row.names = F)
+  
+  }
+```
+
+
+#### P-Value Heatmaps
+We will visualize the p-values in a heatmap by having the metabolites in the row and 
+the pairwise comparisons in the columns. The values that make up the heatmap
+will be the -log10 transformed p-value. This will allow the smaller pvalue to have
+a higher intensity in the heatmap. To generate the heatmap, the following code
+uses [plotly](https://plotly.com/r/) which gives us the capability to make interactive
+plots. The heatmap that is generated will allow us to hover over the heatmap and 
+see information about the metabolite including the metabolite name and the sub-pathway
+and the p-value from the overall F-test. 
+Additionally, we group the metabolites by sub-pathway to make it easier to see 
+if multiple metabolites within a sub-pathway are significant. To do this we:
+
+1. Read in the results from the pairwise comparisons. If you stratified the analysis,
+you may want to copy this chunk and rerun for each strata. Additionally, we will need
+to read in the chemical annotation file.
+
+2. Merge the chemical annotation fill with the results from the pairwise comparisons. 
+
+3. Create the heatmap data that contains only the p-values for each pairwise 
+comparison. Additionally, we -log10 transform all of the p-values. 
+
+4. Create a matrix of "hover data" which will be what is displayed when we hover
+over the heatmap. Here we are choosing to display metabolite name and sub-pathway. 
+
+5. Generate heatmap using plotly
+
+6. Display heatmap
+
+7. Save heatmap in ".../Outputs/Plots" with the file name "PaiwiseComp_pvalue_heatmap".
+Since this plot is interactive, it will be save as an html file that can be opened
+in a web browser. 
+
+```{r pvalue heatmap}
+
+# 1. Read in pairwise results
+results_pair <-read.csv("../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv", check.names = F)
+ 
+# Read chemical annotation file
+met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
+
+ 
+
+# 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
+data <- chem_data %>%
+  select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>%
+  merge(results_pair, by.x = "CHEM_ID",by.y = "Metabolite") %>%
+  arrange(SUB_PATHWAY)
+  
+
+# 3. Create the heatmap data
+heatmap_dat <- apply(data[,grepl("PVALS",names(data))],MARGIN = 2,
+                     FUN = function(x){-log10(x)})
+
+# 4. Create a matrix of "hover data"
+hover_text <- matrix(rep(paste0("Subpathway: ",data$SUB_PATHWAY, ", ",
+                                "Metabolite: ", data$CHEMICAL_NAME,
+                                ", Overall P-value: ", round(data$Overall_pval,3)),
+                         ncol(heatmap_dat)),nrow=length(data$SUB_PATHWAY))
+
+
+# 5. Generate heatmap using plotly
+
+p <- plot_ly(x=colnames(heatmap_dat), y=as.character(data$CHEMICAL_NAME), 
+            z =as.matrix( heatmap_dat), 
+            type = "heatmap",
+            showscale = T, 
+            hoverinfo = 'text',
+            text = hover_text,
+            xaxis = list(ntick= ncol(heatmap_dat))) %>%
+  layout(title = "P-value Pairwise Comparisons Heatmap")
+
+
+# 6. Display heatmap
+p
+
+
+
+# 7. Save.
+#htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/PaiwiseComp_pvalue_heatmap_",".html"))
+
+```
+
+Additionally we can create a heatmap which focuses on the metabolites that had a
+significant pairwise comparison. This heatmap is useful because we can condition
+the heatmap to show which metabolites had a significant amount of variance explained
+by the treatment groups prior to looking at the pairwise comparisons. For each metabolite,
+if the overall pvalue from the F statistic was less than 0.05 AND the pairwise 
+comparison p-value was less than 0.05, then the heatmap value is set to 1 and 
+0 otherwise. In the following code we:
+
+1. Read in the results from the pairwise comparisons. If you stratified the analysis,
+you may want to copy this chunk and rerun for each strata. Additionally, we will need
+to read in the chemical annotation file.
+
+2. Merge the chemical annotation fill with the results from the pairwise comparisons.
+In this step we group the metabolites by pathway.
+
+3. Create the heatmap data where the value is 1 if the overall p-value is less
+than 0.05 and the pairwise comparison p-value is less than 0.05.
+
+4. Create a matrix of "hover data" which will be what is displayed when we hover
+over the heatmap. Here we are choosing to display metabolite name and sub-pathway. 
+
+5. Generate heatmap using plotly
+
+6. Display heatmap
+
+7. Save heatmap in ".../Outputs/Plots" with the file name "SigPaiwiseComp_pvalue_heatmap".
+Since this plot is interactive, it will be save as an html file that can be opened
+in a web browser. 
+
+```{r sig heatmap}
+# 1. Read in pairwise results
+results_pair <-read.csv("../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv", check.names = F)
+  
+# Read chemical annotation file
+met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
+  
+
+# 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
+pval_col_names <- names(results_pair)[grepl("PVALS",as.character(names(results_pair)))]
+data <- chem_data %>%
+  select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>%
+  merge(results_pair, by.x = "CHEM_ID",by.y = "Metabolite") %>%
+  arrange(SUB_PATHWAY)
+  
+
+# 3. Create the heatmap data
+heatmap_dat <- data %>%
+  mutate(across(all_of(pval_col_names),~ ifelse(.x <0.05& Overall_pval<0.05,1,0))) %>%
+  select(all_of(pval_col_names))
+
+# 4. Create a matrix of "hover data"
+hover_text <- matrix(rep(paste0("Subpathway: ",data$SUB_PATHWAY, ", ",
+                                "Metabolite: ", data$CHEMICAL_NAME,
+                                ", Overall P-value: ", round(data$Overall_pval,3)),
+                         ncol(heatmap_dat)),nrow=length(data$SUB_PATHWAY))
+
+
+# 5. Generate heatmap using plotly
+p <- plot_ly(x=colnames(heatmap_dat), y=as.character(data$CHEMICAL_NAME), 
+            z =as.matrix( heatmap_dat), 
+            type = "heatmap",
+            showscale = T, 
+            hoverinfo = 'text',
+            text = hover_text,
+            showscale=F,
+            xaxis = list(ntick= ncol(heatmap_dat))) %>%
+  layout(title = "Significant Pairwise Comparisons Heatmap")
+
+
+# 6. Display heatmap
+p
+
+# 7. Save heatmap
+#htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/SigPaiwiseComp_pvalue_heatmap_"
+ #                                ,".html"))
+
+```

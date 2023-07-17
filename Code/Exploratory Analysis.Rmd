@@ -1,0 +1,405 @@
+---
+title: "Exploratory Analysis"
+author: "Joel Parker"
+date: "2023-07-17"
+output: html_document
+---
+```{r setup, include=FALSE}
+# Set global chunk obptions
+knitr::opts_chunk$set(fig.width=12, fig.height=12)
+
+# Data 
+library(tidyverse)
+library(openxlsx)
+library(kableExtra)
+library(table1)
+library(flextable)
+library(reshape2)
+
+
+# Heat Map
+library(pheatmap)
+library(RColorBrewer)
+library(rstatix)
+library(plotly)
+
+# PCA
+library(factoextra)
+library(FactoMineR)
+
+
+## Combining plots
+library(ggpubr)
+
+
+## Image package
+library(magick)
+
+## Pairwise comparisons
+library(emmeans)
+
+# Metabolomics Pipeline source files
+files.sources = list.files("../R")
+sapply(paste0("../R/",files.sources), source)
+
+```
+
+
+## Exploratory Analysis
+
+In data exploration, we use several methods to help us better understand the 
+underlying patterns in the data without using a formal hypothesis test. In this
+pipeline, we are going to focus on two methods for data exploration:
+
+A.) Principal component analysis
+
+B.) Heat maps
+
+Before diving into the data exploration, we need read the analysis data set. Note,
+we use check.names=F since column names of the analysis data are numeric. 
+
+```{r load-data2}
+# 1. Read analysis dataset
+analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
+```
+
+### Table 1
+The goal of this section is to design a table that resembles the study design of
+your experiment. This step allows us to see descriptive statistics of the samples
+in our data. For this, we are using the analysis data to define a table with a similar
+structure as the table below.
+
+|         | Strat 1      |Strat 2    |
+|:-------:|:------------:|:---------:|
+| *Var1 * |XX     | XX   |  
+| *Var 2* | XX    | XX   |
+| *Var 3* | XX    | XX   |
+
+
+Alternatively, we can define a table non-stratified table with only the number of
+observations within each experimental group. The following code will create the
+desired table 1 for both scenarios.
+
+
+In this chunk, we will label the analysis data variable names. Labeling the variable
+names will allow the tables to display your chosen variable names while maintaining
+the original variable name within the data. We do this in two steps.
+
+1. Choose the variable name.
+  + Change the name assigned to var1 to match the name of the variable in the
+  analysis data set which you want to include in the table.
+  
+  + Repeat this for as many variables as needed.
+  
+2. Choose a single variable to stratify the table by.
+  
+3. Assign the variable a label name
+  + you can change the label of the variable in the table by relabeling the
+  variable to the desired name on the right side of the equation. 
+  
+4. Assign a stratified variable a label name for the table. 
+
+```{r table one labels}
+# 1. Choose the meta data variable name.
+var1 = "GROUP_NAME"
+
+var2 = "TIME1"
+
+
+# 2. Choose a single variable to stratify the table by.
+stratified_var = "Gender"
+
+
+# 3. Assign the variable a label name
+label(analysis_data[,var1]) <- "Treatment Group" 
+
+label(analysis_data[,var2]) <- "Time"
+
+
+# 4. Assign a stratified variable a label name for the table. 
+label(analysis_data[,stratified_var]) = "Gender"
+```
+
+
+Now that you have properly assigned the variables, we will create table 1. To
+create the table, we will be using the table1 function. You must change the
+arguments depending on what you want the table to display. For example:
+* *Table 1 without interaction*: 
+
+$$
+table1(\sim \underbrace{var_1 + var_2 ...}_{\text{Variable names for rows}},   \ \text{data = analysis_data}  )
+$$
+
+
+
+* *Table 1 with interaction*
+
+$$
+table1(\sim \underbrace{var_1 + var_2 ...}_{\text{Variable names for rows}} \underbrace{| \ stratified\_var}_{\text{Statified Variable}},  \ \text{data = analysis_data} )
+$$
+Above is how you change the table1 function to display the table with and without
+a stratified variable. In the next chunk, we utilize the following steps.
+
+1. Create table 1. In this step you will need to use the same variable names as
+in the above chunk within the table1 function. 
+
+2. Display the table
+
+3. Save the table in the folder "/Outputs/Tables/" with the file name "table1". 
+
+```{r table one}
+# 1. Creates table1
+tbl1 <- table1(~ TIME1 + GROUP_NAME| Gender
+               , data = analysis_data)
+
+
+# 2. Displays table 1
+tbl1
+
+
+# 3. saves table 1 
+t1flex(tbl1) %>%
+  save_as_docx(path = paste0("../Outputs/Tables/","table1.docx"))
+```
+
+
+###  Principal Component Analysis
+
+In general, Principal component analysis (PCA) reduces the number of variables 
+in a dataset while preserving as much information from the data as possible. At 
+a high level, PCA is constructed such that the first principal component accounts
+for the largest possible amount of variance within the data. The second principal
+component accounts for the largest amount of remaining variance, and so on. 
+Additionally, each of the principal components produced by PCA is uncorrelated 
+with each of the other principal components. At a high level, PCA allows us to 
+visualize sources of variation in the data.
+
+Here, we will graph the first two principal components of our dataset. In the 
+PCA plot, we can label each point based on variables from the metadata.
+
+The following chunk runs PCA on the scale_peak_data matrix in the following 
+steps:
+
+1.Create a vector of non metabolite variables that are in the the analysis data
+set. These variables include information about the experimental conditions. 
+
+2. Create a data set for the principle component analysis which only includes 
+information on the metabolites. 
+
+3. Run PCA of the pca_dat matrix containing only the metabolites. 
+
+4. Define the plot labels. This is a character string matching the name of one of 
+the variables in the analysis_data which will be used to label points on the PCA
+graph. 
+
+5. Create and display the PCA plot.
+
+6. Save the PCA plot in the "Outputs/Plots" folder with the file name PCA.pdf
+
+
+```{r pca plots}
+# 1. Create the non-metabolite vector. 
+non_metabolite <- c("PARENT_SAMPLE_NAME",
+                             "GROUP_NAME",
+                             "TIME1",
+                             "Gender")
+
+
+# 2. Create PCA data containing only metabolite data
+pca_dat <- analysis_data[,!names(analysis_data) %in% non_metabolite]
+
+
+# 3. Run PCA of the pca_dat matrix containing only the metabolites.   
+res.pca <- PCA(pca_dat, 
+               graph = F)
+
+
+# 4. Define labels
+meta_var = "Gender"
+
+
+# 5. Create figure 
+fviz_pca_ind(res.pca, 
+             label = "none",
+             habillage = as.factor(analysis_data[,meta_var])) 
+
+
+# 6. Save figure
+ggsave(paste0("../Outputs/Plots/","PCA.pdf"), width = 10, height = 10)
+```
+
+
+Suppose you notice a variable with clearly separated groups, and is not a 
+variable of interest. In that case, you may want to consider stratifying your 
+analysis downstream by the values of that variable. For example, if we are 
+looking at the effects of a specific drug, and we notice in the above plot that 
+the samples are grouped by sex, then we may want to consider stratifying the 
+analysis by male and female.
+
+### Heatmaps
+
+Another exploratory analysis tool we can use is heatmaps, whih is a gridded plot
+based on the x-axis- and y-axis labels. The color of the spot on the grid is based on the 
+value's intensity. For our heatmap, the x-axis will be the samples, and the y-axis
+will be the metabolites. The values determining the colors will be the log 
+peak value for each chemical in each observation. We can order our observations 
+to see intensity patterns based on our experimental conditions. This is another
+way of visualizing sources of variation within our data. To do this, we 
+need to merge the chemical annotation, meta, and scaled peak data. Then we need 
+to arrange the data based on our experimental conditions. The create_heatmap_Data
+function in the R folder will help us prepare the data for the heatmap. To do this
+the create_heatmap_Data function takes three arguments.
+
+
+* Analysis data (analysis_data) 
+
+* Heatmap Variables (heatmap_variables) - defines the variables used to order
+the samples.
+
+* ... -  
+
+
+The main utility of create_heatmap data is in (…), which allows you to arrange 
+the data based on experimental conditions. If you are familiar with dplyr, the 
+arrange function orders samples based on the arguments passed into (...). If you 
+are unfamiliar with dplyr, an overview of the arrange function is [here](https://dplyr.tidyverse.org/reference/arrange.html).
+
+
+We will first look at the heatmap with all metabolites. The resulting heatmap
+saves into the Outputs/Plots folder under the filename "AllMetabolites.pdf."
+
+In this chunk we complete the following steps. 
+
+1. Define the heatmap_variables that will be used to order the heatmap
+
+2. Run the create_heatmap_Data function defined in the R script folder. This function
+is going to produce the matrices needed for the heatmap
+
+3. Create a palette for the heatmap. By default we are using a red/blue palette.
+
+4. Create the vals and labels matrices that will define the values of the heatmap
+and the labels of the heatmap. 
+
+5. Display heatmap
+
+6. Save heatmap in the "Outputs/Plots" folder under the filename "Heatmap_all"
+
+
+
+```{r overall heatmap}
+# 1. define meta analysis variables
+heatmap_variables <-   c("GROUP_NAME",
+                             "TIME1",
+                             "Gender")
+
+
+# 2. Create heatmap data
+heatmap_data <- create_heatmap_Data(analysis_data,heatmap_variables = heatmap_variables ,
+                               Gender, GROUP_NAME, desc(TIME1)) # Arranges data frame for heatmap (...)
+
+
+
+# 3. Heat map colors 
+palette <- colorRampPalette(rev(brewer.pal(10, "RdBu")))(256)
+
+
+
+# 4. Values for heatmap
+vals = heatmap_data$heatmap_data_vals
+
+meta = heatmap_data$heatmap_variables
+
+
+# 5. Create heatmap and save. 
+pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
+         annotation_col = meta, show_rownames = F, border_color = NA)
+
+
+# 6. Save heatmap
+pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
+         annotation_col = meta, show_rownames = F, border_color = NA,filename = paste0("../Outputs/Plots/","Heatmap_all.pdf"))
+
+```
+
+
+
+#### Heatmap with top 50 metabolites 
+
+Looking at the heatmap created in the previous chunk with all of the metabolites
+can make it challenging to determine which line goes with which metabolite. To 
+overcome this, we can filter the metabolites based on which metabolites have the
+highest mean log-scaled peak data across all observations. In the heatmap below,
+we select the top 50 metabolites. Once we know the top 50 metabolites with the
+highest mean value, we can filter the peak_data_log data only to include those 
+metabolites. Then we can run the create_heatmap function again and create the 
+heatmap data. To do this the following steps are completed:
+
+1. Define the heatmap_variables to use in the heatmap
+
+2. Select the top 50 metabolites from the analysis data based off of mean value.
+
+3. Filter the analysis_data to only include the top 50 metabolites
+
+4. Generate heatmap data using the create_heatmap_Data function
+
+5. Create a palette for the heatmap. By default, we are using a red/blue palette.
+
+6. Create the vals and the labels that will define the values of the heatmap
+and the labels of the heatmap. 
+
+7. Display heatmap
+
+8. Save heatmap in the "Outputs/Plots" folder under the filename "HeatmapTop50Metabolites"
+
+
+```{r top heatmap}
+# 1. Define meta analysis variables
+heatmap_variables <- c("GROUP_NAME", "TIME1", "Gender")
+
+
+# 2. Find the top 50 metabolites
+select_variables <- analysis_data %>% 
+  select(-all_of(c("PARENT_SAMPLE_NAME",heatmap_variables))) %>%
+  summarise(across(everything(),\(x) mean(x,na.rm = T))) %>%
+  pivot_longer(cols = everything()) %>%
+  arrange(desc(value)) %>%
+  slice(c(1:50))
+
+
+# 3. Filter to the top 50 metabolites
+analysis_data_top50 <- analysis_data %>%
+  select(all_of(c("PARENT_SAMPLE_NAME", heatmap_variables)), select_variables$name) 
+  
+
+# 4. Create heatmap data
+heatmap_data <- create_heatmap_Data(analysis_data_top50,
+                                    heatmap_variables = heatmap_variables ,
+                               Gender, GROUP_NAME, desc(TIME1)) # Arranges data frame for heatmap (...)
+
+
+# 5. Heat map colors 
+palette <- colorRampPalette(rev(brewer.pal(10, "RdBu")))(256)
+
+
+# 6. Values for heatmap
+vals = heatmap_data$heatmap_data_vals
+
+meta = heatmap_data$heatmap_variables
+
+
+# 7. Create heatmap and save. 
+pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
+         annotation_col = meta, show_rownames = F, border_color = NA)
+
+
+# 8. Save heatmap
+pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
+         annotation_col = meta, show_rownames = F, border_color = NA,filename = paste0("../Outputs/Plots/","HeatmapTop50Metabolites.pdf"))
+
+
+
+
+```
+
+
+
