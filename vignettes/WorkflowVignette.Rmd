@@ -346,38 +346,7 @@ analysis_data <- meta_data %>%
   left_join(peak_data_log,"PARENT_SAMPLE_NAME")
 ```
 
-
-
-
-Once we have the analysis data, we want to save it so we can use it for the 
-downstream analysis. We will save this in the "Data/Processed" folder under the
-file name "analysis_data.csv"
-
-```{r save_analysis data}
-# Save analysis data
-write.csv(analysis_data,"../Data/Processed/analysis_data.csv", row.names = F)
-```
-
-
-## Exploratory Analysis
-
-In data exploration, we use several methods to help us better understand the 
-underlying patterns in the data without using a formal hypothesis test. In this
-pipeline, we are going to focus on two methods for data exploration:
-
-A.) Principal component analysis
-
-B.) Heat maps
-
-Before diving into the data exploration, we need read the analysis data set. Note,
-we use check.names=F since column names of the analysis data are numeric. 
-
-```{r load-data2}
-# 1. Read analysis dataset
-analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
-```
-
-### Table 1
+#### Table 1
 The goal of this section is to design a table that resembles the study design of
 your experiment. This step allows us to see descriptive statistics of the samples
 in our data. For this, we are using the analysis data to define a table with a similar
@@ -474,6 +443,35 @@ tbl1
 # 3. saves table 1 
 t1flex(tbl1) %>%
   save_as_docx(path = paste0("../Outputs/Tables/","table1.docx"))
+```
+
+
+Once we have the analysis data, and we are happy with the table 1 we have created
+we want to save it so we can use it for the downstream analysis. We will save
+this in the "Data/Processed" folder under the file name "analysis_data.csv"
+
+```{r save_analysis data}
+# Save analysis data
+write.csv(analysis_data,"../Data/Processed/analysis_data.csv", row.names = F)
+```
+
+
+## Exploratory Analysis
+
+In data exploration, we use several methods to help us better understand the 
+underlying patterns in the data without using a formal hypothesis test. In this
+pipeline, we are going to focus on two methods for data exploration:
+
+A.) Principal component analysis
+
+B.) Heat maps
+
+Before diving into the data exploration, we need read the analysis data set. Note,
+we use check.names=F since column names of the analysis data are numeric. 
+
+```{r load-data2}
+# 1. Read analysis dataset
+analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
 ```
 
 
