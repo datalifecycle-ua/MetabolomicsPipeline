@@ -1532,43 +1532,35 @@ for (i in 1:length(stratas)) {
 ```
 
 
-#### P-Value Heatmaps
-We will visualize the p-values in a heatmap by having the metabolites in the row and 
-the pairwise comparisons in the columns. The values that make up the heatmap
-will be the -log10 transformed p-value. This will allow the smaller pvalue to have
-a higher intensity in the heatmap. To generate the heatmap, the following code
-uses [plotly](https://plotly.com/r/) which gives us the capability to make interactive
-plots. The heatmap that is generated will allow us to hover over the heatmap and 
-see information about the metabolite including the metabolite name and the sub-pathway
-and the p-value from the overall F-test. 
-Additionally, we group the metabolites by sub-pathway to make it easier to see 
-if multiple metabolites within a sub-pathway are significant. To do this we:
+#### Log Fold-Change Heatmap
+For the metabolites which had a significant overall p-value (which tested if the
+treatment group means were equal under the null hypothesis), we will produce a 
+heatmap of the log fold changes. To do this we will,
 
 1. Read in the results from the pairwise comparisons. If you stratified the analysis,
 you may want to copy this chunk and rerun for each strata. Additionally, we will need
-to read in the chemical annotation file.
+to read in the chemical annotation file. When we read in the results from the pairwise
+comparisons, we will filter the results to only look at the metabolites with a significant
+overall p-value. 
 
 2. Merge the chemical annotation fill with the results from the pairwise comparisons. 
 
-3. Create the heatmap data that contains only the p-values for each pairwise 
-comparison. Additionally, we -log10 transform all of the p-values. 
+3. Create the heatmap. In this step we are doing some pre-precessing which removes
+the p-value columns and then transforms the remaining fold change results from 
+wide to long format. Then we use plotly to create an interactive heatmap. 
 
-4. Create a matrix of "hover data" which will be what is displayed when we hover
-over the heatmap. Here we are choosing to display metabolite name and sub-pathway. 
+4. Display heatmap
 
-5. Generate heatmap using plotly
-
-6. Display heatmap
-
-7. Save heatmap in ".../Outputs/Plots" with the file name "PaiwiseComp_pvalue_heatmap".
+5. Save heatmap in ".../Outputs/Plots" with the file name "PaiwiseComp_EST_heatmap".
 Since this plot is interactive, it will be save as an html file that can be opened
 in a web browser. 
 
-```{r pvalue heatmap}
-
+```{r Estimate heatmap}
 # 1. Read in pairwise results
-results_pair <-read.csv("../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv", check.names = F)
- 
+results_pair <-read.csv("../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv"
+                        , check.names = F) %>%
+  filter(Overall_pval < 0.05)
+
 # Read chemical annotation file
 met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
 chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
@@ -1579,118 +1571,118 @@ chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
 data <- chem_data %>%
   select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>%
   merge(results_pair, by.x = "CHEM_ID",by.y = "Metabolite") %>%
-  arrange(SUB_PATHWAY)
-  
-
-# 3. Create the heatmap data
-heatmap_dat <- apply(data[,grepl("PVALS",names(data))],MARGIN = 2,
-                     FUN = function(x){-log10(x)})
-
-# 4. Create a matrix of "hover data"
-hover_text <- matrix(rep(paste0("Subpathway: ",data$SUB_PATHWAY, ", ",
-                                "Metabolite: ", data$CHEMICAL_NAME,
-                                ", Overall P-value: ", round(data$Overall_pval,3)),
-                         ncol(heatmap_dat)),nrow=length(data$SUB_PATHWAY))
+  arrange(SUB_PATHWAY) 
 
 
-# 5. Generate heatmap using plotly
+# 3. Produce Heatmap
+p = data %>%
+      select(CHEM_ID,SUB_PATHWAY,CHEMICAL_NAME, all_of(names(data)[grepl("EST",names(data))])) %>%
+      melt(id.vars = c("CHEM_ID","SUB_PATHWAY","CHEMICAL_NAME"), variable.name = "Contrast", 
+           value.name = "logFoldChange") %>%
+      mutate(Contrast = gsub("_ESTS","",Contrast),
+             logFoldChange = round(logFoldChange,3),
+             foldChange = exp(logFoldChange)) %>%
+      plot_ly(
+        type = "heatmap",
+        x= ~Contrast,
+        y = ~CHEMICAL_NAME,
+        z = ~logFoldChange,
+        text = ~SUB_PATHWAY,
+        hovertemplate = paste("<b>Metabolite: %{y}</b><br><br>",
+                              "Sub-pathway: %{text}<br>",
+                              "Contrast: %{x}<br>",
+                              "Log Fold-Change: %{z}<br>",
+                              "<extra></extra>"),
+        colorbar = list(title ="<b>Log Fold-Change</b>")) %>%
+      layout(title = "<b>Log Fold-Change Heatmap</b>",
+             xaxis = list(title="<b>Contrasts</b>"),
+             yaxis = list(title = ""))
 
-p <- plot_ly(x=colnames(heatmap_dat), y=as.character(data$CHEMICAL_NAME), 
-            z =as.matrix( heatmap_dat), 
-            type = "heatmap",
-            showscale = T, 
-            hoverinfo = 'text',
-            text = hover_text,
-            xaxis = list(ntick= ncol(heatmap_dat))) %>%
-  layout(title = "P-value Pairwise Comparisons Heatmap")
-
-
-# 6. Display heatmap
+# 4. Display heatmap
 p
 
 
 
-# 7. Save.
-#htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/PaiwiseComp_pvalue_heatmap_",".html"))
+# 5. Save.
+#htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/PaiwiseComp_EST_heatmap_",".html"))
 
 ```
 
-Additionally we can create a heatmap which focuses on the metabolites that had a
-significant pairwise comparison. This heatmap is useful because we can condition
-the heatmap to show which metabolites had a significant amount of variance explained
-by the treatment groups prior to looking at the pairwise comparisons. For each metabolite,
-if the overall pvalue from the F statistic was less than 0.05 AND the pairwise 
-comparison p-value was less than 0.05, then the heatmap value is set to 1 and 
-0 otherwise. In the following code we:
+
+
+#### P-Value Heatmap
+For the metabolites which had a significant overall p-value (which tested if the
+treatment group means were equal under the null hypothesis), we will now produce
+a heatmap based on the pairwise comparison p-values. To do this we will: 
 
 1. Read in the results from the pairwise comparisons. If you stratified the analysis,
 you may want to copy this chunk and rerun for each strata. Additionally, we will need
-to read in the chemical annotation file.
+to read in the chemical annotation file. When we read in the results from the pairwise
+comparisons, we will filter the results to only look at the metabolites with a significant
+overall p-value. 
 
-2. Merge the chemical annotation fill with the results from the pairwise comparisons.
-In this step we group the metabolites by pathway.
+2. Merge the chemical annotation fill with the results from the pairwise comparisons. 
 
-3. Create the heatmap data where the value is 1 if the overall p-value is less
-than 0.05 and the pairwise comparison p-value is less than 0.05.
+3. Create the heatmap. In this step we are doing some pre-precessing which removes
+the log fold change columns and then transforms the remaining p-value results from 
+wide to long format. Then we use plotly to create an interactive heatmap. 
 
-4. Create a matrix of "hover data" which will be what is displayed when we hover
-over the heatmap. Here we are choosing to display metabolite name and sub-pathway. 
+4. Display heatmap
 
-5. Generate heatmap using plotly
-
-6. Display heatmap
-
-7. Save heatmap in ".../Outputs/Plots" with the file name "SigPaiwiseComp_pvalue_heatmap".
+5. Save heatmap in ".../Outputs/Plots" with the file name "PaiwiseComp_p_value_heatmap".
 Since this plot is interactive, it will be save as an html file that can be opened
 in a web browser. 
 
-```{r sig heatmap}
+```{r p-value heatmap}
 # 1. Read in pairwise results
-results_pair <-read.csv("../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv", check.names = F)
-  
+results_pair <-read.csv("../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv"
+                        , check.names = F) %>%
+  filter(Overall_pval < 0.05)
+
 # Read chemical annotation file
 met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
 chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
-  
+
+ 
 
 # 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
-pval_col_names <- names(results_pair)[grepl("PVALS",as.character(names(results_pair)))]
 data <- chem_data %>%
   select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>%
   merge(results_pair, by.x = "CHEM_ID",by.y = "Metabolite") %>%
-  arrange(SUB_PATHWAY)
-  
-
-# 3. Create the heatmap data
-heatmap_dat <- data %>%
-  mutate(across(all_of(pval_col_names),~ ifelse(.x <0.05& Overall_pval<0.05,1,0))) %>%
-  select(all_of(pval_col_names))
-
-# 4. Create a matrix of "hover data"
-hover_text <- matrix(rep(paste0("Subpathway: ",data$SUB_PATHWAY, ", ",
-                                "Metabolite: ", data$CHEMICAL_NAME,
-                                ", Overall P-value: ", round(data$Overall_pval,3)),
-                         ncol(heatmap_dat)),nrow=length(data$SUB_PATHWAY))
+  arrange(SUB_PATHWAY) 
 
 
-# 5. Generate heatmap using plotly
-p <- plot_ly(x=colnames(heatmap_dat), y=as.character(data$CHEMICAL_NAME), 
-            z =as.matrix( heatmap_dat), 
-            type = "heatmap",
-            showscale = T, 
-            hoverinfo = 'text',
-            text = hover_text,
-            showscale=F,
-            xaxis = list(ntick= ncol(heatmap_dat))) %>%
-  layout(title = "Significant Pairwise Comparisons Heatmap")
+# 3. Produce Heatmap
+p = data %>%
+      select(CHEM_ID,SUB_PATHWAY,CHEMICAL_NAME, all_of(names(data)[grepl("PVALS",names(data))])) %>%
+      melt(id.vars = c("CHEM_ID","SUB_PATHWAY","CHEMICAL_NAME"), variable.name = "Contrast", 
+           value.name = "P_value") %>%
+      mutate(Contrast = gsub("_PVALS","",Contrast),
+             P_value = round(P_value,3)) %>%
+  arrange(SUB_PATHWAY) %>%
+      plot_ly(
+        type = "heatmap",
+        x= ~Contrast,
+        y = ~CHEMICAL_NAME,
+        z = ~P_value,
+        text = ~SUB_PATHWAY,
+        hovertemplate = paste("<b>Metabolite: %{y}</b><br><br>",
+                              "Sub-pathway: %{text}<br>",
+                              "Contrast: %{x}<br>",
+                              "P-Value: %{z}<br>",
+                              "<extra></extra>"),
+        colorbar = list(title ="<b>P-value</b>")) %>%
+      layout(title = "<b>P-Value Heatmap</b>",
+             xaxis = list(title="<b>Contrasts</b>"),
+             yaxis = list(title = ""))
 
-
-# 6. Display heatmap
+# 4. Display heatmap
 p
 
-# 7. Save heatmap
-#htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/SigPaiwiseComp_pvalue_heatmap_"
- #                                ,".html"))
+
+
+# 5. Save.
+#htmlwidgets::saveWidget(p,paste0("../Outputs/Plots/PaiwiseComp_p_value_heatmap_",".html"))
 
 ```
 
