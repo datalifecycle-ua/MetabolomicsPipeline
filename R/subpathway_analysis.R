@@ -37,7 +37,20 @@ subpathway_analysis <- function(data, chem_data, treat_var, block_var){
         )
         
         int_mod <- lm(inter_formula, data = data)
-        path_data$interaction_pval[which(path_data$CHEM_ID == var)] <- anova(int_mod)[paste0(treat_var,":",block_var),5]
+         
+        # TryCatch for Anova Modeling
+        tryCatch(
+           {path_data$interaction_pval[which(path_data$CHEM_ID == var)] <- anova(int_mod)[paste0(treat_var,":",block_var),5]},
+           
+          warning =function(w){
+            print(paste0(w," for CHEM ID ",var))
+            },
+          
+          finally = {
+            
+            path_data$interaction_pval[which(path_data$CHEM_ID == var)] <- anova(int_mod)[paste0(treat_var,":",block_var),5];
+            
+            })
         
         # Parallel model, this generalizes the model formulation
         par_formula = as.formula(
@@ -47,7 +60,19 @@ subpathway_analysis <- function(data, chem_data, treat_var, block_var){
           )
         )
         par_mod <- lm(par_formula, data = data)
-        path_data$parallel_pval[which(path_data$CHEM_ID == var)] <- anova(par_mod)[block_var,5]
+         
+        # Anova modling for the parallel model. 
+        tryCatch(
+           {
+             path_data$parallel_pval[which(path_data$CHEM_ID == var)] <- anova(par_mod)[block_var,5]
+             },
+          warning =function(w){
+            print(paste0(w," for CHEM ID ",var))
+            },
+          
+          finally = {
+            path_data$parallel_pval[which(path_data$CHEM_ID == var)] <- anova(par_mod)[block_var,5];
+                    })
         
         # Treat model
         treat_formula <- as.formula(
@@ -57,7 +82,18 @@ subpathway_analysis <- function(data, chem_data, treat_var, block_var){
           )
         )
         treat_mod <- lm(treat_formula, data = data)
-        path_data$single_pval[which(path_data$CHEM_ID == var)] <- anova(treat_mod)[treat_var,5]
+        
+        # Anova model for treatment. 
+        tryCatch(
+          {
+            path_data$single_pval[which(path_data$CHEM_ID == var)] <- anova(treat_mod)[treat_var,5]
+            },
+          warning =function(w){
+            print(paste0(w," for CHEM ID ",var))
+            },
+          finally = {
+            path_data$single_pval[which(path_data$CHEM_ID == var)] <- anova(treat_mod)[treat_var,5]
+            })
       }
       
       # Compute combined fisher probabilities for each model.
@@ -123,8 +159,18 @@ subpathway_analysis <- function(data, chem_data, treat_var, block_var){
           )
         )
         treat_mod <- lm(treat_formula, data = data)
-        path_data$single_pval[which(path_data$CHEM_ID == var)] <- anova(treat_mod)[treat_var,5]
-      }
+       
+        tryCatch(
+          {
+         path_data$single_pval[which(path_data$CHEM_ID == var)] <- anova(treat_mod)[treat_var,5]
+          },
+         warning = function(w){
+           print(paste0(w," for CHEM ID ",var))
+         },
+         finally = {path_data$single_pval[which(path_data$CHEM_ID == var)] <- anova(treat_mod)[treat_var,5]}
+        )
+         
+         }
       
       if(length(var_names) == 1){
         path_data$single_fisher[which(path_data$CHEM_ID== var)] <- anova(treat_mod)[treat_var,5]
@@ -146,5 +192,5 @@ subpathway_analysis <- function(data, chem_data, treat_var, block_var){
   }
   
   # Return path data
-  return(path_data)
+  return(path_data = path_data)
 }

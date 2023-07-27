@@ -23,7 +23,14 @@ metabolite_pairwise <- function(form,data,metabolites){
     mod <- lm(model, data = data)
     
     # run anova
-    anov <- anova(mod,lm(outcome~1))
+    tryCatch(
+      {anov <- anova(mod,lm(outcome~1))
+      },
+     warning = function(c){
+       print(paste0(c," for CHEM_ID ",metabolites[i] ))
+     },
+     finally = {anov <- anova(mod,lm(outcome~1))}
+    )
     
     # Get the F statistic pvalue
     overall <- anov$`Pr(>F)`[2]

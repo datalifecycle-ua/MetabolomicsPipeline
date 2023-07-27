@@ -781,8 +781,7 @@ select_variables <- analysis_data %>%
   arrange(desc(value)) %>%
   slice(c(1:50))
 
-
-# 3. Select the top 50 metabolites from the analysis data based off of mean value.
+# Create for loop
 maps <- list()
 for (i in 1:length(values)) {
   
@@ -809,17 +808,13 @@ for (i in 1:length(values)) {
     # 7. Create heatmap and save. 
     maps[[values[i]]] = pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
            annotation_col = meta, show_rownames = F, border_color = NA, show_colnames = F,
-           main = values[i])
+           main = values[i], silent = T)
     
 }
 
 
-# 4. Create plot with all levels
-grid.arrange(grobs= list(maps$Female[[4]],
-                         maps$Male[[4]]))
 
-
-# 5. Save heatmaps for all levels
+# 8. Save heatmaps for all levels
 grids <- grid.arrange(grobs= list(maps$Female[[4]],
                          maps$Male[[4]]))
 
@@ -931,7 +926,8 @@ value of block_var=NULL.
 
 *Note:* Metabolites with a large number of missing values may have unreliable results
 since the missing values were imputed with the minimum of the non-missing values
-of the metabolite. 
+of the metabolite. The warning message from the subpathway_analysis function will
+display the metabolite that produced the warning message. 
 
 To run this analysis, we utilize the following steps. 
 
@@ -940,7 +936,7 @@ To run this analysis, we utilize the following steps.
 2. Save the pathway analysis results to the "Data/Results" folder with the name
 "NonStratified_Full_pathway_results"
 
-```{r run subpathway analysis}
+```{r run subpathway analysis, warning=TRUE}
 # 1. Run the subpathway function
 path_dat <- subpathway_analysis(analysis_data,
                             chem_data = chem_data,
@@ -982,9 +978,10 @@ then the results for females would be saved as "Stratified_female_subpathway_res
 
 *Note:* Metabolites with a large number of missing values may have unreliable results
 since the missing values were imputed with the minimum of the non-missing values
-of the metabolite. 
+of the metabolite. The warning message from the subpathway_analysis function will
+display the metabolite that produced the warning message. 
 
-```{r stratifed analysis}
+```{r stratifed analysis, warning=FALSE}
 # 1. Name of the variable to stratify by.
 stratified_var = "Gender"
 
@@ -995,6 +992,8 @@ uni_vals <- unique(analysis_data[,stratified_var])
 
 # For each value perform the four steps listed above.
 for(i in uni_vals){
+  
+  print(paste0("Running the ", i, " strata."))
   
   # 1. Subset analysis data
   strat_data = analysis_data[analysis_data[,stratified_var]==i,]
@@ -1012,10 +1011,7 @@ for(i in uni_vals){
   # 4 Save results
   write.csv(strat_path_results, paste0("../Data/Results/Stratified_",i,"_subpathway_results.csv"), row.names = F)
   
-  
 }
-
-
 ```
 
 
@@ -1535,7 +1531,9 @@ for (i in 1:length(stratas)) {
 #### Log Fold-Change Heatmap
 For the metabolites which had a significant overall p-value (which tested if the
 treatment group means were equal under the null hypothesis), we will produce a 
-heatmap of the log fold changes. To do this we will,
+heatmap of the log fold changes. This heatmap colors will only show if the 
+log fold-change is greater than log(2) or less than log(.5). Therefore, this heatmap
+will only focus on comparisons with a fold change of two or greater. To do this we will,
 
 1. Read in the results from the pairwise comparisons. If you stratified the analysis,
 you may want to copy this chunk and rerun for each strata. Additionally, we will need
@@ -1547,7 +1545,8 @@ overall p-value.
 
 3. Create the heatmap. In this step we are doing some pre-precessing which removes
 the p-value columns and then transforms the remaining fold change results from 
-wide to long format. Then we use plotly to create an interactive heatmap. 
+wide to long format. We then mutate the logFoldChanges to only display when the 
+fold change is greater than 2 or less than .5. Then we use plotly to create an interactive heatmap. 
 
 4. Display heatmap
 
@@ -1580,8 +1579,8 @@ p = data %>%
       melt(id.vars = c("CHEM_ID","SUB_PATHWAY","CHEMICAL_NAME"), variable.name = "Contrast", 
            value.name = "logFoldChange") %>%
       mutate(Contrast = gsub("_ESTS","",Contrast),
-             logFoldChange = round(logFoldChange,3),
-             foldChange = exp(logFoldChange)) %>%
+             logFoldChange =  ifelse(logFoldChange < log(0.5) | logFoldChange > log(2),
+                                     round(logFoldChange,3), NA)) %>%
       plot_ly(
         type = "heatmap",
         x= ~Contrast,
