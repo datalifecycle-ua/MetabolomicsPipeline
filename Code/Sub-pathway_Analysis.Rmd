@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 # Set global chunk obptions
-knitr::opts_chunk$set(fig.width=12, fig.height=12)
+knitr::opts_chunk$set(fig.width=12, fig.height=12, warning = F)
 
 # Data 
 library(tidyverse)
@@ -31,7 +31,8 @@ library(FactoMineR)
 
 ## Combining plots
 library(ggpubr)
-
+library(grid)
+library(gridExtra)
 
 ## Image package
 library(magick)
@@ -146,7 +147,8 @@ value of block_var=NULL.
 
 *Note:* Metabolites with a large number of missing values may have unreliable results
 since the missing values were imputed with the minimum of the non-missing values
-of the metabolite. 
+of the metabolite. The warning message from the subpathway_analysis function will
+display the metabolite that produced the warning message. 
 
 To run this analysis, we utilize the following steps. 
 
@@ -155,8 +157,8 @@ To run this analysis, we utilize the following steps.
 2. Save the pathway analysis results to the "Data/Results" folder with the name
 "NonStratified_Full_pathway_results"
 
-```{r run ancova}
-# 1. Run the ancova function
+```{r run subpathway analysis, warning=TRUE}
+# 1. Run the subpathway function
 path_dat <- subpathway_analysis(analysis_data,
                             chem_data = chem_data,
                                   block_var = "TIME1",
@@ -166,7 +168,7 @@ path_dat <- subpathway_analysis(analysis_data,
 
 
 # 2. Save results
-write.csv(path_dat,file = "../Data/Results/NonStratified_Full_ancova_results.csv", row.names = F)
+write.csv(path_dat,file = "../Data/Results/NonStratified_Full_subpathway_results.csv", row.names = F)
 ```
 
 
@@ -197,9 +199,10 @@ then the results for females would be saved as "Stratified_female_subpathway_res
 
 *Note:* Metabolites with a large number of missing values may have unreliable results
 since the missing values were imputed with the minimum of the non-missing values
-of the metabolite. 
+of the metabolite. The warning message from the subpathway_analysis function will
+display the metabolite that produced the warning message. 
 
-```{r stratifed analysis}
+```{r stratifed analysis, warning=FALSE}
 # 1. Name of the variable to stratify by.
 stratified_var = "Gender"
 
@@ -211,11 +214,13 @@ uni_vals <- unique(analysis_data[,stratified_var])
 # For each value perform the four steps listed above.
 for(i in uni_vals){
   
+  print(paste0("Running the ", i, " strata."))
+  
   # 1. Subset analysis data
   strat_data = analysis_data[analysis_data[,stratified_var]==i,]
   
   
-  # 2. Run ancova function on the subsetted data
+  # 2. Run subpathway function on the subsetted data
   strat_path_results <- subpathway_analysis(strat_data,
                                         chem_data = chem_data,
                                   block_var = "TIME1",
@@ -227,10 +232,7 @@ for(i in uni_vals){
   # 4 Save results
   write.csv(strat_path_results, paste0("../Data/Results/Stratified_",i,"_subpathway_results.csv"), row.names = F)
   
-  
 }
-
-
 ```
 
 
@@ -653,4 +655,3 @@ for(i in 1:length(strata)){
     }
 }  
 ```
-

@@ -6,7 +6,7 @@ output: html_document
 ---
 ```{r setup, include=FALSE}
 # Set global chunk obptions
-knitr::opts_chunk$set(fig.width=12, fig.height=12)
+knitr::opts_chunk$set(fig.width=12, fig.height=12, warning = F)
 
 # Data 
 library(tidyverse)
@@ -30,7 +30,8 @@ library(FactoMineR)
 
 ## Combining plots
 library(ggpubr)
-
+library(grid)
+library(gridExtra)
 
 ## Image package
 library(magick)
@@ -61,105 +62,6 @@ we use check.names=F since column names of the analysis data are numeric.
 ```{r load-data2}
 # 1. Read analysis dataset
 analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
-```
-
-### Table 1
-The goal of this section is to design a table that resembles the study design of
-your experiment. This step allows us to see descriptive statistics of the samples
-in our data. For this, we are using the analysis data to define a table with a similar
-structure as the table below.
-
-|         | Strat 1      |Strat 2    |
-|:-------:|:------------:|:---------:|
-| *Var1 * |XX     | XX   |  
-| *Var 2* | XX    | XX   |
-| *Var 3* | XX    | XX   |
-
-
-Alternatively, we can define a table non-stratified table with only the number of
-observations within each experimental group. The following code will create the
-desired table 1 for both scenarios.
-
-
-In this chunk, we will label the analysis data variable names. Labeling the variable
-names will allow the tables to display your chosen variable names while maintaining
-the original variable name within the data. We do this in two steps.
-
-1. Choose the variable name.
-  + Change the name assigned to var1 to match the name of the variable in the
-  analysis data set which you want to include in the table.
-  
-  + Repeat this for as many variables as needed.
-  
-2. Choose a single variable to stratify the table by.
-  
-3. Assign the variable a label name
-  + you can change the label of the variable in the table by relabeling the
-  variable to the desired name on the right side of the equation. 
-  
-4. Assign a stratified variable a label name for the table. 
-
-```{r table one labels}
-# 1. Choose the meta data variable name.
-var1 = "GROUP_NAME"
-
-var2 = "TIME1"
-
-
-# 2. Choose a single variable to stratify the table by.
-stratified_var = "Gender"
-
-
-# 3. Assign the variable a label name
-label(analysis_data[,var1]) <- "Treatment Group" 
-
-label(analysis_data[,var2]) <- "Time"
-
-
-# 4. Assign a stratified variable a label name for the table. 
-label(analysis_data[,stratified_var]) = "Gender"
-```
-
-
-Now that you have properly assigned the variables, we will create table 1. To
-create the table, we will be using the table1 function. You must change the
-arguments depending on what you want the table to display. For example:
-* *Table 1 without interaction*: 
-
-$$
-table1(\sim \underbrace{var_1 + var_2 ...}_{\text{Variable names for rows}},   \ \text{data = analysis_data}  )
-$$
-
-
-
-* *Table 1 with interaction*
-
-$$
-table1(\sim \underbrace{var_1 + var_2 ...}_{\text{Variable names for rows}} \underbrace{| \ stratified\_var}_{\text{Statified Variable}},  \ \text{data = analysis_data} )
-$$
-Above is how you change the table1 function to display the table with and without
-a stratified variable. In the next chunk, we utilize the following steps.
-
-1. Create table 1. In this step you will need to use the same variable names as
-in the above chunk within the table1 function. 
-
-2. Display the table
-
-3. Save the table in the folder "/Outputs/Tables/" with the file name "table1". 
-
-```{r table one}
-# 1. Creates table1
-tbl1 <- table1(~ TIME1 + GROUP_NAME| Gender
-               , data = analysis_data)
-
-
-# 2. Displays table 1
-tbl1
-
-
-# 3. saves table 1 
-t1flex(tbl1) %>%
-  save_as_docx(path = paste0("../Outputs/Tables/","table1.docx"))
 ```
 
 
@@ -238,7 +140,7 @@ analysis by male and female.
 
 ### Heatmaps
 
-Another exploratory analysis tool we can use is heatmaps, whih is a gridded plot
+Another exploratory analysis tool we can use is heatmaps, which is a gridded plot
 based on the x-axis- and y-axis labels. The color of the spot on the grid is based on the 
 value's intensity. For our heatmap, the x-axis will be the samples, and the y-axis
 will be the metabolites. The values determining the colors will be the log 
@@ -260,79 +162,26 @@ the samples.
 
 
 The main utility of create_heatmap data is in (…), which allows you to arrange 
-the data based on experimental conditions. If you are familiar with dplyr, the 
+the columns of the heatmap data. If you are familiar with dplyr, the 
 arrange function orders samples based on the arguments passed into (...). If you 
 are unfamiliar with dplyr, an overview of the arrange function is [here](https://dplyr.tidyverse.org/reference/arrange.html).
 
-
-We will first look at the heatmap with all metabolites. The resulting heatmap
-saves into the Outputs/Plots folder under the filename "AllMetabolites.pdf."
-
-In this chunk we complete the following steps. 
-
-1. Define the heatmap_variables that will be used to order the heatmap
-
-2. Run the create_heatmap_Data function defined in the R script folder. This function
-is going to produce the matrices needed for the heatmap
-
-3. Create a palette for the heatmap. By default we are using a red/blue palette.
-
-4. Create the vals and labels matrices that will define the values of the heatmap
-and the labels of the heatmap. 
-
-5. Display heatmap
-
-6. Save heatmap in the "Outputs/Plots" folder under the filename "Heatmap_all"
+We will be building three heatmaps, each heatmap will be increasing in complexity. 
+For your expirment you may not need to use all three of these heatmaps. These 
+three heatmaps will be demonstrated with the mouse ALS data. For each heatmap
+we will look at the top 50 metabolites, which is determined by the highest mean 
+value of the metabolites. By filtering to the top 50 metabolites we will improve
+our ability to see sources of variation. 
 
 
 
-```{r overall heatmap}
-# 1. define meta analysis variables
-heatmap_variables <-   c("GROUP_NAME",
-                             "TIME1",
-                             "Gender")
+#### Heatmap with top 50 metabolites: Treatment Groups
 
-
-# 2. Create heatmap data
-heatmap_data <- create_heatmap_Data(analysis_data,heatmap_variables = heatmap_variables ,
-                               Gender, GROUP_NAME, desc(TIME1)) # Arranges data frame for heatmap (...)
-
-
-
-# 3. Heat map colors 
-palette <- colorRampPalette(rev(brewer.pal(10, "RdBu")))(256)
-
-
-
-# 4. Values for heatmap
-vals = heatmap_data$heatmap_data_vals
-
-meta = heatmap_data$heatmap_variables
-
-
-# 5. Create heatmap and save. 
-pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
-         annotation_col = meta, show_rownames = F, border_color = NA)
-
-
-# 6. Save heatmap
-pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
-         annotation_col = meta, show_rownames = F, border_color = NA,filename = paste0("../Outputs/Plots/","Heatmap_all.pdf"))
-
-```
-
-
-
-#### Heatmap with top 50 metabolites 
-
-Looking at the heatmap created in the previous chunk with all of the metabolites
-can make it challenging to determine which line goes with which metabolite. To 
-overcome this, we can filter the metabolites based on which metabolites have the
-highest mean log-scaled peak data across all observations. In the heatmap below,
-we select the top 50 metabolites. Once we know the top 50 metabolites with the
+In the heatmap below, we select the top 50 metabolites. Once we know the top 50 metabolites with the
 highest mean value, we can filter the peak_data_log data only to include those 
-metabolites. Then we can run the create_heatmap function again and create the 
-heatmap data. To do this the following steps are completed:
+metabolites. Then we can run the create_heatmap function to create the 
+heatmap data. In the create_heatmap_data function, we arrange the data by treatment
+group. To do this the following steps are completed:
 
 1. Define the heatmap_variables to use in the heatmap
 
@@ -340,7 +189,9 @@ heatmap data. To do this the following steps are completed:
 
 3. Filter the analysis_data to only include the top 50 metabolites
 
-4. Generate heatmap data using the create_heatmap_Data function
+4. Generate heatmap data using the create_heatmap_Data function. In this step
+we arrange the heatmap data by treatment group. You may need to change the (...)
+part of the function to reflect the variable names in your data. 
 
 5. Create a palette for the heatmap. By default, we are using a red/blue palette.
 
@@ -354,7 +205,7 @@ and the labels of the heatmap.
 
 ```{r top heatmap}
 # 1. Define meta analysis variables
-heatmap_variables <- c("GROUP_NAME", "TIME1", "Gender")
+heatmap_variables <- c("GROUP_NAME")
 
 
 # 2. Find the top 50 metabolites
@@ -374,7 +225,7 @@ analysis_data_top50 <- analysis_data %>%
 # 4. Create heatmap data
 heatmap_data <- create_heatmap_Data(analysis_data_top50,
                                     heatmap_variables = heatmap_variables ,
-                               Gender, GROUP_NAME, desc(TIME1)) # Arranges data frame for heatmap (...)
+                               GROUP_NAME) # Arranges data frame for heatmap (...)
 
 
 # 5. Heat map colors 
@@ -389,17 +240,177 @@ meta = heatmap_data$heatmap_variables
 
 # 7. Create heatmap and save. 
 pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
-         annotation_col = meta, show_rownames = F, border_color = NA)
+         annotation_col = meta, show_rownames = F, border_color = NA, show_colnames = F)
 
 
 # 8. Save heatmap
 pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
-         annotation_col = meta, show_rownames = F, border_color = NA,filename = paste0("../Outputs/Plots/","HeatmapTop50Metabolites.pdf"))
+         annotation_col = meta, show_rownames = F, show_colnames = F,border_color = NA,filename = paste0("../Outputs/Plots/","HeatmapTop50Metabolites.pdf"))
 
 
 
 
 ```
 
+
+#### Heatmap with top 50 metabolites: Treatment and Block Groups
+
+We can add more complexity to the heatmap by including the blocking variable in 
+the annotation. In the heatmap below the columns of the heatmap are arranged by 
+the additional variable. Here, we follow the following steps. 
+
+1. Define the heatmap_variables to use in the heatmap. For our example this will
+be GROUP_NAME and TIME1.
+
+2. Select the top 50 metabolites from the analysis data based off of mean value.
+
+3. Filter the analysis_data to only include the top 50 metabolites
+
+4. Generate heatmap data using the create_heatmap_Data function. In this step
+we arrange the heatmap data by treatment group. You may need to change the (...)
+part of the function to reflect the variable names in your data. We will be using
+desc(TIME) to arrange the time of treatment in descending order.
+
+5. Create a palette for the heatmap. By default, we are using a red/blue palette.
+
+6. Create the vals and the labels that will define the values of the heatmap
+and the labels of the heatmap. 
+
+7. Display heatmap
+
+8. Save heatmap in the "Outputs/Plots" folder under the filename
+"HeatmapTop50MetabolitesTreatmentandBlock"
+
+```{r heatmap dat2}
+# 1. Define meta analysis variables
+heatmap_variables <- c("GROUP_NAME", 
+                       "TIME1")
+
+
+# 2. Find the top 50 metabolites
+select_variables <- analysis_data %>% 
+  select(-all_of(c("PARENT_SAMPLE_NAME",heatmap_variables))) %>%
+  summarise(across(everything(),\(x) mean(x,na.rm = T))) %>%
+  pivot_longer(cols = everything()) %>%
+  arrange(desc(value)) %>%
+  slice(c(1:50))
+
+
+# 3. Filter to the top 50 metabolites
+analysis_data_top50 <- analysis_data %>%
+  select(all_of(c("PARENT_SAMPLE_NAME", heatmap_variables)), select_variables$name) 
+  
+
+# 4. Create heatmap data
+heatmap_data <- create_heatmap_Data(analysis_data_top50,
+                                    heatmap_variables = heatmap_variables ,
+                               GROUP_NAME, desc(TIME1)) # Arranges data frame for heatmap (...)
+
+
+# 5. Heat map colors 
+palette <- colorRampPalette(rev(brewer.pal(10, "RdBu")))(256)
+
+
+# 6. Values for heatmap
+vals = heatmap_data$heatmap_data_vals
+
+meta = heatmap_data$heatmap_variables
+
+
+# 7. Create heatmap and save. 
+pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
+         annotation_col = meta, show_rownames = F, border_color = NA, show_colnames = F)
+
+
+# 8. Save heatmap
+pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
+         annotation_col = meta, show_rownames = F, show_colnames = F,border_color = NA,filename = paste0("../Outputs/Plots/","HeatmapTop50MetabolitesTreamentandBlock.pdf"))
+```
+
+
+
+#### Heatmap with top 50 metabolites: Treatment and Block Groups Stratified
+We may want to stratify this heatmap even farther by adding an additional variable.
+When we add a third variable, the heatmap may become more challenging to interpret. 
+To overcome this, we recomment stratifying the heatmap by the levels of the third
+variable. For example, if we want to stratify by gender, we will have two separate
+heatmaps, one for males and one for females. 
+
+1. Idenify the statified variable and get the unique levels of the stratified 
+variables.
+
+2. Define the heatmap_variables to use in the heatmap. For our example this will
+be GROUP_NAME and TIME1.
+
+3. Select the top 50 metabolites from the analysis data based off of mean value.
+
+4. Create a heatmap for each level of the stratified variable and store the heatmaps
+in a list. 
+
+
+5. Save heatmap plots in the "Outputs/Plots" folder under the filename
+"HeatmapTop50MetabolitesTreatmentandBlockStratifed"
+
+```{r heatmaps stratified}
+# 1. Get stratified variable and stratified values
+strat_var <- "Gender"
+
+values <- unique(analysis_data[,strat_var])
+
+
+heatmap_variables <- c("GROUP_NAME", 
+                       "TIME1")
+
+
+# 2. Find the top 50 metabolites
+select_variables <- analysis_data %>% 
+  select(-all_of(c("PARENT_SAMPLE_NAME",heatmap_variables))) %>%
+  summarise(across(everything(),\(x) mean(x,na.rm = T))) %>%
+  pivot_longer(cols = everything()) %>%
+  arrange(desc(value)) %>%
+  slice(c(1:50))
+
+# Create for loop
+maps <- list()
+for (i in 1:length(values)) {
+  
+    # 3. Filter to the top 50 metabolites
+    analysis_data_top50_i <- analysis_data[analysis_data[,strat_var]==values[i],] %>%
+    select(all_of(c("PARENT_SAMPLE_NAME", heatmap_variables)), select_variables$name) 
+    
+    
+    # 4. Create heatmap data
+    heatmap_data <- create_heatmap_Data(analysis_data_top50_i,
+                                      heatmap_variables = heatmap_variables ,
+                                 GROUP_NAME, desc(TIME1)) # Arranges data frame for heatmap (...)
+    
+    # 5. Heat map colors 
+    palette <- colorRampPalette(rev(brewer.pal(10, "RdBu")))(256)
+    
+    
+    # 6. Values for heatmap
+    vals = heatmap_data$heatmap_data_vals
+    
+    meta = heatmap_data$heatmap_variables
+    
+    
+    # 7. Create heatmap and save. 
+    maps[[values[i]]] = pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
+           annotation_col = meta, show_rownames = F, border_color = NA, show_colnames = F,
+           main = values[i], silent = T)
+    
+}
+
+
+
+# 8. Save heatmaps for all levels
+grids <- grid.arrange(grobs= list(maps$Female[[4]],
+                         maps$Male[[4]]))
+
+
+
+ggsave(filename = "../Outputs/Plots/HeatmapTop50MetabolitesTreamentandBlockStratified.pdf", grids)
+
+```
 
 

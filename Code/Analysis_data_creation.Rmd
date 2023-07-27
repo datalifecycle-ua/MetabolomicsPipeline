@@ -7,6 +7,46 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+
+# Set global chunk obptions
+knitr::opts_chunk$set(fig.width=12, fig.height=12, warning = F)
+
+# Data 
+library(tidyverse)
+library(openxlsx)
+library(kableExtra)
+library(table1)
+library(flextable)
+library(reshape2)
+
+
+# Heat Map
+library(pheatmap)
+library(RColorBrewer)
+library(rstatix)
+library(plotly)
+
+# PCA
+library(factoextra)
+library(FactoMineR)
+
+
+## Combining plots
+library(ggpubr)
+library(grid)
+library(gridExtra)
+
+## Image package
+library(magick)
+
+## Pairwise comparisons
+library(emmeans)
+
+# Metabolomics Pipeline source files
+files.sources = list.files("../R")
+sapply(paste0("../R/",files.sources), source)
+
 ```
 
 ## Analysis Data Creation
@@ -18,11 +58,12 @@ does these preprocessing steps for their customers and provides the log transfor
 data for their customers in a .xlsx. We recommend utilizing the preprocessed log
 transformed provided by Metabolon. By utilizing the Log Transformed data derived
 by Metabolon, we can ensure the down stream supplemental analysis are utilizing 
-the same data.
+the same data as Metabolon.
 
-We need to merge the sample metadata and the Log normalized data together. To do
-this we are going to read in the sample metadata and the log normalized data. We
-will do this by:
+We need to merge the sample metadata and the Log normalized data together. 
+Additionally, we want to replace the column names with the names of the 
+metabolites. To do this we are going to read in the sample metadata and the log
+normalized data. We will do this by:
 
 1. Provide a path to the metabolon .xlsx file. 
 
@@ -97,16 +138,115 @@ metadata_variables <- c("PARENT_SAMPLE_NAME",
 analysis_data <- meta_data %>%
   select(all_of(metadata_variables)) %>%
   left_join(peak_data_log,"PARENT_SAMPLE_NAME")
+```
 
+#### Table 1
+The goal of this section is to design a table that resembles the study design of
+your experiment. This step allows us to see descriptive statistics of the samples
+in our data. For this, we are using the analysis data to define a table with a similar
+structure as the table below.
+
+|         | Strat 1      |Strat 2    |
+|:-------:|:------------:|:---------:|
+| *Var1 * |XX     | XX   |  
+| *Var 2* | XX    | XX   |
+| *Var 3* | XX    | XX   |
+
+
+Alternatively, we can define a table non-stratified table with only the number of
+observations within each experimental group. The following code will create the
+desired table 1 for both scenarios.
+
+
+In this chunk, we will label the analysis data variable names. Labeling the variable
+names will allow the tables to display your chosen variable names while maintaining
+the original variable name within the data. We do this in two steps.
+
+1. Choose the variable name.
+  + Change the name assigned to var1 to match the name of the variable in the
+  analysis data set which you want to include in the table.
+  
+  + Repeat this for as many variables as needed.
+  
+2. Choose a single variable to stratify the table by.
+  
+3. Assign the variable a label name
+  + you can change the label of the variable in the table by relabeling the
+  variable to the desired name on the right side of the equation. 
+  
+4. Assign a stratified variable a label name for the table. 
+
+```{r table one labels}
+# 1. Choose the meta data variable name.
+var1 = "GROUP_NAME"
+
+var2 = "TIME1"
+
+
+# 2. Choose a single variable to stratify the table by.
+stratified_var = "Gender"
+
+
+# 3. Assign the variable a label name
+label(analysis_data[,var1]) <- "Treatment Group" 
+
+label(analysis_data[,var2]) <- "Time"
+
+
+# 4. Assign a stratified variable a label name for the table. 
+label(analysis_data[,stratified_var]) = "Gender"
 ```
 
 
-Once we have the analysis data, we want to save it so we can use it for the 
-downstream analysis. We will save this in the "Data/Processed" folder under the
-file name "analysis_data.csv"
+Now that you have properly assigned the variables, we will create table 1. To
+create the table, we will be using the table1 function. You must change the
+arguments depending on what you want the table to display. For example:
+* *Table 1 without interaction*: 
+
+$$
+table1(\sim \underbrace{var_1 + var_2 ...}_{\text{Variable names for rows}},   \ \text{data = analysis_data}  )
+$$
+
+
+
+* *Table 1 with interaction*
+
+$$
+table1(\sim \underbrace{var_1 + var_2 ...}_{\text{Variable names for rows}} \underbrace{| \ stratified\_var}_{\text{Statified Variable}},  \ \text{data = analysis_data} )
+$$
+Above is how you change the table1 function to display the table with and without
+a stratified variable. In the next chunk, we utilize the following steps.
+
+1. Create table 1. In this step you will need to use the same variable names as
+in the above chunk within the table1 function. 
+
+2. Display the table
+
+3. Save the table in the folder "/Outputs/Tables/" with the file name "table1". 
+
+```{r table one}
+# 1. Creates table1
+tbl1 <- table1(~ TIME1 + GROUP_NAME| Gender
+               , data = analysis_data)
+
+
+# 2. Displays table 1
+tbl1
+
+
+# 3. saves table 1 
+t1flex(tbl1) %>%
+  save_as_docx(path = paste0("../Outputs/Tables/","table1.docx"))
+```
+
+
+Once we have the analysis data, and we are happy with the table 1 we have created
+we want to save it so we can use it for the downstream analysis. We will save
+this in the "Data/Processed" folder under the file name "analysis_data.csv"
 
 ```{r save_analysis data}
 # Save analysis data
-write.csv(analysis_data,"../Data/Processed/")
+write.csv(analysis_data,"../Data/Processed/analysis_data.csv", row.names = F)
 ```
+
 
