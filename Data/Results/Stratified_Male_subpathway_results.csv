@@ -929,7 +929,7 @@
 100021105,"Fatty Acid, Dicarboxylate","eicosenedioate (C20:1-DC)*",0.361346722383143,0,0.346810715491419,0,0.0691268704360748,0,"Interaction"
 100021123,"Lysine Metabolism","hydroxy-N6,N6,N6-trimethyllysine*",0.110648988657091,0,0.0598038412106989,0,0.29141964772714,0.11,"Interaction"
 100021131,"Fatty Acid Metabolism (Acyl Carnitine, Monounsaturated)","undecenoylcarnitine (C11:1)",0.000292737114628821,0,0.377973655052463,0.76,0.132727747931416,0.03,"Interaction"
-100021141,"Fatty Acid Metabolism (Acyl Carnitine, Hydroxy)","3-hydroxydecanoylcarnitine",0.00222026450087364,0,0.309185752073631,0.36,0.0833330206312738,0,"Interaction"
+100021141,"Fatty Acid Metabolism (Acyl Carnitine, Hydroxy)","3-hydroxydecanoylcarnitine",0.00222026450087363,0,0.309185752073631,0.36,0.0833330206312738,0,"Interaction"
 100021162,"Ceramide PEs","palmitoyl-sphingosine-phosphoethanolamine (d18:1/16:0)",0.743594104983169,0.743594104983169,0.510305727603002,0.510305727603002,0.720039427335431,0.720039427335431,"None"
 100021208,"Benzoate Metabolism","4-vinylcatechol sulfate",0.375301065508147,0.17,0.0330040439581111,0,0.309164662664813,0.37,"Parallel"
 100021220,"Methionine, Cysteine, SAM and Taurine Metabolism","succinoyltaurine",0.0843537350627296,0,0.328312342105295,0,0.707914480706297,0.37,"Interaction"

@@ -325,7 +325,7 @@
 100001170,"Leucine, Isoleucine and Valine Metabolism","3-hydroxy-2-ethylpropionate",0.311769833765214,0.83,0.467610233217782,0.84,0.950667772429385,0,"Single"
 100001178,"Fatty Acid, Dicarboxylate","3-carboxy-4-methyl-5-propyl-2-furanpropanoate (CMPF)",0.489803955274886,0.91,0.204036941801625,0.95,0.0649392009257524,0,"Single"
 100001181,"Long Chain Polyunsaturated Fatty Acid (n3 and n6)","docosapentaenoate (n3 DPA; 22:5n3)",0.948207377049301,1,0.354490711125984,0.13,0.321547792522838,0.05,"None"
-100001182,"Long Chain Polyunsaturated Fatty Acid (n3 and n6)","docosadienoate (22:2n6)",0.97264742912682,1,0.0785349689275678,0.13,0.35238142777604,0.05,"None"
+100001182,"Long Chain Polyunsaturated Fatty Acid (n3 and n6)","docosadienoate (22:2n6)",0.97264742912682,1,0.0785349689275679,0.13,0.35238142777604,0.05,"None"
 100001193,"Long Chain Polyunsaturated Fatty Acid (n3 and n6)","adrenate (22:4n6)",0.613779812303316,1,0.400603793150071,0.13,0.901470402766435,0.05,"None"
 100001195,"Long Chain Polyunsaturated Fatty Acid (n3 and n6)","docosatrienoate (22:3n3)",0.766835593071832,1,0.208687222770502,0.13,0.764114199739238,0.05,"None"
 100001197,"Medium Chain Fatty Acid","10-undecenoate (11:1n1)",0.946911908052704,0.99,0.292222636076547,0.77,0.856319779374057,1,"None"

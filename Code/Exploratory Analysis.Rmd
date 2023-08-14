@@ -2,7 +2,9 @@
 title: "Exploratory Analysis"
 author: "Joel Parker"
 date: "2023-07-17"
-output: html_document
+output:
+   html_document:
+      embed-resources: true
 ---
 ```{r setup, include=FALSE}
 # Set global chunk obptions

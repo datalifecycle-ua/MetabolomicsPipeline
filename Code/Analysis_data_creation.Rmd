@@ -2,7 +2,9 @@
 title: "Analysis_Data_Creation"
 author: "Joel Parker"
 date: "2023-07-11"
-output: html_document
+output:
+   html_document:
+      embed-resources: true
 ---
 
 ```{r setup, include=FALSE}
