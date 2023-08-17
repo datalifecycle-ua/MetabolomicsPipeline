@@ -68,6 +68,13 @@ This pipeline utilizes the
 package to ensure the R environment is consistent for each run. This
 means that all of the required packages for this project will be
 automatically installed within the Metabolomics Pipeline project folder.
+If you are using this pipeline for the first time, then use
+renv::restore() prior to running any of the files. This will install and
+update package versions used to generate this pipeline. It should be
+noted, this pipeline was generated using R 4.3.1 so if you are using an
+older version of R, then it is possible package versions may not be able
+to be reinstalled due to dependency issues. If this is the case we
+recommend to update your R version to R 4.3.1 or greater.
 
 ## Folder Structure
 
