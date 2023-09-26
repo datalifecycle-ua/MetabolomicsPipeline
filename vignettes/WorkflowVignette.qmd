@@ -252,7 +252,7 @@ Now that we have imputed and normalized our data, we need to save the data for
 subsequent sections. We will save peak_data_log in the "Data/Processed" Folder 
 under the file name "Log_transformed_data.csv".
 
-```{r save_data_1}
+```{r Save_data_1}
 # 1. Save log transformed data.
 write.csv(peak_data_log, file = "../Data/Processed/Log_transformed_data.csv",
           row.names = F)
@@ -280,11 +280,12 @@ normalized data. We will do this by:
 
 3. Read in the Log transformed data from the "Log Transformed Data" tab. 
 
-```{r read_in_analysis_data}
+```{r EnterExcelPath}
 # 1. Metabolon excel file 
 met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+```
 
-
+```{r read_in_analysis_data}
 # 2. Read in sample metadata
 meta_data <- read.xlsx(met_excel,sheet = "Sample Meta Data")
 
@@ -307,11 +308,13 @@ additional metadata variables, you can set the "additional_meta=NULL".
 2. If there are additional meta data variables, then merge the additional metadata 
 variables with the metadata from Metabolon.
 
-```{r merge additional vars}
+```{r Enter_additional_vars_path}
 # 1. Provide path to additional metadata
 additional_meta <- "../Data/Metabolon/AdditionalVars.xlsx"
+```
 
 
+```{r merge_additionalVars}
 # 2. Merge additional vars to the meta data
 if(!is.null(additional_meta)){
   meta_data <- read.xlsx(additional_meta) %>%
@@ -335,7 +338,7 @@ a Sex/Gender variable and stratify the analysis.
 2. Merge the metadata and the log transformed data together while keeping only
 the metadata variables needed for the analysis. 
 
-```{r EnterMetadataVariables}
+```{r Enter_MetadataVariables}
 # 1. Select metadata variables
 metadata_variables <- c("PARENT_SAMPLE_NAME", 
                         "GROUP_NAME",
@@ -434,16 +437,18 @@ in the above chunk within the table1 function.
 
 3. Save the table in the folder "/Outputs/Tables/" with the file name "table1". 
 
-```{r table_one}
+```{r function_table_one}
 # 1. Creates table1
 tbl1 <- table1(~ TIME1 + GROUP_NAME| Gender
                , data = analysis_data)
+```
 
-
+```{r display_table1}
 # 2. Displays table 1
 tbl1
+```
 
-
+```{r save_table1}
 # 3. saves table 1 
 t1flex(tbl1) %>%
   save_as_docx(path = paste0("../Outputs/Tables/","table1.docx"))
@@ -454,7 +459,7 @@ Once we have the analysis data, and we are happy with the table 1 we have create
 we want to save it so we can use it for the downstream analysis. We will save
 this in the "Data/Processed" folder under the file name "analysis_data.csv"
 
-```{r save_analysis data}
+```{r Save_analysisdata}
 # Save analysis data
 write.csv(analysis_data,"../Data/Processed/analysis_data.csv", row.names = F)
 ```
@@ -473,7 +478,7 @@ B.) Heat maps
 Before diving into the data exploration, we need read the analysis data set. Note,
 we use check.names=F since column names of the analysis data are numeric. 
 
-```{r load-data2}
+```{r Enter_analysisDataPath}
 # 1. Read analysis dataset
 analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
 ```
@@ -499,14 +504,14 @@ steps:
 1.Create a vector of non metabolite variables that are in the the analysis data
 set. These variables include information about the experimental conditions. 
 
-2. Create a data set for the principle component analysis which only includes 
-information on the metabolites. 
-
-3. Run PCA of the pca_dat matrix containing only the metabolites. 
-
-4. Define the plot labels. This is a character string matching the name of one of 
+2. Define the plot labels. This is a character string matching the name of one of 
 the variables in the analysis_data which will be used to label points on the PCA
 graph. 
+
+3. Create a data set for the principle component analysis which only includes 
+information on the metabolites. 
+
+4. Run PCA of the pca_dat matrix containing only the metabolites. 
 
 5. Create and display the PCA plot.
 
@@ -519,29 +524,28 @@ non_metabolite <- c("PARENT_SAMPLE_NAME",
                              "GROUP_NAME",
                              "TIME1",
                              "Gender")
+
+# 2. Define labels
+meta_var = "Gender"
 ```
 
 ```{r runPCA}
-# 2. Create PCA data containing only metabolite data
+# 3. Create PCA data containing only metabolite data
 pca_dat <- analysis_data[,!names(analysis_data) %in% non_metabolite]
 
 
-# 3. Run PCA of the pca_dat matrix containing only the metabolites.   
+# 4. Run PCA of the pca_dat matrix containing only the metabolites.   
 res.pca <- PCA(pca_dat, 
                graph = F)
 
 
-# 4. Define labels
-meta_var = "Gender"
-
-
-# 5. Create figure 
+# 6. Create figure 
 fviz_pca_ind(res.pca, 
              label = "none",
              habillage = as.factor(analysis_data[,meta_var])) 
 ```
 
-```{r savePCA}
+```{r Save_PCA}
 # 6. Save figure
 ggsave(paste0("../Outputs/Plots/","PCA.pdf"), width = 10, height = 10)
 ```
@@ -619,11 +623,12 @@ and the labels of the heatmap.
 8. Save heatmap in the "Outputs/Plots" folder under the filename "HeatmapTop50Metabolites"
 
 
-```{r top heatmap}
-# 1. Define meta analysis variables
+```{r Enter_heatmapGroupingVar1}
+# 1. Define grouping variables
 heatmap_variables <- c("GROUP_NAME")
+```
 
-
+```{r filter_top50_metabolites}
 # 2. Find the top 50 metabolites
 select_variables <- analysis_data %>% 
   select(-all_of(c("PARENT_SAMPLE_NAME",heatmap_variables))) %>%
@@ -635,15 +640,17 @@ select_variables <- analysis_data %>%
 
 # 3. Filter to the top 50 metabolites
 analysis_data_top50 <- analysis_data %>%
-  select(all_of(c("PARENT_SAMPLE_NAME", heatmap_variables)), select_variables$name) 
+  select(all_of(c("PARENT_SAMPLE_NAME", heatmap_variables)), select_variables$name)
+```
   
-
+```{r function_create_heatmapDat1}
 # 4. Create heatmap data
 heatmap_data <- create_heatmap_Data(analysis_data_top50,
                                     heatmap_variables = heatmap_variables ,
                                GROUP_NAME) # Arranges data frame for heatmap (...)
+```
 
-
+```{r generate_heatmap1}
 # 5. Heat map colors 
 palette <- colorRampPalette(rev(brewer.pal(10, "RdBu")))(256)
 
@@ -657,14 +664,12 @@ meta = heatmap_data$heatmap_variables
 # 7. Create heatmap and save. 
 pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
          annotation_col = meta, show_rownames = F, border_color = NA, show_colnames = F)
+```
 
-
+```{r Save_heatmap1}
 # 8. Save heatmap
 pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
          annotation_col = meta, show_rownames = F, show_colnames = F,border_color = NA,filename = paste0("../Outputs/Plots/","HeatmapTop50Metabolites.pdf"))
-
-
-
 
 ```
 
@@ -697,12 +702,13 @@ and the labels of the heatmap.
 8. Save heatmap in the "Outputs/Plots" folder under the filename
 "HeatmapTop50MetabolitesTreatmentandBlock"
 
-```{r heatmap dat2}
+```{r Enter_treatmentAndBlockGroups}
 # 1. Define meta analysis variables
 heatmap_variables <- c("GROUP_NAME", 
                        "TIME1")
+```
 
-
+```{r filter_top_50_metabololites2}
 # 2. Find the top 50 metabolites
 select_variables <- analysis_data %>% 
   select(-all_of(c("PARENT_SAMPLE_NAME",heatmap_variables))) %>%
@@ -715,14 +721,16 @@ select_variables <- analysis_data %>%
 # 3. Filter to the top 50 metabolites
 analysis_data_top50 <- analysis_data %>%
   select(all_of(c("PARENT_SAMPLE_NAME", heatmap_variables)), select_variables$name) 
-  
+```  
 
+```{r Function_createheatmapData2}
 # 4. Create heatmap data
 heatmap_data <- create_heatmap_Data(analysis_data_top50,
                                     heatmap_variables = heatmap_variables ,
                                GROUP_NAME, desc(TIME1)) # Arranges data frame for heatmap (...)
+```
 
-
+```{r generate_heatmap2}
 # 5. Heat map colors 
 palette <- colorRampPalette(rev(brewer.pal(10, "RdBu")))(256)
 
@@ -736,8 +744,9 @@ meta = heatmap_data$heatmap_variables
 # 7. Create heatmap and save. 
 pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
          annotation_col = meta, show_rownames = F, border_color = NA, show_colnames = F)
+```
 
-
+```{r Save_heatmap2}
 # 8. Save heatmap
 pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
          annotation_col = meta, show_rownames = F, show_colnames = F,border_color = NA,filename = paste0("../Outputs/Plots/","HeatmapTop50MetabolitesTreamentandBlock.pdf"))
@@ -767,25 +776,29 @@ in a list.
 5. Save heatmap plots in the "Outputs/Plots" folder under the filename
 "HeatmapTop50MetabolitesTreatmentandBlockStratifed"
 
-```{r heatmaps stratified}
+```{r Enter_stratifiedVars_and_block-treatment}
 # 1. Get stratified variable and stratified values
 strat_var <- "Gender"
 
 values <- unique(analysis_data[,strat_var])
 
-
+# 2 Get heatmap Variables
 heatmap_variables <- c("GROUP_NAME", 
                        "TIME1")
+```
 
-
-# 2. Find the top 50 metabolites
+```{r filter_top50_metabolites}
+# 3. Find the top 50 metabolites
 select_variables <- analysis_data %>% 
   select(-all_of(c("PARENT_SAMPLE_NAME",heatmap_variables))) %>%
   summarise(across(everything(),\(x) mean(x,na.rm = T))) %>%
   pivot_longer(cols = everything()) %>%
   arrange(desc(value)) %>%
   slice(c(1:50))
+```
 
+
+```{r create_heatmaps3_for_loop}
 # Create for loop
 maps <- list()
 for (i in 1:length(values)) {
@@ -816,9 +829,9 @@ for (i in 1:length(values)) {
            main = values[i], silent = T)
     
 }
+```
 
-
-
+```{r Save_heatmaps3_asGrid}
 # 8. Save heatmaps for all levels
 grids <- grid.arrange(grobs= list(maps$Female[[4]],
                          maps$Male[[4]]))
@@ -841,12 +854,16 @@ section. The two matrices we will need are:
 2. Chemical annotation data (chem_data): Contains all of the information about the
 metabolites, including which sub-pathway and super-pathway they belong to. 
 
-```{r load-dataPrimary analysis}
+```{r Enter_analysisPath_and_metabolomePath}
 # 1. Path to Metabolon .xlsx file.
 met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
 
+analysis_dat_path <- "../Data/Processed/analysis_data.csv"
+```
+
+```{r read_analysis_and_chem}
 # 2. Analysis Data
-analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
+analysis_data <- read.csv(analysis_dat_path, check.names = F)
 
 
 # 3. Read chemical annotations
@@ -941,16 +958,15 @@ To run this analysis, we utilize the following steps.
 2. Save the pathway analysis results to the "Data/Results" folder with the name
 "NonStratified_Full_pathway_results"
 
-```{r run subpathway analysis, warning=TRUE}
+```{r Function_subPath_analysis, warning=TRUE}
 # 1. Run the subpathway function
 path_dat <- subpathway_analysis(analysis_data,
                             chem_data = chem_data,
                                   block_var = "TIME1",
                                   treat_var = "GROUP_NAME")
+```
 
-
-
-
+```{r Save_sub-path-Results}
 # 2. Save results
 write.csv(path_dat,file = "../Data/Results/NonStratified_Full_subpathway_results.csv", row.names = F)
 ```
@@ -986,15 +1002,30 @@ since the missing values were imputed with the minimum of the non-missing values
 of the metabolite. The warning message from the subpathway_analysis function will
 display the metabolite that produced the warning message. 
 
-```{r stratifed analysis, warning=FALSE}
+```{r Enter_modelvars_Stratified, warning=FALSE}
+# Enter block variable name
+blockvar = "TIME1"
+
+# Enter treatment variable
+treatvar = "GROUP_NAME"
+
+
 # 1. Name of the variable to stratify by.
 stratified_var = "Gender"
 
-
 # 3. Find unique values of this variable
 uni_vals <- unique(analysis_data[,stratified_var])
+```
 
+```{r Save_Path_For_Stratified_Analysis}
+# Enter Statified Variable path (Do not include / at the end)
+statified_data_path = "../Data/Processed"
 
+# Enter Statified Results path
+stratified_results_path = "../Data/Results"
+```
+
+```{r run_stratified_analysis}
 # For each value perform the four steps listed above.
 for(i in uni_vals){
   
@@ -1007,14 +1038,14 @@ for(i in uni_vals){
   # 2. Run subpathway function on the subsetted data
   strat_path_results <- subpathway_analysis(strat_data,
                                         chem_data = chem_data,
-                                  block_var = "TIME1",
-                                  treat_var = "GROUP_NAME")
+                                  block_var = blockvar,
+                                  treat_var = treatvar)
   
   # 3 Save stratified data
-  write.csv(strat_data, paste0("../Data/Processed/analysis_data_",i,".csv"), row.names = F)
+  write.csv(strat_data, paste0(stratified_data_path,"/analysis_data_",i,".csv"), row.names = F)
   
   # 4 Save results
-  write.csv(strat_path_results, paste0("../Data/Results/Stratified_",i,"_subpathway_results.csv"), row.names = F)
+  write.csv(strat_path_results, paste0(stratified_results_path,"/Stratified_",i,"_subpathway_results.csv"), row.names = F)
   
 }
 ```
@@ -1057,7 +1088,7 @@ single model is displayed.
 if a sub-pathway shows a significant p-value for the interaction model and the parallel
 model, then the sub-pathway model type is only "interaction". 
 
-```{r table of significant subpathways, results='asis'}
+```{r Enter_results_paths_and_strata_names}
 # 1. Read in Results from the analysis step. 
 results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
                   "../Data/Results/Stratified_Female_subpathway_results.csv")
@@ -1065,8 +1096,14 @@ results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
 
 # 2. Define the names of the strata
 strata <- c("Male", "Female")
+```
 
+```{r Save_path_for_sigModels_by_model_type}
+# Enter path to save tables
+path_for_sigModels_by_model_type = "../Outputs/Tables"
+```
 
+```{r sigMetabolites_by_modelType,results='asis'}
 for (i in 1:length(strata)) {
   
     # 3. Read in results data
@@ -1106,7 +1143,7 @@ for (i in 1:length(strata)) {
      
      # 8. Save table
      save_as_docx(sig_subPaths,path=paste0(
-       "../Outputs/Tables/NumberOfSigPathwaysByModelType_",strata[i],".docx"))
+      path_for_sigModels_by_model_type ,"/NumberOfSigPathwaysByModelType_",strata[i],".docx"))
 }     
 ```
 
@@ -1145,7 +1182,7 @@ the model type.
 *Note:* The model type for each sub-pathway is determined hierarchically. For instance, 
 if a sub-pathway shows a significant p-value for the interaction model and the parallel
 model, then the sub-pathway model type is only "interaction". 
-```{r proportion in super pathways, results='asis'}
+```{r Enter_results_and_strataName2}
 # 1. Read in Results from the analysis step. 
 results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
                   "../Data/Results/Stratified_Female_subpathway_results.csv")
@@ -1153,8 +1190,15 @@ results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
 
 # 2. Define the names of the strata
 strata <- c("Male", "Female")
+```
 
+```{r Save_tablePaths2}
+# Enter path for where you would like to store your results.
+tableResults2 <- "../Outputs/Tables"
 
+```
+
+```{r sigSubpaths_within_super-path}
 for(i in 1:length(strata)){
   
   # 3 Read results for the strata
@@ -1212,7 +1256,7 @@ for(i in 1:length(strata)){
   
   
   # 8. Save table
-  save_as_docx(superPath,path = paste0("../Outputs/Tables/SigSuperPathwayPecentages_",strata[i],".docx"))
+  save_as_docx(superPath,path = paste0(tableResults2,"/SigSuperPathwayPecentages_",strata[i],".docx"))
 }     
 ```
 
@@ -1241,7 +1285,7 @@ for the model type with the the pathways that were non-significant filtered out.
 
 8. Save table in the "Outputs/Tables" folder with the name "SigSubpathwayTable_{{strata}}"
 
-```{r table of counts for each subpathway, results='asis'}
+```{r Enter_resultsPath_3}
 # 1. Read in Results from the analysis step. 
 results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
                   "../Data/Results/Stratified_Female_subpathway_results.csv")
@@ -1249,8 +1293,14 @@ results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
 
 # 2. Define the names of the strata
 strata <- c("Male", "Female")
+```
 
 
+```{r Save_tablePaths3}
+tablePaths3 = "../Outputs/Tables"
+```
+
+```{r significant_metabolites_list, results='asis'}
 # Create for loop
 for (i in 1:length(strata)){
   
@@ -1302,7 +1352,7 @@ for (i in 1:length(strata)){
   
   
   # Save table
-  save_as_docx(path = paste0("../Outputs/Tables/SigSubpathwayTable_",strata[i],".docx"))
+  save_as_docx(path = paste0(tablePaths3,"/SigSubpathwayTable_",strata[i],".docx"))
 }
 ```
 
@@ -1349,7 +1399,7 @@ Create a second for loop which:
 "Metabolite_model_pvalues_{{pathway}}_{{strata}}"
 
 
-```{r table of counts for each subpathway top five, results='asis'}
+```{r Enter_results_and_strataName4}
 # 1. Read in Results from the analysis step. 
 results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
                   "../Data/Results/Stratified_Female_subpathway_results.csv")
@@ -1359,10 +1409,16 @@ results_path <- c("../Data/Results/Stratified_Male_subpathway_results.csv",
 strata <- c("Male", "Female")
 
 
-# 3 Model type (Interaction, Parallel, Single)
+# 3 Enter Model type (Interaction, Parallel, Single)
 mod = "Interaction"
+```
+
+```{r Save_tablePaths4}
+tablePaths4 = "../Outputs/Tables"
+```
 
 
+```{r metaboloites_within_sig_subpath, results='asis'}
 # Create for loop
 for(i in 1:length(strata)){
   # 4. Read in table data and results from overall analysis. 
@@ -1434,7 +1490,7 @@ for(i in 1:length(strata)){
       
       # 11. Save table 
     save_as_docx(top_pathway_table, 
-                 path = paste0("../Outputs/Tables/Metabolite_model_pvalues_",gsub("[^A-Za-z0-9 ]","",pathways[j]),"_",strata[i],".docx"))
+                 path = paste0(tablePaths4,"/Metabolite_model_pvalues_",gsub("[^A-Za-z0-9 ]","",pathways[j]),"_",strata[i],".docx"))
       
     }
 }  
@@ -1447,9 +1503,12 @@ metabolite_pairwise function defined in the R scripts. We will first read in the
 analysis data needed for this analysis. Since the column names of the analysis
 data are numeric, we should convert all of the column names to to characters.
 
+```{r Enter_analysisDataPath3}
+path3 = "../Data/Processed/analysis_data.csv"
+```
 ```{r get significant sub pathways}
 # 1. Read in data from the analysis above
-analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
+analysis_data <- read.csv(path3, check.names = F)
 
 # 2. Make the variable names charactors
 names(analysis_data) <- as.character(names(analysis_data))
@@ -1499,20 +1558,27 @@ Create a for look that:
 6. Save results in the "../Data/Results/Pairwise_Comparisons" folder with the 
 file name "Pairwise_{{strata}}.
 
-```{r run subpathway analysis on significant pathways, warning=FALSE}
+```{r Enter_stratvar_and_modelFormula, warning=FALSE}
 # 1. Define the variable in the analysis data that we want to stratify 
 strata_var <- "Gender"
 
 
 # 2. Define the form variable
 form <- "GROUP_NAME*TIME1"
+```
 
-
-# Create a list of metabolites
-analysis_variables <- c("PARENT_SAMPLE_NAME", "GROUP_NAME",
+```{r Enter_nonMetabolite_variables}
+# Enter Non-metabolite variables
+non_metabolite <- c("PARENT_SAMPLE_NAME", "GROUP_NAME",
                                            "TIME1", "Gender")
-metabolites <- names(analysis_data)[!names(analysis_data) %in% analysis_variables ]
+metabolites <- names(analysis_data)[!names(analysis_data) %in% non_metabolite]
+```
 
+```{r Save_pairwise_statified_results}
+pair_strat_results_path = "../Data/Results/Pairwise_Comparisons"
+```
+
+```{r stratified_Pairwise_analysis}
 stratas <- unique(analysis_data[,strata_var])
 for (i in 1:length(stratas)) {
   
@@ -1526,7 +1592,7 @@ for (i in 1:length(stratas)) {
                                        metabolites = metabolites)
   
   # 6. Save results
-  write.csv(strat_results, file = paste0("../Data/Results/Pairwise_Comparisons/Pairwise_",
+  write.csv(strat_results, file = paste0(pair_strat_results_path,"/Pairwise_",
                                          stratas[i],".csv"), row.names = F)
   
   }
@@ -1559,14 +1625,22 @@ fold change is greater than 2 or less than .5. Then we use plotly to create an i
 Since this plot is interactive, it will be save as an html file that can be opened
 in a web browser. 
 
-```{r Estimate heatmap}
+```{r Enter_pairwise_results_path}
+# Enter pairwise results path
+pair_results_path = "../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv"
+
+# Enter chemical annotation path
+met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+```
+
+
+```{r estimate_heatmap}
 # 1. Read in pairwise results
-results_pair <-read.csv("../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv"
-                        , check.names = F) %>%
+results_pair <-read.csv(pair_results_path,
+                         check.names = F) %>%
   filter(Overall_pval < 0.05)
 
 # Read chemical annotation file
-met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
 chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
 
  
@@ -1637,14 +1711,22 @@ wide to long format. Then we use plotly to create an interactive heatmap.
 Since this plot is interactive, it will be save as an html file that can be opened
 in a web browser. 
 
+
+```{r Enter_pairwise_results_path2}
+# Enter pairwise results path
+pair_results_path = "../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv"
+
+# Enter chemical annotation path
+met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+```
+
 ```{r p-value heatmap}
 # 1. Read in pairwise results
-results_pair <-read.csv("../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv"
-                        , check.names = F) %>%
+results_pair <-read.csv(pair_results_path,
+                         check.names = F) %>%
   filter(Overall_pval < 0.05)
 
 # Read chemical annotation file
-met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
 chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
 
  
@@ -1738,21 +1820,31 @@ Here we look at the boxplots for each metabolite within a specified subpathway u
 the subpathway_boxplots function. The subpathway_boxplots function takes the 
 following arguments
 
+```{r Enter_analysis_and_chem_path}
+# Enter pairwise results path
+analysis = "../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv"
 
-```{r boxplots, fig.width = 10, fig.height=10}
+# Enter chemical annotation path
+met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+```
+
+```{r Enter_subpathway}
+# 3. Specify subpathway of interest. 
+subpath = "Gamma-glutamyl Amino Acid"
+```
+
+
+```{r loadData, fig.width = 10, fig.height=10}
 
 # 1. Read in analysis data
-analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
+analysis_data <- read.csv(analysis, check.names = F)
 
 # 2. Reach in chemical annotation data
 # Read chemical annotation file
-met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
 chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
-  
-# 3. Specify subpathway of interest. 
-subpath = "Gamma-glutamyl Amino Acid"
+```  
 
-
+```{r Function_subpathBoxplot}
 # 4. Run the subpathway_boxplots function
 box_1 <- subpathway_boxplots(analysis_data =  analysis_data,
                 chem_data = chem_data,
@@ -1761,14 +1853,17 @@ box_1 <- subpathway_boxplots(analysis_data =  analysis_data,
                 groupBy = GROUP_NAME,
                 # Additional analysis data filtering options. 
                 Gender == "Male", GROUP_NAME != "Control")
+```
 
-
+```{r dispaly_boxplot}
 # 5. Customize labels for the boxplots
 box_1 +
   labs(x = "Time", y="Scaled Intensity", color="Treatment Group",
        title = "Metabolite boxplots for the Gamma-glutamyl Amino Acid Subpathway")
+```
 
 
+```{r Save_boxplot}
 # 6. Save boxplots. You can change the file type for example change pdf to png. 
 ggsave(filename = paste0("../Outputs/Plots/Metabolite_boxplots_",subpath,".pdf"))
 
@@ -1836,25 +1931,33 @@ correspond with the original values.
 "linePlots_{{subpathway}} where {{subpathway}} is the name of the subpathway 
 defined in step 4.
 
+```{r Enter_analysis_and_chem_path2}
+# Enter pairwise results path
+analysis = "../Data/Results/Pairwise_Comparisons/Pairwise_Female.csv"
 
-```{r line-plots}
+# Enter chemical annotation path
+met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+```
+```{r loadData2}
+
 # 1. Read in analysis data
-analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
+analysis_data <- read.csv(analysis, check.names = F)
 
 # 2. Reach in chemical annotation data
-met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+# Read chemical annotation file
 chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
+```  
 
-
+```{r Function_dataFilter}
 # 3. Prep data for line plots
 analysis_data <- analysis_data %>%
   filter(Gender=="Male") %>%
   mutate(TIME1 = case_when(TIME1== "PreSymp" ~ 1,
                            TIME1 =="Onset" ~ 2,
                        TIME1 == "End" ~ 3))
+```
 
-
-
+```{r }
 # 4. Define subpathway of interest. 
 subpathway = "Gamma-glutamyl Amino Acid"
 
