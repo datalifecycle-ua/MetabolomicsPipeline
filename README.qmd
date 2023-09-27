@@ -1,10 +1,7 @@
 ---
 title: "Metabolomics Pipeline"
 author: "Joel Parker"
-format: 
-  gfm:
-    mermaid-format: js
-    fig-responsive: false
+format: gfm
 editor: visual
 ---
 
