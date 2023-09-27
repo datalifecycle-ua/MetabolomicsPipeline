@@ -8,24 +8,32 @@ complement the analysis by Metabolon. In the Metabolon data, each
 “sub-pathway” classifies a collection of metabolites, and each
 “super-pathway” classifies a collection of sub-pathways. The below
 figure highlights the steps we will be taking, which highlight the main
-modules of this pipeline.
+modules of this pipeline. The workflow for each module is highlighted in
+the [Modules](#modules) section, which will link each step of the
+pipeline to the .R files.
 
 <img src='Workflow.png'>
 
-The figure above highlights the five modules in this pipeline
+The figure above highlights the six modules in this pipeline
 
 1.  [Peak Normalization and
-    standardization](#peak-normalization-and-standardization-(default=off))
+    standardization](#peak-normalization-and-standardization)
 
 2.  [Analysis Data Creation](#analysis-data-creation)
 
-3.  Exploratory Peak Analysis
+3.  [Exploratory Peak Analysis](#exploratory-peak-analysis)
 
-4.  Sub-pathway Analysis
+4.  [Subpathway Analysis](#subpathway-analysis)
 
-5.  Pairwise Comparisons at the metabolite level.
+5.  [Pairwise Comparisons at the metabolite
+    level](#pairwise-comparisons-at-the-metabolite-level)
 
-6.  Metabolite box plots and line plots within sub-pathways.
+6.  [Metabolite box plots and line plots within
+    subpathways](#metabolite-box-plots-and-line-plots-within-subpathways)
+
+Prior to jumping into the details of each of the modules, the README
+disscusses [installation](#installation) and [how to get
+started](#getting-started) using the pipeline.
 
 ## Installation
 
@@ -65,7 +73,7 @@ from Metabolon in the “Data/Metabolon” folder and run the
 the analysis data. Once the analysis data is created, you can run any of
 the analysis sections in the “Code” folder independently.
 
-## renv
+### renv
 
 This pipeline utilizes the
 [renv](https://rstudio.github.io/renv/articles/renv.html#reproducibility)
@@ -80,7 +88,7 @@ older version of R, then it is possible package versions may not be able
 to be reinstalled due to dependency issues. If this is the case we
 recommend to update your R version to R 4.3.1 or greater.
 
-## Folder Structure within git-hub
+### Folder Structure within git-hub
 
 To get started, in the Metabolomics pipeline working directory, there
 are five folders with the following folder structure:
@@ -106,8 +114,317 @@ The report saves to the “Outputs/Reports” folder.
 
 ## Modules
 
-### Peak Normalization and standardization (Default=OFF)
+### Peak Normalization and standardization
 
 Since Metabolome provides peak normalization and standardization, we
 recommend using the normalized peak data from Metabolome rather than
 “re-normalizing” the peak data. However,
+
+``` mermaid
+flowchart LR
+
+    %% enter all modules
+    A{&quot;Enter Metabolome .xlsx path &lt;br&gt; (Enter_peakDataPath.R)&quot; }
+    
+    B[(&quot;Load Raw Peak Data &lt;br&gt; (loadPeakData.R)&quot;)]
+
+    C[&quot;Box plots before standardization &lt;br&gt; (beforeMedianStandardization.R)&quot;]
+
+    D[&quot;Median Standardization &lt;br&gt; (medianStandardization.R)&quot;]
+
+    E[&quot;Box plots after median standarization &lt;br&gt; (afterMedianStandardization.R)&quot;]
+
+    F[&quot;Minimume Value Imputation &lt;br&gt; (minValImpute.R)&quot;]
+
+    G[&quot;Log transformation &lt;br&gt; (logTransformation.R)&quot;]
+
+    H{&quot;Save Normalized Peak Data &lt;br&gt; (Save_dataNorm.R)&quot;}
+
+%% Create contections between nodes
+A --&gt; B
+B --&gt; C
+B --&gt; D
+subgraph &quot;Normalization and Standardization&quot;
+  C
+  D --&gt; E
+  D --&gt; F
+  F --&gt; G
+
+end
+G --&gt; H
+```
+
+### Analysis Data Creation
+
+``` mermaid
+
+
+flowchart TD
+
+    %% enter all modules
+    A{&quot;Enter Metabolome .xlsx path &lt;br&gt; (Enter_ExcelPath.R)&quot; }
+    
+    
+    B[(&quot;Load Raw Peak and Annotation Data &lt;br&gt; (readRawData}.R)&quot;)]
+
+    C{&quot;Path to additional meta data variables (optional) &lt;br&gt; (Enter_additionalVarsPath.R)&quot;}
+
+    L[(&quot;Load additional meta data &lt;br&gt; (loadAdditionalMeta.R)&quot;)]
+
+    D[&quot;Merge additional meta data &lt;br&gt; (merge_additionalVars.R)&quot;]
+
+    E{&quot;Select nesscisary meta data variables &lt;br&gt; (Enter_MetadataVariables.R)&quot;}
+
+    F[&quot;Merge metadata with Norm peak data &lt;br&gt; (mergeAnalysisData.R)&quot;]
+
+    G{&quot;Enter table1 labels &lt;br&gt; (Enter_tableOneLabels.R)&quot;}
+
+    H{&quot;Generate table 1 &lt;br&gt; (function_tableOne.R)&quot;}
+
+    I[&quot;Display table 1 &lt;br&gt; (displayTable1.R)&quot;]
+
+    J{&quot;Save table1 &lt;br&gt; (Save_table1.R)&quot;}
+
+    K{&quot;Save analysis data &lt;br&gt; (Save_analysisdata.R)&quot;}
+
+    %% Create relationships between modules
+    A --&gt;B
+    C --&gt; L
+    L --&gt; D
+    B --&gt; D
+    subgraph Analysis Data Creation
+    
+        E --&gt; F
+        F --&gt; G
+        F --&gt; H
+        D --&gt; E
+        G --&gt; H
+        H --&gt; I
+
+    end
+    F --&gt; K
+    I --&gt; J
+```
+
+### Exploratory Peak Analysis
+
+``` mermaid
+flowchart TD
+    
+    %% Define nodes
+    A{&quot;Analysis Data Path &lt;br&gt; (Enter_analysisDataPath.R)&quot;}
+    B{&quot;Define Metadata Variables &lt;br&gt; (Enter_nonMetaboliteData.R)&quot;}
+
+    C[(&quot;Load Analysis Data &lt;br&gt; (readAnalysisData.R)&quot;)]
+
+    D[&quot;Run PCA &lt;br&gt; (runPCA.R)&quot;]
+
+    E{&quot;Save PCA &lt;br&gt; (Save_PCA.R)&quot;}
+
+    F{&quot;Define Heatmap Variables &lt;br&gt; (Enter_heatmapGroupingVar1.R)&quot;}
+
+    G[&quot;Filter top 50 metabolites &lt;br&gt; (filterTop50Metabolites.R)&quot;]
+
+    H{&quot;Heatmap Data Function &lt;br&gt; (function_createHeatmapDat1.R)&quot;}
+
+    I[&quot;Generate Heatmap Treatment &lt;br&gt; (generateHeatmap1.R)&quot;]
+    J{&quot;Save Heatmap treatment &lt;br&gt; (Save_heatmap1.R)&quot;}
+
+%% Heatmap 2 
+ K{&quot;Define treatment, block and strata &lt;br&gt; (Enter_stratifiedVarsAndBlockTreatment.R)&quot;}
+
+    L[&quot;Filter top 50 metabolites &lt;br&gt; (filter_top50_metabolites3.R)&quot;]
+
+    M{&quot;Heatmap Data Function &lt;br&gt; (function_createHeatmapDat3.R)&quot;}
+
+    O{&quot;Save Heatmap treatment &lt;br&gt; (Save_heatmaps3AsGrid.R)&quot;}
+
+%% Establish relationships
+
+    A--&gt;C
+    B --&gt; D
+    C --&gt; D
+    D --&gt; E
+    subgraph PCA
+        D
+
+    end
+    E
+    C --&gt; G
+    F --&gt; G
+    subgraph Heatmap Treatment
+        G --&gt; H
+        H --&gt; I
+    end
+    I --&gt; J
+
+    K --&gt; L
+    C--&gt; L
+    subgraph Heatmap Stratified
+    L --&gt; M
+    end
+    M--&gt; O
+
+```
+
+### Subpathway Analysis
+
+#### Subpathway analysis
+
+``` mermaid
+flowchart TD
+    
+    %% Define nodes
+    Path{&quot;Enter Analysis and &lt;br&gt; Chemical Annotation path &lt;br&gt; (Enter_analysisPathAndMetabolomePath.R)&quot;}
+
+    Read[(&quot;Read in Data &lt;br&gt; (read_analysisAndChem.R)&quot;)]
+
+    subPath{&quot;SubPathway Analysis &lt;br&gt; (Function_subPathAanalysis.R)&quot;}
+
+    saveResults{&quot;Save Subpathway Analysis Results &lt;br&gt; (Save_subpathResults.R)&quot;}
+
+    stratifiedVar{&quot;Enter Stratified Variable &lt;br&gt; (Enter_modelvarsStratified)&quot;}
+
+    resultsPath{&quot;Enter results path &lt;br&gt; (SavePathForStratifiedAnalysis.R) &quot;}
+
+    runStatifiedSubpath[&quot;Run Stratified Subpath analsysi &lt;br&gt; (runStratifiedAnalysis)&quot;]
+
+    %% Create Relationships
+    Path --&gt; Read
+    Read --&gt; subPath
+    subgraph Subpathway Analysis
+    subPath 
+    end
+    subPath --&gt; saveResults
+
+    Read --&gt;runStatifiedSubpath
+    resultsPath --&gt; runStatifiedSubpath
+    stratifiedVar --&gt; runStatifiedSubpath
+    subgraph Statified Subpathway Analysis
+    runStatifiedSubpath
+    end
+
+```
+
+#### Subpathway results tables
+
+``` mermaid
+flowchart TD
+    
+    %% Define nodes
+    Path{&quot;Path for each strata&#39;s results &lt;br&gt; (Enter_resultsPathsAndStrataNames.R)&quot;}
+
+    Read{&quot;Enter Path to save tables &lt;br&gt; (Save_tablePaths.R)&quot;}
+
+    MetByModel[&quot;Metabolite By Sig. Model Type &lt;br&gt; (sigMetabolitesByModelType.R)&quot;]
+
+    PropSuper[&quot;Proportion Sig. Sub Within Super &lt;br&gt; (sigSubpathsWithinSuperPath.R)&quot;]
+
+    SigMetList[&quot;Table of Sig. Metabolites &lt;br&gt; (significantMetabolitesList.R)&quot;]
+
+    ModelType{&quot;Enter Model Type of Interest &lt;br&gt; (Enter_modelType.R)&quot;}
+    
+    metaWIthinSig[&quot;Metabolites Withing &lt;br&gt; Sig. Subpathway &lt;br&gt; (metaboloitesWithinSigSubpath.R)&quot;]
+
+    %% Create Relationships
+    Path --&gt; MetByModel
+    Read --&gt; MetByModel
+
+    Path --&gt; PropSuper
+    Read --&gt; PropSuper
+
+    Path --&gt; SigMetList
+    Read --&gt; SigMetList
+
+    Path --&gt; metaWIthinSig
+    Read --&gt; metaWIthinSig
+    ModelType --&gt; metaWIthinSig
+```
+
+### Pairwise Comparisons at the metabolite level
+
+#### 1. Pairwise Analysis
+
+``` mermaid
+flowchart TD
+    
+    %% Define nodes
+    Path{&quot;Enter Path for Analysis Data &lt;br&gt; (Enter_analysisDataPath3.R)&quot;}
+
+    vars{&quot;Enter Variable Names &lt;br&gt; (Enter_Variables.R)&quot;}
+
+    results{&quot;Enter Path To Save Results &lt;br&gt; (Save_pairwiseStatifiedResults.R)&quot;}
+
+    pairwise[&quot;Statified Pairwise Analysis &lt;br&gt; (stratified_PairwiseAnalysis.R)&quot;]
+
+    
+    Path --&gt; pairwise
+    vars --&gt; pairwise
+    results --&gt; pairwise
+    
+    subgraph Pairwise Analysis
+    pairwise
+    end
+
+```
+
+#### 2. Pairwise Results Strata Visualizations
+
+``` mermaid
+flowchart TD
+    
+    %% Define nodes
+  
+    Path2{&quot;Enter Path to Strata Result .csv &lt;br&gt; (Enter_pairwiseResultsPath.R)&quot;}
+
+    fold[&quot;Fold Change Heatmap &lt;br&gt; (estimate_heatmap.R)&quot;]
+    pval[&quot;P-Value Heatmap &lt;br&gt; (pValueHeatmap.R)&quot;]
+
+    Path2--&gt;fold
+    Path2--&gt; pval
+
+    subgraph Visualizaitons
+    fold
+    pval
+    end
+
+```
+
+### Metabolite box plots and line plots within subpathways.
+
+``` mermaid
+flowchart TD
+    
+    %% Define nodes
+  paths{&quot;Enter Analysis and Chem Paths &lt;br&gt; (Enter_Paths)&quot;}
+
+  subpath{&quot;Enter Subpathway of Interest &lt;br&gt; (Enter_subpathway.R)&quot;}
+
+  output{&quot;Enter Output Folder Path &lt;br&gt; (Enter_folder.R)&quot;}
+
+  subpathBoxplots{&quot;Function: Subpathway BoxPlots Function &lt;br&gt; (Function_boxPlots.R)&quot;}
+  
+  functionlinePlots{&quot;Function: Line Plots &lt;br&gt;&quot;}
+
+  mutation{&quot;Data Mutation &lt;br&gt; (Function_dataMutation.R)&quot;}
+
+  %% Creaate Relationships  
+  paths --&gt; subpathBoxplots
+  subpath --&gt; subpathBoxplots
+  output --&gt; subpathBoxplots
+
+  subgraph Metabolite BoxPlots
+    subpathBoxplots
+  end
+
+  paths --&gt; mutation
+  mutation --&gt; functionlinePlots
+  subpath --&gt; functionlinePlots
+  output --&gt; functionlinePlots
+
+  subgraph LinePlots
+    mutation
+    functionlinePlots
+  end
+
+```

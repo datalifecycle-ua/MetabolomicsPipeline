@@ -1,7 +1,10 @@
 ---
 title: "Metabolomics Pipeline"
 author: "Joel Parker"
-format: gfm
+format: 
+  gfm:
+    mermaid-format: js
+    fig-responsive: false
 editor: visual
 ---
 
@@ -10,26 +13,33 @@ The purpose of this pipeline is to provide additional analyses to complement the
 analysis by Metabolon. In the Metabolon data, each 
 "sub-pathway" classifies a collection of metabolites, and each "super-pathway" 
 classifies a collection of sub-pathways. The below figure highlights the steps we will be taking, which 
-highlight the main modules of this pipeline. 
+highlight the main modules of this pipeline. The workflow for each module is highlighted
+in the [Modules](#modules) section, which will link each step of the pipeline to 
+the .R files. 
 
 
 <img src='Workflow.png'>
 
-The figure above highlights the five modules in this pipeline 
+The figure above highlights the six modules in this pipeline
 
-1. [Peak Normalization and standardization](#peak-normalization-and-standardization-(default=off))
+1. [Peak Normalization and standardization](#peak-normalization-and-standardization)
 
 2. [Analysis Data Creation](#analysis-data-creation)
 
-2. Exploratory Peak Analysis
+3. [Exploratory Peak Analysis](#exploratory-peak-analysis)
 
-3. Sub-pathway Analysis 
+4. [Subpathway Analysis](#subpathway-analysis) 
 
-4. Pairwise Comparisons at the metabolite level.
+5. [Pairwise Comparisons at the metabolite level](#pairwise-comparisons-at-the-metabolite-level)
 
-5. Metabolite box plots and line plots within sub-pathways.
+6. [Metabolite box plots and line plots within subpathways](#metabolite-box-plots-and-line-plots-within-subpathways)
 
-## Installation {#sec-Installation}
+
+Prior to jumping into the details of each of the modules, the README disscusses
+[installation](#installation) and [how to get started](#getting-started) using the 
+pipeline. 
+
+## Installation 
 
 To download this pipeline, first make sure you have installed devtools.
 
@@ -63,7 +73,7 @@ in the "Code" folder to create the analysis data. Once the analysis data is crea
 you can run any of the analysis sections in the "Code" folder independently. 
 
 
-## renv 
+### renv 
 This pipeline utilizes the [renv](https://rstudio.github.io/renv/articles/renv.html#reproducibility)
 package to ensure the R environment is consistent for each run. This means that all
 of the required packages for this project will be automatically installed within 
@@ -74,7 +84,7 @@ this pipeline was generated using R 4.3.1 so if you are using an older version o
 then it is possible package versions may not be able to be reinstalled due to dependency
 issues. If this is the case we recommend to update your R version to R 4.3.1 or greater. 
 
-## Folder Structure within git-hub
+### Folder Structure within git-hub
 To get started, in the Metabolomics pipeline working directory, there are five 
 folders with the following folder structure: 
 
@@ -97,10 +107,326 @@ a report and save it as a .pdf or .html. The report saves to the "Outputs/Report
 folder.
 
 
-## Modules {#sec-Modules}
+## Modules
 
-### Peak Normalization and standardization (Default=OFF)
+### Peak Normalization and standardization
 Since Metabolome provides peak normalization and standardization, we recommend
 using the normalized peak data from Metabolome rather than "re-normalizing" the
 peak data. However, 
+
+```{mermaid}
+flowchart LR
+
+    %% enter all modules
+    A{"Enter Metabolome .xlsx path <br> (Enter_peakDataPath.R)" }
+    
+    B[("Load Raw Peak Data <br> (loadPeakData.R)")]
+
+    C["Box plots before standardization <br> (beforeMedianStandardization.R)"]
+
+    D["Median Standardization <br> (medianStandardization.R)"]
+
+    E["Box plots after median standarization <br> (afterMedianStandardization.R)"]
+
+    F["Minimume Value Imputation <br> (minValImpute.R)"]
+
+    G["Log transformation <br> (logTransformation.R)"]
+
+    H{"Save Normalized Peak Data <br> (Save_dataNorm.R)"}
+
+%% Create contections between nodes
+A --> B
+B --> C
+B --> D
+subgraph "Normalization and Standardization"
+  C
+  D --> E
+  D --> F
+  F --> G
+
+end
+G --> H
+```
+
+### Analysis Data Creation 
+
+```{mermaid}
+
+
+flowchart TD
+
+    %% enter all modules
+    A{"Enter Metabolome .xlsx path <br> (Enter_ExcelPath.R)" }
+    
+    
+    B[("Load Raw Peak and Annotation Data <br> (readRawData}.R)")]
+
+    C{"Path to additional meta data variables (optional) <br> (Enter_additionalVarsPath.R)"}
+
+    L[("Load additional meta data <br> (loadAdditionalMeta.R)")]
+
+    D["Merge additional meta data <br> (merge_additionalVars.R)"]
+
+    E{"Select nesscisary meta data variables <br> (Enter_MetadataVariables.R)"}
+
+    F["Merge metadata with Norm peak data <br> (mergeAnalysisData.R)"]
+
+    G{"Enter table1 labels <br> (Enter_tableOneLabels.R)"}
+
+    H{"Generate table 1 <br> (function_tableOne.R)"}
+
+    I["Display table 1 <br> (displayTable1.R)"]
+
+    J{"Save table1 <br> (Save_table1.R)"}
+
+    K{"Save analysis data <br> (Save_analysisdata.R)"}
+
+    %% Create relationships between modules
+    A -->B
+    C --> L
+    L --> D
+    B --> D
+    subgraph Analysis Data Creation
+    
+        E --> F
+        F --> G
+        F --> H
+        D --> E
+        G --> H
+        H --> I
+
+    end
+    F --> K
+    I --> J
+```
+
+### Exploratory Peak Analysis
+
+```{mermaid}
+flowchart TD
+    
+    %% Define nodes
+    A{"Analysis Data Path <br> (Enter_analysisDataPath.R)"}
+    B{"Define Metadata Variables <br> (Enter_nonMetaboliteData.R)"}
+
+    C[("Load Analysis Data <br> (readAnalysisData.R)")]
+
+    D["Run PCA <br> (runPCA.R)"]
+
+    E{"Save PCA <br> (Save_PCA.R)"}
+
+    F{"Define Heatmap Variables <br> (Enter_heatmapGroupingVar1.R)"}
+
+    G["Filter top 50 metabolites <br> (filterTop50Metabolites.R)"]
+
+    H{"Heatmap Data Function <br> (function_createHeatmapDat1.R)"}
+
+    I["Generate Heatmap Treatment <br> (generateHeatmap1.R)"]
+    J{"Save Heatmap treatment <br> (Save_heatmap1.R)"}
+
+%% Heatmap 2 
+ K{"Define treatment, block and strata <br> (Enter_stratifiedVarsAndBlockTreatment.R)"}
+
+    L["Filter top 50 metabolites <br> (filter_top50_metabolites3.R)"]
+
+    M{"Heatmap Data Function <br> (function_createHeatmapDat3.R)"}
+
+    O{"Save Heatmap treatment <br> (Save_heatmaps3AsGrid.R)"}
+
+%% Establish relationships
+
+    A-->C
+    B --> D
+    C --> D
+    D --> E
+    subgraph PCA
+        D
+
+    end
+    E
+    C --> G
+    F --> G
+    subgraph Heatmap Treatment
+        G --> H
+        H --> I
+    end
+    I --> J
+
+    K --> L
+    C--> L
+    subgraph Heatmap Stratified
+    L --> M
+    end
+    M--> O
+
+```
+
+
+
+### Subpathway Analysis 
+
+
+#### Subpathway analysis
+```{mermaid}
+flowchart TD
+    
+    %% Define nodes
+    Path{"Enter Analysis and <br> Chemical Annotation path <br> (Enter_analysisPathAndMetabolomePath.R)"}
+
+    Read[("Read in Data <br> (read_analysisAndChem.R)")]
+
+    subPath{"SubPathway Analysis <br> (Function_subPathAanalysis.R)"}
+
+    saveResults{"Save Subpathway Analysis Results <br> (Save_subpathResults.R)"}
+
+    stratifiedVar{"Enter Stratified Variable <br> (Enter_modelvarsStratified)"}
+
+    resultsPath{"Enter results path <br> (SavePathForStratifiedAnalysis.R) "}
+
+    runStatifiedSubpath["Run Stratified Subpath analsysi <br> (runStratifiedAnalysis)"]
+
+    %% Create Relationships
+    Path --> Read
+    Read --> subPath
+    subgraph Subpathway Analysis
+    subPath 
+    end
+    subPath --> saveResults
+
+    Read -->runStatifiedSubpath
+    resultsPath --> runStatifiedSubpath
+    stratifiedVar --> runStatifiedSubpath
+    subgraph Statified Subpathway Analysis
+    runStatifiedSubpath
+    end
+
+```
+
+#### Subpathway results tables
+```{mermaid}
+flowchart TD
+    
+    %% Define nodes
+    Path{"Path for each strata's results <br> (Enter_resultsPathsAndStrataNames.R)"}
+
+    Read{"Enter Path to save tables <br> (Save_tablePaths.R)"}
+
+    MetByModel["Metabolite By Sig. Model Type <br> (sigMetabolitesByModelType.R)"]
+
+    PropSuper["Proportion Sig. Sub Within Super <br> (sigSubpathsWithinSuperPath.R)"]
+
+    SigMetList["Table of Sig. Metabolites <br> (significantMetabolitesList.R)"]
+
+    ModelType{"Enter Model Type of Interest <br> (Enter_modelType.R)"}
+    
+    metaWIthinSig["Metabolites Withing <br> Sig. Subpathway <br> (metaboloitesWithinSigSubpath.R)"]
+
+    %% Create Relationships
+    Path --> MetByModel
+    Read --> MetByModel
+
+    Path --> PropSuper
+    Read --> PropSuper
+
+    Path --> SigMetList
+    Read --> SigMetList
+
+    Path --> metaWIthinSig
+    Read --> metaWIthinSig
+    ModelType --> metaWIthinSig
+```
+
+
+### Pairwise Comparisons at the metabolite level
+
+
+
+#### 1. Pairwise Analysis
+
+```{mermaid}
+flowchart TD
+    
+    %% Define nodes
+    Path{"Enter Path for Analysis Data <br> (Enter_analysisDataPath3.R)"}
+
+    vars{"Enter Variable Names <br> (Enter_Variables.R)"}
+
+    results{"Enter Path To Save Results <br> (Save_pairwiseStatifiedResults.R)"}
+
+    pairwise["Statified Pairwise Analysis <br> (stratified_PairwiseAnalysis.R)"]
+
+    
+    Path --> pairwise
+    vars --> pairwise
+    results --> pairwise
+    
+    subgraph Pairwise Analysis
+    pairwise
+    end
+
+```
+
+#### 2.  Pairwise Results Strata Visualizations
+```{mermaid}
+flowchart TD
+    
+    %% Define nodes
+  
+    Path2{"Enter Path to Strata Result .csv <br> (Enter_pairwiseResultsPath.R)"}
+
+    fold["Fold Change Heatmap <br> (estimate_heatmap.R)"]
+    pval["P-Value Heatmap <br> (pValueHeatmap.R)"]
+
+
+    Path2-->fold
+    Path2--> pval
+
+    subgraph Visualizaitons
+    fold
+    pval
+    end
+
+```
+
+
+### Metabolite box plots and line plots within subpathways.
+
+```{mermaid}
+flowchart TD
+    
+    %% Define nodes
+  paths{"Enter Analysis and Chem Paths <br> (Enter_Paths)"}
+
+  subpath{"Enter Subpathway of Interest <br> (Enter_subpathway.R)"}
+
+  output{"Enter Output Folder Path <br> (Enter_folder.R)"}
+
+  subpathBoxplots{"Function: Subpathway BoxPlots Function <br> (Function_boxPlots.R)"}
+  
+  functionlinePlots{"Function: Line Plots <br>"}
+
+  mutation{"Data Mutation <br> (Function_dataMutation.R)"}
+
+  %% Creaate Relationships  
+  paths --> subpathBoxplots
+  subpath --> subpathBoxplots
+  output --> subpathBoxplots
+
+  subgraph Metabolite BoxPlots
+    subpathBoxplots
+  end
+
+  paths --> mutation
+  mutation --> functionlinePlots
+  subpath --> functionlinePlots
+  output --> functionlinePlots
+
+  subgraph LinePlots
+    mutation
+    functionlinePlots
+  end
+
+```
+
+
 
