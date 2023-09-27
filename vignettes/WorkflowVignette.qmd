@@ -1957,7 +1957,7 @@ analysis_data <- analysis_data %>%
                        TIME1 == "End" ~ 3))
 ```
 
-```{r }
+```{r Function_linePlots}
 # 4. Define subpathway of interest. 
 subpathway = "Gamma-glutamyl Amino Acid"
 
@@ -1969,14 +1969,16 @@ line_plots <- subpathway_lineplots(analysis_data = analysis_data,
                      X = TIME1,
                      groupBy = GROUP_NAME)
 
+```
 
-
+```{r display_linePlot}
 # 6. Edit asthetics of plots
 line_plots +
   scale_x_continuous(breaks = c(1, 2, 3), labels = c("PreSymp", "Onset", "End")) +
   labs(x= "Time",y="Scaled Intensity",color = "Treatment Group")
+```
 
-
+```{r Save_linePlot}
 # 7. Save plots 
 ggsave(filename = paste0("../Outputs/Plots/LinePlots_",subpathway,".pdf"))
 
@@ -2011,21 +2013,25 @@ step 3. In this example we are filtering the data on females.
 
 
 
-```{r line-plots stratified}
+```{r Enter_analysisAndChemPath}
+# 1. Read in analysis data
+analysis_path <- "../Data/Processed/analysis_data.csv"
+
+# 2. Reach in chemical annotation data
+met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+
+
+```
+
+```{r readStratPlotData}
 # 1. Read in analysis data
 analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
 
 # 2. Reach in chemical annotation data
-met_excel <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
 chem_data <- read.xlsx(met_excel,sheet = "Chemical Annotation")
+```
 
-
-
-
-# 3. Define subpathway of interest. 
-subpathway = "Gamma-glutamyl Amino Acid"
-
-
+```{r Function_filterStrata}
 # 4. Prep data for line plots
 analysis_data_male <- analysis_data %>%
   filter(Gender=="Male") %>%
@@ -2040,9 +2046,13 @@ analysis_data_female <- analysis_data %>%
   mutate(TIME1 = case_when(TIME1== "PreSymp" ~ 1,
                            TIME1 =="Onset" ~ 2,
                        TIME1 == "End" ~ 3))
+```
 
 
+```{r Function_linePlotsStrata}
 
+# 3. Define subpathway of interest. 
+subpathway = "Gamma-glutamyl Amino Acid"
 
 # 6. Create plot for males
 males <- subpathway_lineplots(analysis_data = analysis_data_male,
@@ -2063,8 +2073,9 @@ females <- subpathway_lineplots(analysis_data = analysis_data_male,
                      groupBy = GROUP_NAME)+
     scale_x_continuous(breaks = c(1, 2, 3), labels = c("PreSymp", "Onset", "End")) +
     labs(x= "Time",y="Scaled Intensity",color = "Treatment Group")
+```
 
-
+```{r Function_DisplayLinePlotsStrata}
 # 8. Display stratified plot
 ggarrange(males,
   females,
@@ -2073,11 +2084,9 @@ ggarrange(males,
   common.legend = T,
   vjust = 0
 ) 
+```
 
-
-
-
-
+```{r Save_LinePlotsStrata}
 # 9. Save plots 
 ggsave(filename = paste0("../Outputs/Plots/LinePlots_",subpathway,"_stratified.pdf"))
 
