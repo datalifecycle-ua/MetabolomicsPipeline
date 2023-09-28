@@ -131,8 +131,6 @@ flowchart TD
 
     C{"Path to additional meta data variables (optional) <br> (Enter_additionalVarsPath.R)"}
 
-    L[("Load additional meta data <br> (loadAdditionalMeta.R)")]
-
     D["Merge additional meta data <br> (merge_additionalVars.R)"]
 
     E{"Select nesscisary meta data variables <br> (Enter_MetadataVariables.R)"}
@@ -151,8 +149,7 @@ flowchart TD
 
     %% Create relationships between modules
     A -->B
-    C --> L
-    L --> D
+    C --> D
     B --> D
     subgraph Analysis Data Creation
     
@@ -177,6 +174,7 @@ flowchart TD
     
     %% Define nodes
     A{"Analysis Data Path <br> (Enter_analysisDataPath.R)"}
+    F{"Enter path to output folder <br> (Enter_Out)"}
     B{"Define Metadata Variables <br> (Enter_nonMetaboliteData.R)"}
 
     D["Run PCA <br> (runPCA.R)"]
@@ -188,8 +186,9 @@ flowchart TD
 
     A-->D
     B --> D
+    F --> D
     subgraph PCA
-        D--> E
+        D
     end
 
 
@@ -231,17 +230,14 @@ flowchart TD
     path{"Enter Analysis Data Path <br> (Enter_analysisDataPath.R)"}
     group{"Enter Heatmap Group and Strata Variables <br> (Enter_stratifiedVars.R)"}
 
-    f["Filter Top 50 Metabolites <br> (filter_top50_metabolites3.R)"]
-
     create{"Function: Create Stratified Heatmap (Loop) <br> (function_createHeatmapDat3.R)"}
 
 
 
     %% Create links
-    path --> f 
     group --> create
     subgraph Heatmap
-        f --> create
+        create
     end
 ```
 
