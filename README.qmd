@@ -203,20 +203,20 @@ flowchart TD
     path{"Enter Analysis Data Path <br> (Enter_analysisDataPath.R)"}
     group{"Enter Heatmap Group Variables <br> (Enter_heatmapGroupingVar1.R)"}
 
-    filter["Filter Top 50 Metabolites <br> (filterTop50Metabolites.R)"]
+    f["Filter Top 50 Metabolites <br> (filterTop50Metabolites.R)"]
 
     dat{"Function: Create Heatmap Data <br> (function_createHeatmapDat1.R)"}
-
+    
     create["Create and Save Heatmap <br> (generateHeatmap1.R)"]
 
     %% Create links
-    path --> filter 
-    filter --> dat
+    path --> f
+    f --> dat
     group --> dat
     dat --> create
 
     subgraph Heatmap
-        filter
+        f
         dat
         create
     end
@@ -231,17 +231,17 @@ flowchart TD
     path{"Enter Analysis Data Path <br> (Enter_analysisDataPath.R)"}
     group{"Enter Heatmap Group and Strata Variables <br> (Enter_stratifiedVars.R)"}
 
-    filter["Filter Top 50 Metabolites <br> (filter_top50_metabolites3.R)"]
+    f["Filter Top 50 Metabolites <br> (filter_top50_metabolites3.R)"]
 
     create{"Function: Create Stratified Heatmap (Loop) <br> (function_createHeatmapDat3.R)"}
 
 
 
     %% Create links
-    path --> filter 
+    path --> f 
     group --> create
     subgraph Heatmap
-        filter --> create
+        f --> create
     end
 ```
 
@@ -420,5 +420,4 @@ flowchart TD
 
 ```
 
-#### Stratified Line Plots
 

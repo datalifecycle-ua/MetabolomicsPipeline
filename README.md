@@ -120,65 +120,63 @@ Since Metabolome provides peak normalization and standardization, we
 recommend using the normalized peak data from Metabolome rather than
 “re-normalizing” the peak data. However,
 
-<img src="README_files\figure-markdown_github\mermaid-figure-1.png"
-style="width:8in;height:11.53in" />
+<img src="README_files/figure-markdown_github/mermaid-figure-1.png"
+style="width:8in;height:11.47in" />
 
 ### Analysis Data Creation
 
-<img src="README_files\figure-markdown_github\mermaid-figure-11.png"
-style="width:10.34in;height:22.37in" />
+<img src="README_files/figure-markdown_github/mermaid-figure-11.png"
+style="width:10.31in;height:22.28in" />
 
 ### Exploratory Peak Analysis
 
 #### PCA
 
-<img src="README_files\figure-markdown_github\mermaid-figure-10.png"
-style="width:6.31in;height:6.88in" />
+<img src="README_files/figure-markdown_github/mermaid-figure-10.png"
+style="width:6.29in;height:6.85in" />
 
 #### Heatmaps
 
-<img src="README_files\figure-markdown_github\mermaid-figure-9.png"
-style="width:5.33in;height:5.33in" />
+<img src="README_files/figure-markdown_github/mermaid-figure-9.png"
+style="width:7.57in;height:11.82in" />
 
 #### Statified Heatmaps
 
-<img src="README_files\figure-markdown_github\mermaid-figure-8.png"
-style="width:5.33in;height:5.33in" />
+<img src="README_files/figure-markdown_github/mermaid-figure-8.png"
+style="width:9.09in;height:12.28in" />
 
 ### Subpathway Analysis
 
 #### Subpathway analysis
 
-<img src="README_files\figure-markdown_github\mermaid-figure-7.png"
-style="width:11.7in;height:15.74in" />
+<img src="README_files/figure-markdown_github/mermaid-figure-7.png"
+style="width:11.67in;height:15.69in" />
 
 #### Subpathway results tables
 
-<img src="README_files\figure-markdown_github\mermaid-figure-6.png"
-style="width:13.1in;height:5.04in" />
+<img src="README_files/figure-markdown_github/mermaid-figure-6.png"
+style="width:13.07in;height:5.01in" />
 
 ### Pairwise Comparisons at the metabolite level
 
 #### 1. Pairwise Analysis
 
-<img src="README_files\figure-markdown_github\mermaid-figure-5.png"
-style="width:9.54in;height:4.96in" />
+<img src="README_files/figure-markdown_github/mermaid-figure-5.png"
+style="width:9.5in;height:4.94in" />
 
 #### 2. Pairwise Results Strata Visualizations
 
-<img src="README_files\figure-markdown_github\mermaid-figure-4.png"
-style="width:4.86in;height:4.81in" />
+<img src="README_files/figure-markdown_github/mermaid-figure-4.png"
+style="width:4.86in;height:4.79in" />
 
 ### Metabolite box plots and line plots within subpathways.
 
 #### Box Plots
 
-<img src="README_files\figure-markdown_github\mermaid-figure-3.png"
-style="width:9.67in;height:7.93in" />
+<img src="README_files/figure-markdown_github/mermaid-figure-3.png"
+style="width:9.63in;height:7.91in" />
 
 #### Line Plots
 
-<img src="README_files\figure-markdown_github\mermaid-figure-2.png"
-style="width:9.97in;height:9.6in" />
-
-#### Stratified Line Plots
+<img src="README_files/figure-markdown_github/mermaid-figure-2.png"
+style="width:9.94in;height:9.57in" />
