@@ -83,7 +83,7 @@ You should save the .xlsx file from Metabolon and any additional metadata files 
 Since Metabolome provides peak normalization and standardization, we recommend using the normalized peak data from Metabolome rather than "re-normalizing" the peak data. However,
 
 ```{mermaid}
-flowchart LR
+flowchart TD
 
     %% enter all modules
     A{"Enter Metabolome .xlsx path <br> (Enter_peakDataPath.R)" }

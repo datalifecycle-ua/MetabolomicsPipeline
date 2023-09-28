@@ -121,7 +121,7 @@ recommend using the normalized peak data from Metabolome rather than
 “re-normalizing” the peak data. However,
 
 <img src="README_files\figure-markdown_github\mermaid-figure-1.png"
-style="width:17.93in;height:4.04in" />
+style="width:8in;height:11.53in" />
 
 ### Analysis Data Creation
 
