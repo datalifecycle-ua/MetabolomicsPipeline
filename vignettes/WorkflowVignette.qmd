@@ -53,15 +53,21 @@ sapply(paste0("../R/",files.sources), source)
 ## Introduction
 The purpose of this pipeline is to provide a set of additional analyses to 
 complement the analysis done by Metabolon. These additional analysis are broken
-down into four main sections. 
+down into six main sections. 
 
-1. Data Exploration
+1. Peak normalization and standardization (default off) 
 
-2. Sub-pathway Analysis
+2. Analysis data creation 
 
-3. Pairwise comparisons
+3. Data exploration
 
-4. Plots
+4. Subpathway Analysis
+
+5. Pairwise comparisons
+
+6. Box plot and line plots
+
+The overall structure for each of these modules is shown in the figure below. 
 
 
 ```{r workflow, fig.height=20, fig.width=16}
@@ -71,7 +77,8 @@ image_trim(img)
 ```
 
 The R "chunks" separate each of the analysis steps within the main sections of 
-the pipeline. In some chunks, there may need to be lines of code that need to 
+the pipeline and each chunk is tied to a .R file in the Code folder.
+In some chunks, there may need to be lines of code that need to 
 change from experiment to experiment. This pipeline provides a list of steps for
 each chunk and highlights places where you need to make changes. 
 
@@ -84,7 +91,7 @@ folders with the following folder structure:
     - Metabolon: Contains the .xlsx file from Metabolon and other files related 
     to the metadata.
     - Processed: Contains data processed from this pipeline. 
--   Code: 
+-   Code: Contains the .R files needed for this pipeline
 -   Outputs
     -   Plots
     -   Tables
@@ -99,7 +106,17 @@ a report and save it as a .pdf or .html. The report saves to the "Outputs/Report
 folder.
 
 
-## Normalization and Standardization
+## Normalization and Standardization (default=off)
+Metabolome include peak data that has been normalized and standardized as part
+of the .xlsx Metabolome data file. We recommend you use the normalized peak data
+from Metabolome and therefore, <mark> the normalization and standardization steps
+are "off" by default.</mark>. However, is some cases you may need to perform normalization 
+differently than what was provided by Metabolome. An example of this is if your expirement
+was run in two different batches. Metabolome will perform the normalization for each 
+batch seperatly. This can cause downstream issues and we recomomned combining the 
+raw data and performing one normalization on both batches.<mark> To turn on the normalization
+steps set eval=TRUE. </mark>
+
 In its raw form, the peak data contain counts for each metabolite in each sample.
 Standardization and normalization are important steps to improve the 
 signal-to-noise ratio. In the next section, we are implementing the same 
@@ -113,12 +130,12 @@ tables .xlsx file for your project.
 2. Read in the "Peak Area Data" tab from the .xlsx file provided above.
 
 
-```{r Enter_peakDataPath}
+```{r Enter_peakDataPath, eval=FALSE}
 # Provide a path to Metabolon .xlsx file. 
 metabolon_path <- "../Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
 ```
 
-```{r loadPeakData}
+```{r loadPeakData, eval=FALSE}
 # 2. Load raw peak data
 peak_data <- read.xlsx(metabolon_path, sheet = "Peak Area Data")
 ```
@@ -136,7 +153,7 @@ we:
 
 3. Plot the box plots for each of the five metabolites. 
 
-```{r beforeMedianStandardization}
+```{r beforeMedianStandardization, eval=FALSE}
 # 1. Select the first five metabolites for the box plot. 
 metabolites <- names(peak_data)[2:6]
 
@@ -160,7 +177,7 @@ Now we perform median standardization by:
 
 3. Divide each value by the median metabolite value. 
 
-```{r medianStandardization}
+```{r medianStandardization, eval=FALSE}
 # 1. Initialize a new peak_data_med matrix
 peak_data_norm <-  peak_data 
 
@@ -181,7 +198,7 @@ for(i in colnames(peak_data_med)){
 Now we can look at those same metabolites from before. We will notice that the 
 median value for all metabolites are now lined up at 1. 
 
-```{r afterMedianStandardization}
+```{r afterMedianStandardization, eval=FALSE}
 # 1. Select the first five metabolites for the box plot. 
 metabolites <- names(peak_data)[2:6]
 
@@ -212,7 +229,7 @@ metabolite. We do this in the following steps.
  the minimum value for that metabolite is imputed. 
 
 
-```{r minValImpute}
+```{r minValImpute, eval=FALSE}
 # 1. Initialize the new peak_data_imputed matrix
 peak_data_imputed <- peak_data_norm
 
@@ -238,7 +255,7 @@ The final step is to take a natural log transformation of each of the values.
 
 1. Log transform all of the values
 
-```{r logTransformation}
+```{r logTransformation, eval=FALSE}
 # 1. Log transform all of the values
 peak_data_log <- peak_data_imputed %>%
   mutate_if(is.numeric, log)
@@ -251,7 +268,7 @@ Now that we have imputed and normalized our data, we need to save the data for
 subsequent sections. We will save peak_data_log in the "Data/Processed" Folder 
 under the file name "Log_transformed_data.csv".
 
-```{r Save_dataNorm}
+```{r Save_dataNorm, eval=FALSE}
 # 1. Save log transformed data.
 write.csv(peak_data_log, file = "../Data/Processed/Log_transformed_data.csv",
           row.names = F)
@@ -318,6 +335,9 @@ meta_data_additional <- read.xlsx(additional_metaPath)
 
 
 ```{r merge_additionalVars}
+# If you have additional meta data set additional_meta=T
+additional_meta=T
+
 # 2. Merge additional vars to the meta data
 if(!is.null(additional_meta)){
   meta_data <- meta_data_additional %>%
@@ -419,17 +439,19 @@ create the table, we will be using the table1 function. You must change the
 arguments depending on what you want the table to display. For example:
 * *Table 1 without interaction*: 
 
-$$
+\begin{aligned}
 table1(\sim \underbrace{var_1 + var_2 ...}_{\text{Variable names for rows}},   \ \text{data = analysis_data}  )
-$$
+\end{aligned}
 
 
 
 * *Table 1 with interaction*
 
-$$
+
+\begin{aligned}
 table1(\sim \underbrace{var_1 + var_2 ...}_{\text{Variable names for rows}} \underbrace{| \ stratified\_var}_{\text{Statified Variable}},  \ \text{data = analysis_data} )
-$$
+end{aligned}
+
 Above is how you change the table1 function to display the table with and without
 a stratified variable. In the next chunk, we utilize the following steps.
 
@@ -486,10 +508,6 @@ we use check.names=F since column names of the analysis data are numeric.
 analysis_data_path <- "../Data/Processed/analysis_data.csv"
 ```
 
-```{r readAnalysisData}
-# 1. Read in analysis data
-analysis_data <- read.csv("../Data/Processed/analysis_data.csv", check.names = F)
-```
 
 ###  Principal Component Analysis
 
@@ -537,6 +555,10 @@ meta_var = "Gender"
 ```
 
 ```{r runPCA}
+
+# 1. Read in analysis data
+analysis_data <- read.csv(analysis_data_path, check.names = F)
+
 
 # 3. Create PCA data containing only metabolite data
 pca_dat <- analysis_data[,!names(analysis_data) %in% non_metabolite]
@@ -636,6 +658,11 @@ and the labels of the heatmap.
 heatmap_variables <- c("GROUP_NAME")
 ```
 
+```{r Enter_OutputFolder}
+# Enter output folder
+out <- "../Outputs/Plots"
+```
+
 ```{r filterTop50Metabolites}
 # 2. Find the top 50 metabolites
 select_variables <- analysis_data %>% 
@@ -672,12 +699,10 @@ meta = heatmap_data$heatmap_variables
 # 7. Create heatmap and save. 
 pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
          annotation_col = meta, show_rownames = F, border_color = NA, show_colnames = F)
-```
 
-```{r Save_heatmap1}
 # 8. Save heatmap
 pheatmap(vals, cluster_cols = F, cluster_rows = F, color = palette,
-         annotation_col = meta, show_rownames = F, show_colnames = F,border_color = NA,filename = paste0("../Outputs/Plots/","HeatmapTop50Metabolites.pdf"))
+         annotation_col = meta, show_rownames = F, show_colnames = F,border_color = NA,filename = paste0(out,"/HeatmapTop50Metabolites.pdf"))
 
 ```
 
@@ -784,7 +809,7 @@ in a list.
 5. Save heatmap plots in the "Outputs/Plots" folder under the filename
 "HeatmapTop50MetabolitesTreatmentandBlockStratifed"
 
-```{r Enter_stratifiedVarsAndBlockTreatment}
+```{r Enter_stratifiedVars}
 # 1. Get stratified variable and stratified values
 strat_var <- "Gender"
 
@@ -837,16 +862,15 @@ for (i in 1:length(values)) {
            main = values[i], silent = T)
     
 }
-```
 
-```{r Save_heatmaps3AsGrid}
+
 # 8. Save heatmaps for all levels
 grids <- grid.arrange(grobs= list(maps$Female[[4]],
                          maps$Male[[4]]))
 
 
 
-ggsave(filename = "../Outputs/Plots/HeatmapTop50MetabolitesTreamentandBlockStratified.pdf", grids)
+ggsave(filename = paste0(out,"/HeatmapTop50MetabolitesTreamentandBlockStratified.pdf"), grids)
 
 ```
 
@@ -1050,7 +1074,7 @@ for(i in uni_vals){
                                   treat_var = treatvar)
   
   # 3 Save stratified data
-  write.csv(strat_data, paste0(stratified_data_path,"/analysis_data_",i,".csv"), row.names = F)
+  write.csv(strat_data, paste0(statified_data_path,"/analysis_data_",i,".csv"), row.names = F)
   
   # 4 Save results
   write.csv(strat_path_results, paste0(stratified_results_path,"/Stratified_",i,"_subpathway_results.csv"), row.names = F)
@@ -1112,6 +1136,8 @@ tablePath = "../Outputs/Tables"
 ```
 
 ```{r sigMetabolitesByModelType,results='asis'}
+#| tbl-cap: "Significant Metabolites by Model"
+
 for (i in 1:length(strata)) {
   
     # 3. Read in results data
@@ -1191,7 +1217,7 @@ the model type.
 if a sub-pathway shows a significant p-value for the interaction model and the parallel
 model, then the sub-pathway model type is only "interaction". 
 
-```{r sigSubpathsWithinSuperPath}
+```{r sigSubpathsWithinSuperPath, results='asis'}
 for(i in 1:length(strata)){
   
   # 3 Read results for the strata
@@ -1236,20 +1262,18 @@ for(i in 1:length(strata)){
                   ungroup() %>% arrange(-percent_significant) %>%
                   transmute(SUPER_PATHWAY, percent_significant = paste0(number_significant, " / ", pathway_count, 
                                                                         " (", percent_significant, "%)")) %>%
-                  flextable() %>%
-                  set_header_labels(SUPER_PATHWAY="Super Pathway", percent_significant = "Percent Significant") %>%
-                  set_table_properties(layout = "autofit") %>%
-                  set_caption(caption = paste0("Proportion of significant subpathways within super-pathways (",
-                                                   strata[i],").")) %>%
-                  theme_vanilla()
+                  knitr::kable(col.names = c("Super Pathway", "Percent Significant"),
+               caption = paste0("Proportion of significant <br> subpathways within super-pathways (",
+                                                   strata[i],").") )
+              
   
   
   # 7. Display table
-  cat(knitr::knit_print(superPath))
-  
+  print(superPath)
+  cat("\n")
   
   # 8. Save table
-  save_as_docx(tablePath,path = paste0(tableResults2,"/SigSuperPathwayPecentages_",strata[i],".docx"))
+  save_kable(superPath, file = paste0(tablePath,"/SigSuperPathwayPecentages_",strata[i],".png"))
 }     
 ```
 
@@ -1310,28 +1334,25 @@ for (i in 1:length(strata)){
     select(sub_pathway, ends_with("_fisher"), model) %>%
     distinct() %>% 
     filter(model != "None") %>%
-    mutate(pval = eval(cases)) %>%
+    mutate(pval = round(eval(cases),3)) %>%
     select(sub_pathway, model, pval) %>%
     arrange(model, pval)
   
   
   # 6. Format table
   path_tab = pathway_table %>%
-    flextable() %>%
-    set_header_labels(sub_pathway="Subpathway", model = "Model Type", pval = "P-value") %>%
-    set_table_properties(layout = "autofit") %>%
-    colformat_double(digits = 3) %>%
-    theme_vanilla() %>%
-    set_caption(caption = paste0("Significant Subpathways (",
-                                                   strata[i],")."))
+    knitr::kable(col.names = c("Subpathway", "Model Type","P-value"),
+                 caption = paste0("Significant Subpathways (",
+                                                   strata[i],").") )
   
   
   # 7. Display table
-  cat(knitr::knit_print(path_tab))
+    print(path_tab)
+
   
   
   # Save table
-  save_as_docx(path = paste0(tablePath,"/SigSubpathwayTable_",strata[i],".docx"))
+  save_kable(path_tab ,file  = paste0(tablePath,"/SigSubpathwayTable_",strata[i],".png"))
 }
 ```
 
@@ -1441,23 +1462,17 @@ for(i in 1:length(strata)){
             filter(sub_pathway == pathways[j]) %>%
             select(chem_name, all_of(paste0(tolower(mod),"_pval"))) %>%
             arrange(all_of(paste0(tolower(mod),"p_val"))) %>%
-            flextable() %>%
-            set_header_labels(chem_name="Metabolite") %>%
-            set_table_properties(layout = "autofit") %>%
-            add_header_row(values = c(pathways[j]),colwidths = 2) %>%
-            theme_vanilla() %>%
-            align(i=1,align = "center", part = "header") %>%
-            colformat_double(digits = 3) %>%
-            set_caption(caption = paste0("Metabolites Within Pathways of Significant ",mod, " Model(",
-                                                   strata[i],")."))
+            knitr::kable(col.names = c("Chemical Name","P-value"), caption = paste0("Metabolites Within Pathways of Significant ",mod, " Model(",
+                                                   strata[i],").")) 
+
     
       # 10. Display table 
-      cat(knitr::knit_print(top_paths_table))
+      print(top_paths_table)
       
       
       # 11. Save table 
-    save_as_docx(top_pathway_table, 
-                 path = paste0(tablePath,"/Metabolite_model_pvalues_",gsub("[^A-Za-z0-9 ]","",pathways[j]),"_",strata[i],".docx"))
+    save_kable(top_pathway_table, 
+                  file = paste0(tablePath,"/Metabolite_model_pvalues_",gsub("[^A-Za-z0-9 ]","",pathways[j]),"_",strata[i],".png"))
       
     }
 }  
@@ -1912,7 +1927,7 @@ analysis_data <- analysis_data %>%
 # 5. Run subpathway_line plots function.
 line_plots <- subpathway_lineplots(analysis_data = analysis_data,
                      chem_data = chem_data,
-                     subpathway = subpathway,
+                     subpathway = subpath,
                      X = TIME1,
                      groupBy = GROUP_NAME)
 
@@ -1924,7 +1939,7 @@ line_plots +
 
 
 # 7. Save plots 
-ggsave(filename = paste0(plot_save ,"/LinePlots_",subpathway,".pdf"))
+ggsave(filename = paste0(plot_save ,"/LinePlots_",subpath,".pdf"))
 
 ```
 

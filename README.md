@@ -125,39 +125,60 @@ style="width:8in;height:11.53in" />
 
 ### Analysis Data Creation
 
-<img src="README_files\figure-markdown_github\mermaid-figure-8.png"
+<img src="README_files\figure-markdown_github\mermaid-figure-11.png"
 style="width:10.34in;height:22.37in" />
 
 ### Exploratory Peak Analysis
 
-<img src="README_files\figure-markdown_github\mermaid-figure-7.png"
-style="width:14.07in;height:19.52in" />
+#### PCA
+
+<img src="README_files\figure-markdown_github\mermaid-figure-10.png"
+style="width:6.31in;height:6.88in" />
+
+#### Heatmaps
+
+<img src="README_files\figure-markdown_github\mermaid-figure-9.png"
+style="width:5.33in;height:5.33in" />
+
+#### Statified Heatmaps
+
+<img src="README_files\figure-markdown_github\mermaid-figure-8.png"
+style="width:5.33in;height:5.33in" />
 
 ### Subpathway Analysis
 
 #### Subpathway analysis
 
-<img src="README_files\figure-markdown_github\mermaid-figure-6.png"
+<img src="README_files\figure-markdown_github\mermaid-figure-7.png"
 style="width:11.7in;height:15.74in" />
 
 #### Subpathway results tables
 
-<img src="README_files\figure-markdown_github\mermaid-figure-5.png"
+<img src="README_files\figure-markdown_github\mermaid-figure-6.png"
 style="width:13.1in;height:5.04in" />
 
 ### Pairwise Comparisons at the metabolite level
 
 #### 1. Pairwise Analysis
 
-<img src="README_files\figure-markdown_github\mermaid-figure-4.png"
+<img src="README_files\figure-markdown_github\mermaid-figure-5.png"
 style="width:9.54in;height:4.96in" />
 
 #### 2. Pairwise Results Strata Visualizations
 
-<img src="README_files\figure-markdown_github\mermaid-figure-3.png"
+<img src="README_files\figure-markdown_github\mermaid-figure-4.png"
 style="width:4.86in;height:4.81in" />
 
 ### Metabolite box plots and line plots within subpathways.
 
+#### Box Plots
+
+<img src="README_files\figure-markdown_github\mermaid-figure-3.png"
+style="width:9.67in;height:7.93in" />
+
+#### Line Plots
+
 <img src="README_files\figure-markdown_github\mermaid-figure-2.png"
-style="width:10.76in;height:11.6in" />
+style="width:9.97in;height:9.6in" />
+
+#### Stratified Line Plots

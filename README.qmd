@@ -170,6 +170,8 @@ flowchart TD
 
 ### Exploratory Peak Analysis {#exploratory-peak-analysis}
 
+#### PCA
+
 ```{mermaid}
 flowchart TD
     
@@ -177,56 +179,70 @@ flowchart TD
     A{"Analysis Data Path <br> (Enter_analysisDataPath.R)"}
     B{"Define Metadata Variables <br> (Enter_nonMetaboliteData.R)"}
 
-    C[("Load Analysis Data <br> (readAnalysisData.R)")]
-
     D["Run PCA <br> (runPCA.R)"]
 
     E{"Save PCA <br> (Save_PCA.R)"}
 
-    F{"Define Heatmap Variables <br> (Enter_heatmapGroupingVar1.R)"}
-
-    G["Filter top 50 metabolites <br> (filterTop50Metabolites.R)"]
-
-    H{"Heatmap Data Function <br> (function_createHeatmapDat1.R)"}
-
-    I["Generate Heatmap Treatment <br> (generateHeatmap1.R)"]
-    J{"Save Heatmap treatment <br> (Save_heatmap1.R)"}
-
-%% Heatmap 2 
- K{"Define treatment, block and strata <br> (Enter_stratifiedVarsAndBlockTreatment.R)"}
-
-    L["Filter top 50 metabolites <br> (filter_top50_metabolites3.R)"]
-
-    M{"Heatmap Data Function <br> (function_createHeatmapDat3.R)"}
-
-    O{"Save Heatmap treatment <br> (Save_heatmaps3AsGrid.R)"}
 
 %% Establish relationships
 
-    A-->C
+    A-->D
     B --> D
-    C --> D
-    D --> E
     subgraph PCA
-        D
-
+        D--> E
     end
-    E
-    C --> G
-    F --> G
-    subgraph Heatmap Treatment
-        G --> H
-        H --> I
-    end
-    I --> J
 
-    K --> L
-    C--> L
-    subgraph Heatmap Stratified
-    L --> M
-    end
-    M--> O
 
+```
+
+
+#### Heatmaps
+
+```{mermaid}
+flowchart TD
+    path{"Enter Analysis Data Path <br> (Enter_analysisDataPath.R)"}
+    group{"Enter Heatmap Group Variables <br> (Enter_heatmapGroupingVar1.R)"}
+
+    filter["Filter Top 50 Metabolites <br> (filterTop50Metabolites.R)"]
+
+    dat{"Function: Create Heatmap Data <br> (function_createHeatmapDat1.R)"}
+
+    create["Create and Save Heatmap <br> (generateHeatmap1.R)"]
+
+    %% Create links
+    path --> filter 
+    filter --> dat
+    group --> dat
+    dat --> create
+
+    subgraph Heatmap
+        filter
+        dat
+        create
+    end
+
+```
+
+
+#### Statified Heatmaps
+
+```{mermaid}
+flowchart TD
+    path{"Enter Analysis Data Path <br> (Enter_analysisDataPath.R)"}
+    group{"Enter Heatmap Group and Strata Variables <br> (Enter_stratifiedVars.R)"}
+
+    filter["Filter Top 50 Metabolites <br> (filter_top50_metabolites3.R)"]
+
+    create{"Function: Create Stratified Heatmap (Loop) <br> (function_createHeatmapDat3.R)"}
+
+
+
+    %% Create links
+    path --> filter 
+    group --> create
+    subgraph Heatmap
+        filter --> create
+    end
 ```
 
 ### Subpathway Analysis {#subpathway-analysis}
@@ -355,6 +371,7 @@ flowchart TD
 
 ### Metabolite box plots and line plots within subpathways.
 
+#### Box Plots
 ```{mermaid}
 flowchart TD
     
@@ -367,9 +384,6 @@ flowchart TD
 
   subpathBoxplots{"Function: Subpathway BoxPlots Function <br> (Function_boxPlots.R)"}
   
-  functionlinePlots{"Function: Line Plots <br>"}
-
-  mutation{"Data Mutation <br> (Function_dataMutation.R)"}
 
   %% Creaate Relationships  
   paths --> subpathBoxplots
@@ -379,15 +393,32 @@ flowchart TD
   subgraph Metabolite BoxPlots
     subpathBoxplots
   end
+```
 
-  paths --> mutation
-  mutation --> functionlinePlots
-  subpath --> functionlinePlots
-  output --> functionlinePlots
 
+#### Line Plots
+```{mermaid}
+ flowchart TD
+  paths{"Enter Analysis and Chem Paths <br> (Enter_Paths)"}
+
+  subpath{"Enter Subpathway of Interest <br> (Enter_subpathway.R)"}
+
+  output{"Enter Output Folder Path <br> (Enter_folder.R)"}
+
+  
+  functionlinePlots{"Function: Line Plots <br>"}
+
+  mutation{"Data Mutation <br> (Function_dataMutation.R)"}
+
+    paths --> mutation
+    subpath --> functionlinePlots
+    output --> functionlinePlots
+  
   subgraph LinePlots
-    mutation
-    functionlinePlots
+    mutation --> functionlinePlots
   end
 
 ```
+
+#### Stratified Line Plots
+
