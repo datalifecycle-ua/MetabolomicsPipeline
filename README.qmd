@@ -6,37 +6,28 @@ editor: visual
 ---
 
 ## Overview {#sec-overview}
-The purpose of this pipeline is to provide additional analyses to complement the
-analysis by Metabolon. In the Metabolon data, each 
-"sub-pathway" classifies a collection of metabolites, and each "super-pathway" 
-classifies a collection of sub-pathways. The below figure highlights the steps we will be taking, which 
-highlight the main modules of this pipeline. The workflow for each module is highlighted
-in the [Modules](#modules) section, which will link each step of the pipeline to 
-the .R files. 
 
+The purpose of this pipeline is to provide additional analyses to complement the analysis by Metabolon. In the Metabolon data, each "sub-pathway" classifies a collection of metabolites, and each "super-pathway" classifies a collection of sub-pathways. The below figure highlights the steps we will be taking, which highlight the main modules of this pipeline. The workflow for each module is highlighted in the [Modules](#modules) section, which will link each step of the pipeline to the .R files.
 
-<img src='Workflow.png'>
+<img src="Workflow.png"/>
 
 The figure above highlights the six modules in this pipeline
 
-1. [Peak Normalization and standardization](#peak-normalization-and-standardization)
+1.  [Peak Normalization and standardization](#peak-normalization-and-standardization)
 
-2. [Analysis Data Creation](#analysis-data-creation)
+2.  [Analysis Data Creation](#analysis-data-creation)
 
-3. [Exploratory Peak Analysis](#exploratory-peak-analysis)
+3.  [Exploratory Peak Analysis](#exploratory-peak-analysis)
 
-4. [Subpathway Analysis](#subpathway-analysis) 
+4.  [Subpathway Analysis](#subpathway-analysis)
 
-5. [Pairwise Comparisons at the metabolite level](#pairwise-comparisons-at-the-metabolite-level)
+5.  [Pairwise Comparisons at the metabolite level](#pairwise-comparisons-at-the-metabolite-level)
 
-6. [Metabolite box plots and line plots within subpathways](#metabolite-box-plots-and-line-plots-within-subpathways)
+6.  [Metabolite box plots and line plots within subpathways](#metabolite-box-plots-and-line-plots-within-subpathways)
 
+Prior to jumping into the details of each of the modules, the README disscusses [installation](#installation) and [how to get started](#getting-started) using the pipeline.
 
-Prior to jumping into the details of each of the modules, the README disscusses
-[installation](#installation) and [how to get started](#getting-started) using the 
-pipeline. 
-
-## Installation 
+## Installation {#installation}
 
 To download this pipeline, first make sure you have installed devtools.
 
@@ -46,70 +37,50 @@ install.packages("devtools")
 ```
 
 Now you can download the pipeline from Git-hub.
+
 ```{r, eval = FALSE}
 # Download pipeline from Github
 devtools::install_github("JoelParkerUofA/Metabolomics-Pipeline")
 ```
 
-Once the pipeline has finished downloading, you can open the R project by opening
-the "Metabolomic Pipeline.Rproj" to run this pipeline on your local computer. 
-
+Once the pipeline has finished downloading, you can open the R project by opening the "Metabolomic Pipeline.Rproj" to run this pipeline on your local computer.
 
 ## Getting Started {#sec-GettingStarted}
 
 #### Demo Data Set
-The workflow comes with a dataset in the Data/Metabolon folder which contains metaboloic
-profiles across several treatment groups and time points of ALS in mice. To get started, 
-the vignette folder has a file called WorkflowVignette.Rmd. This file walks through
-all steps of the pipeline using the ALS data. 
+
+The workflow comes with a dataset in the Data/Metabolon folder which contains metaboloic profiles across several treatment groups and time points of ALS in mice. To get started, the vignette folder has a file called WorkflowVignette.Rmd. This file walks through all steps of the pipeline using the ALS data.
 
 #### Your Own Data
-If you have data from Metabolon, you can simply place the .xlsx file from Metabolon
-in the "Data/Metabolon" folder and run the "Analysis_data_creation.Rmd" .Rmd file
-in the "Code" folder to create the analysis data. Once the analysis data is created,
-you can run any of the analysis sections in the "Code" folder independently. 
 
+If you have data from Metabolon, you can simply place the .xlsx file from Metabolon in the "Data/Metabolon" folder and run the "Analysis_data_creation.Rmd" .Rmd file in the "Code" folder to create the analysis data. Once the analysis data is created, you can run any of the analysis sections in the "Code" folder independently.
 
-### renv 
-This pipeline utilizes the [renv](https://rstudio.github.io/renv/articles/renv.html#reproducibility)
-package to ensure the R environment is consistent for each run. This means that all
-of the required packages for this project will be automatically installed within 
-the Metabolomics Pipeline project folder. If you are using this pipeline for the 
-first time, then use renv::restore() prior to running any of the files. This will
-install and update package versions used to generate this pipeline. It should be noted,
-this pipeline was generated using R 4.3.1 so if you are using an older version of R, 
-then it is possible package versions may not be able to be reinstalled due to dependency
-issues. If this is the case we recommend to update your R version to R 4.3.1 or greater. 
+### renv
+
+This pipeline utilizes the [renv](https://rstudio.github.io/renv/articles/renv.html#reproducibility) package to ensure the R environment is consistent for each run. This means that all of the required packages for this project will be automatically installed within the Metabolomics Pipeline project folder. If you are using this pipeline for the first time, then use renv::restore() prior to running any of the files. This will install and update package versions used to generate this pipeline. It should be noted, this pipeline was generated using R 4.3.1 so if you are using an older version of R, then it is possible package versions may not be able to be reinstalled due to dependency issues. If this is the case we recommend to update your R version to R 4.3.1 or greater.
 
 ### Folder Structure within git-hub
-To get started, in the Metabolomics pipeline working directory, there are five 
-folders with the following folder structure: 
+
+To get started, in the Metabolomics pipeline working directory, there are five folders with the following folder structure:
 
 -   Data
-    - Metabolon: Contains the .xlsx file from Metabolon and other files related 
-    to the metadata.
-    - Processed: Contains data processed from this pipeline. 
+    -   Metabolon: Contains the .xlsx file from Metabolon and other files related to the metadata.
+    -   Processed: Contains data processed from this pipeline.
 -   Code: Contains the .R files of each step of the pipeline.
 -   Outputs
     -   Plots
     -   Tables
     -   Reports
-- R: Contains and .R file with additional functions used for this pipeline.
-- renv: This folder is generated by renv to restore package versions.
+-   R: Contains and .R file with additional functions used for this pipeline.
+-   renv: This folder is generated by renv to restore package versions.
 
-You should save the .xlsx file from Metabolon and any additional metadata files 
-to the Data/Metabolon folder. The main output folder will contain the plots and 
-tables generated from this pipeline. Additionally, you can run this pipeline as 
-a report and save it as a .pdf or .html. The report saves to the "Outputs/Reports"
-folder.
+You should save the .xlsx file from Metabolon and any additional metadata files to the Data/Metabolon folder. The main output folder will contain the plots and tables generated from this pipeline. Additionally, you can run this pipeline as a report and save it as a .pdf or .html. The report saves to the "Outputs/Reports" folder.
 
+## Modules {#modules}
 
-## Modules
+### Peak Normalization and standardization {#peak-normalization-and-standardization}
 
-### Peak Normalization and standardization
-Since Metabolome provides peak normalization and standardization, we recommend
-using the normalized peak data from Metabolome rather than "re-normalizing" the
-peak data. However, 
+Since Metabolome provides peak normalization and standardization, we recommend using the normalized peak data from Metabolome rather than "re-normalizing" the peak data. However,
 
 ```{mermaid}
 flowchart LR
@@ -145,7 +116,7 @@ end
 G --> H
 ```
 
-### Analysis Data Creation 
+### Analysis Data Creation {#analysis-data-creation}
 
 ```{mermaid}
 
@@ -197,7 +168,7 @@ flowchart TD
     I --> J
 ```
 
-### Exploratory Peak Analysis
+### Exploratory Peak Analysis {#exploratory-peak-analysis}
 
 ```{mermaid}
 flowchart TD
@@ -258,12 +229,10 @@ flowchart TD
 
 ```
 
-
-
-### Subpathway Analysis 
-
+### Subpathway Analysis {#subpathway-analysis}
 
 #### Subpathway analysis
+
 ```{mermaid}
 flowchart TD
     
@@ -300,6 +269,7 @@ flowchart TD
 ```
 
 #### Subpathway results tables
+
 ```{mermaid}
 flowchart TD
     
@@ -333,10 +303,7 @@ flowchart TD
     ModelType --> metaWIthinSig
 ```
 
-
-### Pairwise Comparisons at the metabolite level
-
-
+### Pairwise Comparisons at the metabolite level {#pairwise-comparisons-at-the-metabolite-level}
 
 #### 1. Pairwise Analysis
 
@@ -363,7 +330,8 @@ flowchart TD
 
 ```
 
-#### 2.  Pairwise Results Strata Visualizations
+#### 2. Pairwise Results Strata Visualizations
+
 ```{mermaid}
 flowchart TD
     
@@ -384,7 +352,6 @@ flowchart TD
     end
 
 ```
-
 
 ### Metabolite box plots and line plots within subpathways.
 
@@ -424,6 +391,3 @@ flowchart TD
   end
 
 ```
-
-
-

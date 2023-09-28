@@ -12,7 +12,7 @@ modules of this pipeline. The workflow for each module is highlighted in
 the [Modules](#modules) section, which will link each step of the
 pipeline to the .R files.
 
-<img src='Workflow.png'>
+<img src="Workflow.png"/>
 
 The figure above highlights the six modules in this pipeline
 
