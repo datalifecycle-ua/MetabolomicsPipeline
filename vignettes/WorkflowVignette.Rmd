@@ -1173,21 +1173,18 @@ for (i in 1:length(strata)) {
     # 4. Create table
      sig_subPaths <- count(table_data, model) %>% #<4>
                         arrange((model)) %>% #<4>
-                        flextable() %>% #<4>
-                       set_header_labels(model = "Model Type", n="Count")%>% #<4>
-                       theme_vanilla() %>%#<4>
-                       set_table_properties(layout = "autofit") %>% #<4>
-                      set_caption(caption = paste0("Sigificant Pathways by Model (", #<4>
-                                                   strata[i],").")) #<4>
+                        kable(format = "pipe", col.names = c("Model Type","Count"),
+                              caption = paste0("Sigificant Pathways by Model (", #<4>
+                                                   strata[i],")."))
      
      
      # 5. Display table
-     cat(knitr::knit_print(sig_subPaths)) #<5>
+     print(sig_subPaths) #<5>
     
      
      # 6. Save table
-     save_as_docx(sig_subPaths,path=paste0( #<6>
-      tablePath ,"/NumberOfSigPathwaysByModelType_",strata[i],".docx")) #<6>
+     save_kable(sig_subPaths,file=paste0( #<6>
+      tablePath ,"/NumberOfSigPathwaysByModelType_",strata[i],".png")) #<6>
 }     
 ```
 1. Read in results data

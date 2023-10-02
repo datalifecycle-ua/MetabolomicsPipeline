@@ -78,13 +78,17 @@ You should save the .xlsx file from Metabolon and any additional metadata files 
 
 ## Modules {#modules}
 Below are the workflows for each module. The shapes for each step have a specific 
-meaning. 
+meaning which are defined below.  
 
 ```{mermaid}
-
+A{User input required}
+B[(Data loading)]
+C[Data processing step]
 
 ```
 
+Under the description of each step of the workflow is the .R file that corrosponds
+to that step. 
 
 ### Peak Normalization and standardization {#peak-normalization-and-standardization}
 

@@ -114,26 +114,43 @@ The report saves to the “Outputs/Reports” folder.
 
 ## Modules
 
-### Peak Normalization and standardization
-
-Since Metabolome provides peak normalization and standardization, we
-recommend using the normalized peak data from Metabolome rather than
-“re-normalizing” the peak data. However,
+Below are the workflows for each module. The shapes for each step have a
+specific meaning which are defined below.
 
 <img src="README_files/figure-markdown_github/mermaid-figure-1.png"
+style="width:5.33in;height:5.33in" />
+
+Under the description of each step of the workflow is the .R file that
+corrosponds to that step.
+
+### Peak Normalization and standardization
+
+Metabolome include peak data that has been normalized and standardized
+as part of the .xlsx Metabolome data file. We recommend you use the
+normalized peak data from Metabolome and therefore, <mark> the
+normalization and standardization steps are “off” by default.</mark>.
+However, is some cases you may need to perform normalization differently
+than what was provided by Metabolome. An example of this is if your
+expirement was run in two different batches. Metabolome will perform the
+normalization for each batch seperatly. This can cause downstream issues
+and we recommend combining the raw data and performing one normalization
+on both batches.<mark> To turn on the normalization steps set eval=TRUE.
+</mark>
+
+<img src="README_files/figure-markdown_github/mermaid-figure-12.png"
 style="width:8in;height:11.47in" />
 
 ### Analysis Data Creation
 
 <img src="README_files/figure-markdown_github/mermaid-figure-11.png"
-style="width:10.31in;height:22.28in" />
+style="width:10.31in;height:24.05in" />
 
 ### Exploratory Peak Analysis
 
 #### PCA
 
 <img src="README_files/figure-markdown_github/mermaid-figure-10.png"
-style="width:6.29in;height:6.85in" />
+style="width:11.77in;height:4.63in" />
 
 #### Heatmaps
 
@@ -143,7 +160,7 @@ style="width:7.57in;height:11.82in" />
 #### Statified Heatmaps
 
 <img src="README_files/figure-markdown_github/mermaid-figure-8.png"
-style="width:9.09in;height:12.28in" />
+style="width:7.69in;height:9.04in" />
 
 ### Subpathway Analysis
 
