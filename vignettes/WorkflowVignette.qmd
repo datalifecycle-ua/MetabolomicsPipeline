@@ -114,7 +114,7 @@ from Metabolome and therefore, <mark> the normalization and standardization step
 are "off" by default.</mark>. However, is some cases you may need to perform normalization 
 differently than what was provided by Metabolome. An example of this is if your expirement
 was run in two different batches. Metabolome will perform the normalization for each 
-batch seperatly. This can cause downstream issues and we recomomned combining the 
+batch seperatly. This can cause downstream issues and we recommend combining the 
 raw data and performing one normalization on both batches.<mark> To turn on the normalization
 steps set eval=TRUE. </mark>
 

@@ -77,10 +77,26 @@ To get started, in the Metabolomics pipeline working directory, there are five f
 You should save the .xlsx file from Metabolon and any additional metadata files to the Data/Metabolon folder. The main output folder will contain the plots and tables generated from this pipeline. Additionally, you can run this pipeline as a report and save it as a .pdf or .html. The report saves to the "Outputs/Reports" folder.
 
 ## Modules {#modules}
+Below are the workflows for each module. The shapes for each step have a specific 
+meaning. 
+
+```{mermaid}
+
+
+```
+
 
 ### Peak Normalization and standardization {#peak-normalization-and-standardization}
 
-Since Metabolome provides peak normalization and standardization, we recommend using the normalized peak data from Metabolome rather than "re-normalizing" the peak data. However,
+Metabolome include peak data that has been normalized and standardized as part
+of the .xlsx Metabolome data file. We recommend you use the normalized peak data
+from Metabolome and therefore, <mark> the normalization and standardization steps
+are "off" by default.</mark>. However, is some cases you may need to perform normalization 
+differently than what was provided by Metabolome. An example of this is if your expirement
+was run in two different batches. Metabolome will perform the normalization for each 
+batch seperatly. This can cause downstream issues and we recommend combining the 
+raw data and performing one normalization on both batches.<mark> To turn on the normalization
+steps set eval=TRUE. </mark>
 
 ```{mermaid}
 flowchart TD
