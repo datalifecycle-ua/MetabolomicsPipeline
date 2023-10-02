@@ -1,4 +1,3 @@
-## ----setup----
 # Set global chunk obptions
 knitr::opts_chunk$set(fig.width=12, fig.height=12, warning = F)
 
