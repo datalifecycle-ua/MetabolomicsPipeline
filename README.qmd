@@ -13,7 +13,7 @@ The purpose of this pipeline is to provide additional analyses to complement the
 
 The figure above highlights the six modules in this pipeline
 
-1.  [Peak Normalization and standardization](#peak-normalization-and-standardization)
+1.  [Peak Normalization and standardization (Default = OFF)](#peak-normalization-and-standardization)
 
 2.  [Analysis Data Creation](#analysis-data-creation)
 

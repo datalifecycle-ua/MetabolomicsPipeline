@@ -16,8 +16,8 @@ pipeline to the .R files.
 
 The figure above highlights the six modules in this pipeline
 
-1.  [Peak Normalization and
-    standardization](#peak-normalization-and-standardization)
+1.  [Peak Normalization and standardization (Default =
+    OFF)](#peak-normalization-and-standardization)
 
 2.  [Analysis Data Creation](#analysis-data-creation)
 
