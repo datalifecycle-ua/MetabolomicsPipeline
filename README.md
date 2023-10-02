@@ -118,7 +118,7 @@ Below are the workflows for each module. The shapes for each step have a
 specific meaning which are defined below.
 
 <img src="README_files/figure-markdown_github/mermaid-figure-1.png"
-style="width:5.33in;height:5.33in" />
+style="width:5.96in;height:2.13in" />
 
 Under the description of each step of the workflow is the .R file that
 corrosponds to that step.
