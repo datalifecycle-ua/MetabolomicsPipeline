@@ -14,6 +14,8 @@
 #' and the values for the heatmap.
 #' 
 #' 
+#' @export
+#' 
 
 
 

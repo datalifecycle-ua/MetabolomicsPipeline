@@ -1,3 +1,49 @@
+#' Subpathway Analysis
+#' 
+#' Subpathway analysis for metabolite data. 
+#' 
+#' @details For each metabolite, we test three models using using ANOVA.
+#' \itemize{
+#'  
+#'  \item{Interaction:}{ \eqn{log Peak = Treatment + block + Treatment*block}}
+#'  
+#'  \item{Parallel: }{ \eqn{log Peak = Treatment + block}}
+#'  
+#'  \item{Single: }{ \eqn{log Peak =  Treatment}}
+#' 
+#' }
+#' 
+#' For the interaction model, we are focusing only on the interaction term 
+#' "Treatment*block" for this to test if there is a  significant interaction between our 
+#' treatment and the block variable. The parallel model is testing if the block
+#' variable is explaining a significant amount of the metabolite variance,
+#' and the treatment model is testing if the treatment explains a 
+#' significant proportion of the variance for each metabolite. 
+#' Then, each model will be tested at the subpathway level with the Combined Fisher Probability. 
+#' \deqn{\tilde{X} = -2\sum_{i=1}^k ln(p_i)}
+#' 
+#' @seealso [Loughin, Thomas M. "A systematic comparison of methods for combining p-values from independent tests." Computational statistics & data analysis 47.3 (2004): 467-485.](https://www.sciencedirect.com/science/article/pii/S0167947303002950)
+
+#' 
+#' @param data The analysis data containing sample meta data and metabolite peak data
+#' @param chem_data Chemical Annotation data provided by Metabolon.
+#' @param treat_var This is the name of the variable in the analysis data that is the main variable of interest. 
+#' @param block_var Is the name of the blocking variable in the dataset.
+#' If the the experimental design does not include a blocking variable, then the 
+#' value of block_var=NULL.
+#' 
+#' @returns A data frame with "CHEM_ID","sub_pathway","chem_name","interaction_pval","interaction_fisher","parallel_pval","parallel_fisher","single_pval","single_fisher",and "model" for each metabolite. 
+#' 
+#' 
+#' @import dplyr
+#' 
+#' 
+#' @export
+#' 
+#' 
+
+
+
 subpathway_analysis <- function(data, chem_data, treat_var, block_var){
   
   if(!is.null(block_var)){
@@ -13,7 +59,7 @@ subpathway_analysis <- function(data, chem_data, treat_var, block_var){
                              single_pval = NA,
                              single_fisher = NA,
                              model = NA) %>%
-      mutate(sub_pathway = ifelse(is.na(sub_pathway), "Unknown Metabolite", sub_pathway))
+      dplyr::mutate(sub_pathway = ifelse(is.na(sub_pathway), "Unknown Metabolite", sub_pathway))
     
     
     #For each pathways run the models for each metabolite within the pathway.
@@ -138,7 +184,7 @@ subpathway_analysis <- function(data, chem_data, treat_var, block_var){
                             single_pval = NA,
                             single_fisher = NA,
                             model = NA) %>%
-      mutate(sub_pathway = ifelse(is.na(sub_pathway), "Unknown Metabolite", sub_pathway))
+      dplyr::mutate(sub_pathway = ifelse(is.na(sub_pathway), "Unknown Metabolite", sub_pathway))
     
     for(pathway in unique(path_data$sub_pathway)){
       var_names <- path_data$CHEM_ID[which(path_data$sub_pathway == pathway)]
@@ -175,7 +221,7 @@ subpathway_analysis <- function(data, chem_data, treat_var, block_var){
       if(length(var_names) == 1){
         path_data$single_fisher[which(path_data$CHEM_ID== var)] <- anova(treat_mod)[treat_var,5]
         
-        path_data$model[which(path_data$sub_pathway == pathway)] <- case_when(anova(treat_mod)[1,5] < 0.05 ~ "Single",
+        path_data$model[which(path_data$sub_pathway == pathway)] <- dplyr::case_when(anova(treat_mod)[1,5] < 0.05 ~ "Single",
                                                                                 TRUE ~ "None")
       }else{
         
@@ -183,7 +229,7 @@ subpathway_analysis <- function(data, chem_data, treat_var, block_var){
         single_p <- round(pchisq(single_fisher, 2*length(var_names), lower.tail = F), 2)
         path_data$single_fisher[which(path_data$sub_pathway == pathway)] <- single_p
         
-        path_data$model[which(path_data$sub_pathway == pathway)] <- case_when(single_p < 0.05 ~ "Single",
+        path_data$model[which(path_data$sub_pathway == pathway)] <- dplyr::case_when(single_p < 0.05 ~ "Single",
                                                                                 TRUE ~ "None")
         
       }

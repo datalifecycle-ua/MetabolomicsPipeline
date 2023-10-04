@@ -1,8 +1,23 @@
+#' Log transformation of metabolite data
+#' 
+#' This function log trasforms each peak in Metabolome data
+#' 
+#' @param peak_data A matrix of peak data with metabolites in the columns
+#' 
+#' @return log transformed peak data
+#' 
+#' @import dplyr
+#' @export
+#'
+#'
+#'
+
+
 log_transformation <- function(peak_data){
   
   # 1. Log transform all of the values
   peak_data_log <- peak_data %>% 
-    mutate_if(is.numeric, log) 
+    dplyr::mutate_if(is.numeric, log) 
   
   # Return log tranformed data
   return(peak_data_log)

@@ -23,6 +23,7 @@ library(flextable)
 library(reshape2)
 
 
+
 # Heat Map
 library(pheatmap)
 library(RColorBrewer)
@@ -1146,7 +1147,7 @@ single model is displayed.
 if a sub-pathway shows a significant p-value for the interaction model and the parallel
 model, then the sub-pathway model type is only "interaction". 
 ```{r sigMetabolitesByModelType,results='asis'}
-#| tbl-cap: "Significant Metabolites by Model"
+#| tbl-cap: "Significant Subpathways by Model"
 
 for (i in 1:length(strata)) {
   
@@ -1344,6 +1345,8 @@ Please identify which model type you would like to focus on.
 ```{r Enter_modelType}
 # Enter Model type (Interaction, Parallel, Single)
 mod = "Interaction" #<1>
+
+subpathway = 
 ```
 1. Enter Model type (Interaction, Parallel, Single)
 
@@ -1427,6 +1430,21 @@ for(i in 1:length(strata)){
 6. Create table for specific model type
 7. Display table 
 8. Save table 
+
+
+```{r}
+mod=c("interaction","single")
+
+path_data %>% 
+  filter(sub_pathway=="Chemical") %>%
+  select(chem_name,all_of(paste0(mod,"_pval"))) %>%
+  knitr::kable(digits = 3, col.names = c("Metabolite Name",str_to_title(paste0(mod," P-Value")))) %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+```
+
+
+
 
 ## Pairwise Compairisons
 At the metabolite level, we can look at the pairwise comparisons for all experimental 
@@ -1609,6 +1627,10 @@ p #<4>
 4. Display heatmap
 
 
+```{r}
+met_est_heatmap(results_pair,chem_data)
+```
+
 #### P-Value Heatmap
 For the metabolites which had a significant overall p-value (which tested if the
 treatment group means were equal under the null hypothesis), we will now produce
@@ -1673,7 +1695,10 @@ wide to long format. Then we use plotly to create an interactive heatmap.
 
 4. Display heatmap
 
+```{r}
+met_p_heatmap(results_data = results_pair,chem_data = chem_data)
 
+```
 
 ## Box Plots and Line Plots
 Visualizations of the data can help us see the underlying trends. Two useful visualization
