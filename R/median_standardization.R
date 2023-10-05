@@ -27,5 +27,5 @@ median_standardization <- function(peak_data){
     peak_data_std[,i] <- peak_data_std[,i]/peak_data_med[,i]  
   }  
   
-  return(peak_data_norm)
+  return(peak_data_std)
 }
