@@ -18,10 +18,14 @@
 #' @export
 
 
-metabolite_pca <- function(analysis_data,metabolites,meta_var){
+metabolite_pca <- function(MetPipe,meta_var){
+  
+  # Get metabolite
+  mets <- intersect(names(MetPipe@standardized_peak),
+                    MetPipe@chemical_annotation$CHEM_ID)
   
   # Create PCA data containing only metabolite data
-  pca_dat <- analysis_data[,metabolites] #<4>
+  pca_dat <- MetPipe@analysis[,mets]
   
   
   # Run PCA of the pca_dat matrix containing only the metabolites.   
@@ -32,7 +36,7 @@ metabolite_pca <- function(analysis_data,metabolites,meta_var){
   # Create figure 
   pca_plot <- factoextra::fviz_pca_ind(res.pca, 
                  label = "none",
-                 habillage = as.factor(analysis_data[,meta_var])) 
+                 habillage = as.factor(MetPipe@analysis[,meta_var])) 
   
   return(pca_plot)
 }

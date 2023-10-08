@@ -31,8 +31,9 @@ met_p_heatmap <- function(results_data, chem_data){
 
   # 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
   data <- chem_data %>% 
-    dplyr::select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>% #<2>
-    merge(results_data, by.x = "CHEM_ID",by.y = "Metabolite") %>% 
+    dplyr::select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>% 
+    merge(results_data, by.x = "CHEM_ID",by.y = "metabolite") %>% 
+    dplyr::filter(Overall_pval < 0.05) %>%
     dplyr::arrange(SUB_PATHWAY)  
   
   

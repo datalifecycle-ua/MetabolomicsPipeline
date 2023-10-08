@@ -4,7 +4,7 @@
 \alias{metabolite_pairwise}
 \title{Metabolite Pairwise Comparisons.}
 \usage{
-metabolite_pairwise(form, data, metabolites)
+metabolite_pairwise(MetPipe, form, strat_var = NULL)
 }
 \arguments{
 \item{form:}{This is a character string the resembles the right hand side of a

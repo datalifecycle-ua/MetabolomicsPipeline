@@ -4,14 +4,14 @@
 \alias{metabolite_pca}
 \title{Metabolite PCA}
 \usage{
-metabolite_pca(analysis_data, metabolites, meta_var)
+metabolite_pca(MetPipe, meta_var)
 }
 \arguments{
+\item{meta_var}{A metadata variable to color code the PCA plot by.}
+
 \item{analysis_data}{\itemize{
 \item analysis data with metabolites in the columns
 }}
-
-\item{meta_var}{A metadata variable to color code the PCA plot by.}
 
 \item{A}{vector of metabolites to include in the PCA. This is primarily to
 to remove columns that do not include metabolite peak data.}

@@ -32,81 +32,51 @@
 
 
 
-metabolite_pairwise <- function(form,data,metabolites){
+metabolite_pairwise <- function(MetPipe,form,strat_var=NULL){
   
-  # Create progress bar
-  pb = txtProgressBar(min = 0, max = length(metabolites), initial = 0) 
-  
-  for (i in 1:length(metabolites)) {
+  if(is.null(strat_var)){
     
-    # update progress bar
-    setTxtProgressBar(pb,i)
+    # Get metabolites
+    mets <- intersect(names(MetPipe@analysis),MetPipe@chemical_annotation$CHEM_ID)
     
-    # Get gene
-    outcome <- data[,metabolites[i]]
+    # Get pairwise comparisons
+    res <- apply(MetPipe@analysis[,mets], MARGIN=2, FUN = function(X){
+                                                            pairwise(X,form = form,data = MetPipe@analysis)})
     
-    # Define mode
-    model <- as.formula(
-      paste("outcome", 
-            paste(form,collapse = " + "),
-            sep = "~"
-      )
-    )
+    results <- do.call(rbind,res)
     
-    # Run model
-    mod <- lm(model, data = data)
+    # Add metabolite names
+    results$metabolite = rownames(results)
     
-    # run anova
-    tryCatch(
-      {anov <- anova(mod,lm(outcome~1))
-      },
-     warning = function(c){
-       print(paste0(c," for CHEM_ID ",metabolites[i] ))
-     },
-     finally = {anov <- anova(mod,lm(outcome~1))}
-    )
-    
-    # Get the F statistic pvalue
-    overall <- anov$`Pr(>F)`[2]
-    
-    
-    # Create model for the pairwise comparisons
-    means_mod <- as.formula(
-      paste("pairwise", 
-            paste(form,collapse = " + "),
-            sep = "~"
-      )
-    )
-    
-    # Find pairwise comparisons
-    pairs <- emmeans::emmeans(mod, means_mod,adjust='none')$contrasts
-    
-    
-    # Create results table
-    if(i ==1 ){
-      cols <- c("Metabolite","Overall_pval",paste0(summary(pairs)[,1],"_ESTS"),paste0(summary(pairs)[,1],"_PVALS"))
-      
-      results <- data.frame(matrix(nrow = length(metabolites),ncol = length(cols)))
-      
-      colnames(results) <- cols
-    }
-    
-    # Put results in the results data frame
-    results[i,"Metabolite"] = metabolites[i]
-    
-    results[i,"Overall_pval"] = overall
-    
-    results[i,paste0(summary(pairs)[,1],"_ESTS")] <- summary(pairs)[,"estimate"]
-    
-    results[i,paste0(summary(pairs)[,1],"_PVALS")] <- summary(pairs)[,"p.value"]
-    
-    # Order column names
-    new_cols <- c("Metabolite","Overall_pval",names(results)[-1:-2][order(names(results)[-1:-2])])
-    
-    results <- results[,new_cols]
-    
-    
+    return(results)
   }
-  close(pb)
-  return(results)
+  
+  if(!is.null(strat_var)){
+    
+    # Get Metabolites
+    mets <- intersect(names(MetPipe@analysis),MetPipe@chemical_annotation$CHEM_ID)
+    
+    # Split data
+    data <- split(MetPipe@analysis,f=MetPipe@analysis[,strat_var])
+    
+    # Get results
+    results <- lapply(data, function(X){
+      
+      # Get pairwise comparisons
+      res <- apply(X[,mets], MARGIN=2, FUN = function(m){
+        
+        pairwise(m,form = form,data = X )
+        
+      })
+      
+      res2 <- do.call(rbind,res)
+      
+      # Add metabolite names
+      res2$metabolite = rownames(res2)
+      
+      return(res2)
+    })
+   
+  }
+
 }

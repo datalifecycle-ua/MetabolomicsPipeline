@@ -3,18 +3,14 @@
 ################################################################################
 
 #  Metabolon excel file 
-met_excel <- "Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+met_excel <- "data/UNAZ-0501-22VW_ DATA TABLES.xlsx"
 
 #  Provide path to additional metadata (if no additional meta data the set = NULL)
-additional_metaPath <- "Data/Metabolon/AdditionalVars.xlsx" 
+additional_metaPath <- "data/AdditionalVars.xlsx" 
 
-# Provide path for analysis data output
-data_output = "Data/Processed/"
 
-# Provide path for table 1 output
-table_output <- "Outputs/Tables/"
 ################################################################################
-### Enter Metadata Variables ###################################################
+### Enter Metadata Variables For Analysis ######################################
 ################################################################################
 metadata_variables <- c("PARENT_SAMPLE_NAME", 
                         "GROUP_NAME", 
@@ -26,12 +22,9 @@ metadata_variables <- c("PARENT_SAMPLE_NAME",
 ### Load Data ##################################################################
 ################################################################################
 
-# Read in sample metadata
-meta_data <- read.xlsx(met_excel,sheet = "Sample Meta Data") 
+# Create MetPipe Object
+dat <- loadMetPipeFromMetabolon(metabolon_path = met_excel)
 
-
-# Read Log transformed data
-peak_data_log <- read.xlsx(met_excel,sheet = "Log Transformed Data") 
 
 
 # 2. Merge additional vars to the meta data
@@ -41,24 +34,20 @@ if(!is.null(additional_metaPath)){
   meta_data_additional <- read.xlsx(additional_metaPath) 
   
   meta_data <- meta_data_additional %>% 
-    left_join(meta_data,"PARENT_SAMPLE_NAME") 
+    left_join(dat@meta,"PARENT_SAMPLE_NAME")
+  
+  # Update meta data slot
+  dat@meta <- meta_data
 }
 
 
 ################################################################################
-### Merge Peak and Metadata ####################################################
+### Add Analysis Data To MetPipe Object ########################################
 ################################################################################
 # 2. Create analysis data
-analysis_data <- meta_data %>% 
+dat@analysis <- dat@meta %>% 
   select(all_of(metadata_variables)) %>% 
-  left_join(peak_data_log,"PARENT_SAMPLE_NAME") 
-
-
-################################################################################
-### Save Analysis Data #########################################################
-################################################################################
-# Save analysis data
-write.csv(analysis_data,paste0(data_output,"analysis_data.csv"), row.names = F) 
+  left_join(dat@standardized_peak,"PARENT_SAMPLE_NAME") 
 
 
 ################################################################################
@@ -73,22 +62,24 @@ var2 = "TIME1"
 stratified_var = "Gender" 
 
 # 3. Assign the variable a label name
-label(analysis_data[,var1]) <- "Treatment Group" 
+label(dat@analysis[,var1]) <- "Treatment Group" 
 
-label(analysis_data[,var2]) <- "Time" 
+label(dat@analysis[,var2]) <- "Time" 
 
 # 4. Assign a stratified variable a label name for the table. 
-label(analysis_data[,stratified_var]) = "Gender" 
+label(dat@analysis[,stratified_var]) = "Gender" 
 
 # 5. Create table 1
 tbl1 <- table1(~ TIME1 + GROUP_NAME| Gender 
-               , data = analysis_data) 
+               , data = dat@analysis) 
 
 # 6. Display table 1
 print(tbl1)
 
-#7. Save table 1
-t1flex(tbl1) %>% #<3>
-  save_as_docx(path = paste0(table_output,"table1.docx"))
+################################################################################
+### Save MetPipe Object ########################################################
+################################################################################
+
+# saveRDS(dat, file = "data/demo.Rds")
 
 

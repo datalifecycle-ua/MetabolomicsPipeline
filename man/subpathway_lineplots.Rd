@@ -4,15 +4,13 @@
 \alias{subpathway_lineplots}
 \title{Subpathway Lineplots}
 \usage{
-subpathway_lineplots(analysis_data, chem_data, subpathway, X, groupBy)
+subpathway_lineplots(MetPipe, subpathway, X, groupBy, ...)
 }
 \arguments{
-\item{analysis_data}{The analysis data containing sample meta data and metabolite peak data.}
-
-\item{chem_data}{Chemical Annotation data provided by Metabolon.}
+\item{MetPipe}{MetPipe data object}
 
 \item{subpathway}{Character value of the subpathway of interest. This is case
-sensitive and must be in the chem_data.}
+sensitive and must be in the chemical annotation file.}
 
 \item{X}{This the the name of the variable in the meta data that is used for the
 X axis of the box plots.}
@@ -20,6 +18,8 @@ X axis of the box plots.}
 \item{groupBy}{This is a grouping variable. As a recommendation the treatment
 groups should be used in the groupBy argument as this will provide a different color
 for each of the treatments making it easier to identify.}
+
+\item{...}{Additional arguments to filter the analysis data by.}
 }
 \value{
 Line plots stratified by metabolite.

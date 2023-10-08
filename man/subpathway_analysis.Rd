@@ -4,18 +4,18 @@
 \alias{subpathway_analysis}
 \title{Subpathway Analysis}
 \usage{
-subpathway_analysis(data, chem_data, treat_var, block_var)
+subpathway_analysis(MetPipe, treat_var, block_var, strat_var = NULL)
 }
 \arguments{
-\item{data}{The analysis data containing sample meta data and metabolite peak data}
-
-\item{chem_data}{Chemical Annotation data provided by Metabolon.}
+\item{MetPipe}{MetPipe data object}
 
 \item{treat_var}{This is the name of the variable in the analysis data that is the main variable of interest.}
 
 \item{block_var}{Is the name of the blocking variable in the dataset.
 If the the experimental design does not include a blocking variable, then the
 value of block_var=NULL.}
+
+\item{strat_var}{Variable to stratifiy the subpathway analysis by.}
 }
 \value{
 A data frame with "CHEM_ID","sub_pathway","chem_name","interaction_pval","interaction_fisher","parallel_pval","parallel_fisher","single_pval","single_fisher",and "model" for each metabolite.

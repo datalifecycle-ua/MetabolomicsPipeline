@@ -3,7 +3,7 @@
 ###############################################################################
 
 # Provide a path to Metabolon .xlsx file. 
-metabolon_path <- "Data/Metabolon/UNAZ-0501-22VW_ DATA TABLES.xlsx" 
+metabolon_path <- "Data/UNAZ-0501-22VW_ DATA TABLES.xlsx" 
 
 # Output data path
 Outfolder = "Data/Processed/"
@@ -16,12 +16,15 @@ Outfolder = "Data/Processed/"
 peak_data <- read.xlsx(metabolon_path, sheet = "Peak Area Data") # <2>
 
 
+# Create MetPipe Object
+dat <- createMetPipe(raw_peak = peak_data)
+
 
 ###############################################################################
 #### Plots Before Standardization and Normalization ###########################
 ###############################################################################
 # Select the first five metabolites for the box plot. 
-metabolites <- names(peak_data)[2:6] 
+metabolites <- names(dat@raw_peak)[2:6] 
 
 
 #  Create the boxplot data
@@ -41,7 +44,7 @@ ggplot(plot_data,aes(x=variable,y=value)) +
 ###############################################################################
 
 # Median standardization
-med_std <- median_standardization(peak_data = peak_data)
+med_std <- median_standardization(peak_data = dat@raw_peak)
 
 # Minimum Value imputation
 impute <- min_val_impute(med_std)
@@ -68,9 +71,8 @@ ggplot(plot_data,aes(x=variable,y=value)) +
   theme_bw() #<3>
 
 ###############################################################################
-#### Save Data  ###############################################################
+#### Save Data MetPipe Object #################################################
 ###############################################################################
 
-write.csv(log_trans_met, file = paste0(Outfolder,"Log_transformed_data.csv"), 
-          row.names = F) 
+dat@standardized_peak <-  log_trans_met
 

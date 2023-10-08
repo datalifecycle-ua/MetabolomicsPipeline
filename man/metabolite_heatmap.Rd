@@ -4,22 +4,35 @@
 \alias{metabolite_heatmap}
 \title{Create metabolite heatmap}
 \usage{
-metabolite_heatmap(.analysis_data, heatmap_variables, metabolites, ...)
+metabolite_heatmap(
+  MetPipe,
+  top_mets = 50,
+  group_vars,
+  strat_var = NULL,
+  caption = NULL,
+  ...
+)
 }
 \arguments{
-\item{.analysis_data}{The analysis data containing all of the metabolite and
-metadata information.}
+\item{MetPipe}{Expirement MetPipe object}
 
-\item{heatmap_variables}{A vector of variable names that are NOT metabolites to include
-in the heatmap.}
+\item{top_mets}{Number of metabolites to include in heatmap. Metabolites
+are choose based on highest variability.}
 
-\item{metabolites}{a vector of metabolite names to include in the heatmap.}
+\item{group_vars}{Vector of variables to annotate heatmap with. Columns will
+be grouped by these variables}
+
+\item{strat_var}{Variable to stratify the heatmap by.}
+
+\item{caption}{A title for the heatmap.}
 
 \item{...}{Additional arguments that can be passed into the arrange function.
 This parameter will order the columns of the heatmap.}
 }
 \value{
 Heatmap plot with the columns arranged as specified in ...
+if a strata is specified then a list is returned, if strata=NULL
+then a single heatmap is returned.
 }
 \description{
 This function creates metabolite heatmaps
