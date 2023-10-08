@@ -22,6 +22,9 @@ knitr::opts_chunk$set(fig.width=12, fig.height=12, warning = F)
 library(openxlsx)
 library(dplyr)
 
+# Tables
+library(table1)
+
 # Plots
 library(ggplot2)
 
@@ -115,16 +118,35 @@ dat@standardized_peak <-  log_trans_met
 ```
 
 
-```{r AnalysisDataCreation, eval=FALSE}
+```{r AnalysisDataCreation, echo=FALSE}
 ################################################################################
-### Enter Data Paths ###########################################################
+### Load Data ##################################################################
 ################################################################################
 
-#  Metabolon excel file 
-met_excel <- "data/UNAZ-0501-22VW_ DATA TABLES.xlsx"
+# Create MetPipe Object From .xlsx
+#dat <- loadMetPipeFromMetabolon(metabolon_path = met_excel)
 
-#  Provide path to additional metadata (if no additional meta data the set = NULL)
-additional_metaPath <- "data/AdditionalVars.xlsx" 
+# Manually create MetPipe Object
+dat <- createMetPipe(raw_peak = peak_data,
+                     standardized_peak = peak_data_standardized,
+                     meta = meta_data,
+                     chemical_annotation = Chemical_Annotation)
+
+
+#### Load additional Metadata
+# meta_data_additional <- read.xlsx(additional_metaPath) 
+meta_data_additional <- MetabolomicsPipeline::AdditionalMeta
+
+
+# 2. Merge additional vars to the meta data
+if(nrow(meta_data_additional)>0){
+  
+  meta_data <- meta_data_additional %>% 
+    left_join(dat@meta,"PARENT_SAMPLE_NAME")
+  
+  # Update meta data slot
+  dat@meta <- meta_data
+}
 
 
 ################################################################################
@@ -134,32 +156,6 @@ metadata_variables <- c("PARENT_SAMPLE_NAME",
                         "GROUP_NAME", 
                         "TIME1", 
                         "Gender") 
-
-
-################################################################################
-### Load Data ##################################################################
-################################################################################
-
-# Create MetPipe Object From .xlsx
-#dat <- loadMetPipeFromMetabolon(metabolon_path = met_excel)
-
-dat <- createMetPipe(raw_peak = peak_data,
-                     standardized_peak = peak_data_standardized,
-                     meta = meta_data,
-                     chemical_annotation = Chemical_Annotation)
-
-# 2. Merge additional vars to the meta data
-if(!is.null(additional_metaPath)){
-  
-  # Read in additional meta data 
-  meta_data_additional <- read.xlsx(additional_metaPath) 
-  
-  meta_data <- meta_data_additional %>% 
-    left_join(dat@meta,"PARENT_SAMPLE_NAME")
-  
-  # Update meta data slot
-  dat@meta <- meta_data
-}
 
 
 ################################################################################
