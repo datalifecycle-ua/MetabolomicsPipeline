@@ -16,6 +16,7 @@
 #' @import dplyr
 #' @import knitr
 #' @import kableExtra
+#' @import stringr
 #' 
 #' @export
 #' 
@@ -29,7 +30,7 @@ met_within_sub <- function(subpath_results,subpathway,mod = c("interaction","par
     table <- subpath_results %>% 
       dplyr::filter(sub_pathway=="Chemical") %>%
       dplyr::select(chem_name,all_of(paste0(mod,"_pval"))) %>%
-      knitr::kable(digits = 3, col.names = c("Metabolite Name",str_to_title(paste0(mod," P-Value"))),caption = paste0("Metabolites within ",str_to_title(subpathway))) %>%
+      knitr::kable(digits = 3, col.names = c("Metabolite Name",stringr::str_to_title(paste0(mod," P-Value"))),caption = paste0("Metabolites within ",str_to_title(subpathway))) %>%
       kableExtra::kable_paper(full_width = F, html_font = "Cambria")
     
     return(table)
@@ -44,7 +45,7 @@ met_within_sub <- function(subpath_results,subpathway,mod = c("interaction","par
       stratum %>% 
         dplyr::filter(sub_pathway=="Chemical") %>%
         dplyr::select(chem_name,all_of(paste0(mod,"_pval"))) %>%
-        knitr::kable(digits = 3, col.names = c("Metabolite Name",str_to_title(paste0(mod," P-Value"))),
+        knitr::kable(digits = 3, col.names = c("Metabolite Name",stringr::str_to_title(paste0(mod," P-Value"))),
                      caption = paste0("Metabolites within ",str_to_title(subpathway)," (",name,")")) %>%
         kableExtra::kable_paper(full_width = F, html_font = "Cambria")
     })

@@ -13,8 +13,9 @@ Outfolder = "Data/Processed/"
 ###############################################################################
 
 #  Load raw peak data
-peak_data <- read.xlsx(metabolon_path, sheet = "Peak Area Data") # <2>
+#peak_data <- read.xlsx(metabolon_path, sheet = "Peak Area Data") 
 
+peak_data <- MetabolomicsPipeline::peak_data
 
 # Create MetPipe Object
 dat <- createMetPipe(raw_peak = peak_data)
