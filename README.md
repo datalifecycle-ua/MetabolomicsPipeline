@@ -1,199 +1,56 @@
-# Metabolomics Pipeline
-Joel Parker
 
-## Overview
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
-The purpose of this pipeline is to provide additional analyses to
-complement the analysis by Metabolon. In the Metabolon data, each
-“sub-pathway” classifies a collection of metabolites, and each
-“super-pathway” classifies a collection of sub-pathways. The below
-figure highlights the steps we will be taking, which highlight the main
-modules of this pipeline. The workflow for each module is highlighted in
-the [Modules](#modules) section, which will link each step of the
-pipeline to the .R files.
+# MetabolomicsPipeline
 
-<img src="Workflow.png"/>
+<!-- badges: start -->
+<!-- badges: end -->
 
-The figure above highlights the six modules in this pipeline
-
-1.  [Peak Normalization and standardization (Default =
-    OFF)](#peak-normalization-and-standardization)
-
-2.  [Analysis Data Creation](#analysis-data-creation)
-
-3.  [Exploratory Peak Analysis](#exploratory-peak-analysis)
-
-4.  [Subpathway Analysis](#subpathway-analysis)
-
-5.  [Pairwise Comparisons at the metabolite
-    level](#pairwise-comparisons-at-the-metabolite-level)
-
-6.  [Metabolite box plots and line plots within
-    subpathways](#metabolite-box-plots-and-line-plots-within-subpathways)
-
-Prior to jumping into the details of each of the modules, the README
-disscusses [installation](#installation) and [how to get
-started](#getting-started) using the pipeline.
+The goal of MetabolomicsPipeline is to …
 
 ## Installation
 
-To download this pipeline, first make sure you have installed devtools.
+You can install the development version of MetabolomicsPipeline from
+[GitHub](https://github.com/) with:
 
 ``` r
-# Install Dev tools
-install.packages("devtools")
+# install.packages("devtools")
+devtools::install_github("JoelParkerUofA/MetabolomicsPipeline")
 ```
 
-Now you can download the pipeline from Git-hub.
+## Example
+
+This is a basic example which shows you how to solve a common problem:
 
 ``` r
-# Download pipeline from Github
-devtools::install_github("JoelParkerUofA/Metabolomics-Pipeline")
+library(MetabolomicsPipeline)
+#> Warning: replacing previous import 'dplyr::group_rows' by
+#> 'kableExtra::group_rows' when loading 'MetabolomicsPipeline'
+#> Warning: replacing previous import 'ggplot2::last_plot' by 'plotly::last_plot'
+#> when loading 'MetabolomicsPipeline'
+## basic example code
 ```
 
-Once the pipeline has finished downloading, you can open the R project
-by opening the “Metabolomic Pipeline.Rproj” to run this pipeline on your
-local computer.
+What is special about using `README.Rmd` instead of just `README.md`?
+You can include R chunks like so:
 
-## Getting Started
+``` r
+summary(cars)
+#>      speed           dist       
+#>  Min.   : 4.0   Min.   :  2.00  
+#>  1st Qu.:12.0   1st Qu.: 26.00  
+#>  Median :15.0   Median : 36.00  
+#>  Mean   :15.4   Mean   : 42.98  
+#>  3rd Qu.:19.0   3rd Qu.: 56.00  
+#>  Max.   :25.0   Max.   :120.00
+```
 
-#### Demo Data Set
+You’ll still need to render `README.Rmd` regularly, to keep `README.md`
+up-to-date. `devtools::build_readme()` is handy for this.
 
-The workflow comes with a dataset in the Data/Metabolon folder which
-contains metaboloic profiles across several treatment groups and time
-points of ALS in mice. To get started, the vignette folder has a file
-called WorkflowVignette.Rmd. This file walks through all steps of the
-pipeline using the ALS data.
+You can also embed plots, for example:
 
-#### Your Own Data
+<img src="man/figures/README-pressure-1.png" width="100%" />
 
-If you have data from Metabolon, you can simply place the .xlsx file
-from Metabolon in the “Data/Metabolon” folder and run the
-“Analysis_data_creation.Rmd” .Rmd file in the “Code” folder to create
-the analysis data. Once the analysis data is created, you can run any of
-the analysis sections in the “Code” folder independently.
-
-### renv
-
-This pipeline utilizes the
-[renv](https://rstudio.github.io/renv/articles/renv.html#reproducibility)
-package to ensure the R environment is consistent for each run. This
-means that all of the required packages for this project will be
-automatically installed within the Metabolomics Pipeline project folder.
-If you are using this pipeline for the first time, then use
-renv::restore() prior to running any of the files. This will install and
-update package versions used to generate this pipeline. It should be
-noted, this pipeline was generated using R 4.3.1 so if you are using an
-older version of R, then it is possible package versions may not be able
-to be reinstalled due to dependency issues. If this is the case we
-recommend to update your R version to R 4.3.1 or greater.
-
-### Folder Structure within git-hub
-
-To get started, in the Metabolomics pipeline working directory, there
-are five folders with the following folder structure:
-
--   Data
-    -   Metabolon: Contains the .xlsx file from Metabolon and other
-        files related to the metadata.
-    -   Processed: Contains data processed from this pipeline.
--   Code: Contains the .R files of each step of the pipeline.
--   Outputs
-    -   Plots
-    -   Tables
-    -   Reports
--   R: Contains and .R file with additional functions used for this
-    pipeline.
--   renv: This folder is generated by renv to restore package versions.
-
-You should save the .xlsx file from Metabolon and any additional
-metadata files to the Data/Metabolon folder. The main output folder will
-contain the plots and tables generated from this pipeline. Additionally,
-you can run this pipeline as a report and save it as a .pdf or .html.
-The report saves to the “Outputs/Reports” folder.
-
-## Modules
-
-Below are the workflows for each module. The shapes for each step have a
-specific meaning which are defined below.
-
-<img src="README_files/figure-markdown_github/mermaid-figure-1.png"
-style="width:5.96in;height:2.13in" />
-
-Under the description of each step of the workflow is the .R file that
-corrosponds to that step.
-
-### Peak Normalization and standardization
-
-Metabolome include peak data that has been normalized and standardized
-as part of the .xlsx Metabolome data file. We recommend you use the
-normalized peak data from Metabolome and therefore, <mark> the
-normalization and standardization steps are “off” by default.</mark>.
-However, is some cases you may need to perform normalization differently
-than what was provided by Metabolome. An example of this is if your
-expirement was run in two different batches. Metabolome will perform the
-normalization for each batch seperatly. This can cause downstream issues
-and we recommend combining the raw data and performing one normalization
-on both batches.<mark> To turn on the normalization steps set eval=TRUE.
-</mark>
-
-<img src="README_files/figure-markdown_github/mermaid-figure-12.png"
-style="width:8in;height:11.47in" />
-
-### Analysis Data Creation
-
-<img src="README_files/figure-markdown_github/mermaid-figure-11.png"
-style="width:10.31in;height:24.05in" />
-
-### Exploratory Peak Analysis
-
-#### PCA
-
-<img src="README_files/figure-markdown_github/mermaid-figure-10.png"
-style="width:11.77in;height:4.63in" />
-
-#### Heatmaps
-
-<img src="README_files/figure-markdown_github/mermaid-figure-9.png"
-style="width:7.57in;height:11.82in" />
-
-#### Statified Heatmaps
-
-<img src="README_files/figure-markdown_github/mermaid-figure-8.png"
-style="width:7.69in;height:9.04in" />
-
-### Subpathway Analysis
-
-#### Subpathway analysis
-
-<img src="README_files/figure-markdown_github/mermaid-figure-7.png"
-style="width:11.67in;height:15.69in" />
-
-#### Subpathway results tables
-
-<img src="README_files/figure-markdown_github/mermaid-figure-6.png"
-style="width:13.07in;height:5.01in" />
-
-### Pairwise Comparisons at the metabolite level
-
-#### 1. Pairwise Analysis
-
-<img src="README_files/figure-markdown_github/mermaid-figure-5.png"
-style="width:9.5in;height:4.94in" />
-
-#### 2. Pairwise Results Strata Visualizations
-
-<img src="README_files/figure-markdown_github/mermaid-figure-4.png"
-style="width:4.86in;height:4.79in" />
-
-### Metabolite box plots and line plots within subpathways.
-
-#### Box Plots
-
-<img src="README_files/figure-markdown_github/mermaid-figure-3.png"
-style="width:9.63in;height:7.91in" />
-
-#### Line Plots
-
-<img src="README_files/figure-markdown_github/mermaid-figure-2.png"
-style="width:9.94in;height:9.57in" />
+In that case, don’t forget to commit and push the resulting figure
+files, so they display on GitHub and CRAN.
