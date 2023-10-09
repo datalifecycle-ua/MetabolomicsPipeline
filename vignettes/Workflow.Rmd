@@ -1,5 +1,7 @@
 ---
-title: "Workflow"
+title: "MetabolomicsPipeline Workflow"
+author: "Joel Parker"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Workflow}
@@ -31,7 +33,104 @@ library(ggplot2)
 # Load Metabolomics Pipeline
 library(MetabolomicsPipeline)
 
+# To upload image
+library(magick)
+
 ```
+
+## Introduction
+The purpose of this pipeline is to provide a set of additional analyses to 
+complement the analysis done by Metabolon. These additional analysis are broken
+down into six main sections. 
+
+1. Peak normalization and standardization (default off) 
+
+2. Analysis data creation 
+
+3. Data exploration
+
+4. Subpathway Analysis
+
+5. Pairwise comparisons
+
+6. Box plot and line plots
+
+The overall structure for each of these modules is shown in the figure below. 
+
+
+```{r workflow, fig.height=20, fig.width=16}
+img = image_read("../Workflow.png")
+
+image_trim(img)
+```
+
+Each section consists of 1 chunk to demonstrate the workflow for each module. The .R
+script for each module is located in the Code folder of the github project. When 
+you add your own data you can add the Metabolon .xlsx file in the UserData folder. 
+
+## Loading metabolomic data into the MetabolomicsPipeline MetPipe
+
+Most of the functions in the MetabolomicsPipeline require the data to be loaded
+into a MetPipe data object. The MetPipe data object allows the data from the Metabolon
+experiment to be loaded into 5 different "slots".
+
+1. raw_peak: The raw peak data
+
+2. meta: The sample metadata
+
+3. standardized_peak: The log standardized peak data
+
+4. chemical_annotation: The chemical annotation file which contains metadata for each metabolite
+
+5. analaysis: final analysis data containing the required variables for analysis
+
+Since some of the functions require information from multiple datasets, the MetPipe
+data object provides a convenient way to keep the data organized. 
+
+The data can be loaded into the MetPipe object in two different ways. If you have the 
+.xlsx file from Metabolon, you can automatically load the data into the required slots
+using the "loadMetPipeFromMetabolon" function:
+
+
+```
+data = loadMetPipeFromMetabolon("Path/To/Data.xlsx)
+```
+Or, each of these data file can be loaded manually by useing the "createMetPipe" function:
+
+```
+data = createMetPipe(raw_peak = peak_data_data,
+                     standardized_peak = peak_data_standardized_data,
+                     meta = meta_data_data,
+                     chemical_annotation = Chemical_Annotation_data)
+```
+which requires you to load each dataset separately. Metabolon does not provide
+the data for the "analysis" slot. The analysis data with be created and loaded into 
+the MetPipe object in the AnalysisDataCreation module. 
+
+## Normalization and Standardization (default=off)
+Metabolome include peak data that has been normalized and standardized as part
+of the .xlsx Metabolome data file. We recommend you use the normalized peak data
+from Metabolon and therefore, <mark> the normalization and standardization steps
+are "off" by default.</mark>. However, is some cases you may need to perform normalization 
+differently than what was provided by Metabolome. An example of this is if your experiment
+was run in two different batches. Metabolon will perform the normalization for each 
+batch separately. This can cause downstream issues and we recommend combining the 
+raw data and performing one normalization on both batches.<mark> To turn on the normalization
+step set eval=TRUE. </mark>
+
+In its raw form, the peak data contain counts for each metabolite in each sample.
+Standardization and normalization are important steps to improve the 
+signal-to-noise ratio. In the next section, we are implementing the same 
+standardization and normalization methods used by Metabolon by:
+
+1. Standardizing each metabolite by the metabolites median.
+
+2. Impute missing values for each metabolite by the minimum value of the metabolite
+
+3. Log transform each value
+
+Additionally, this module provide boxplots from a few metabolite before and after
+normalization and standardization.
 
 ```{r NormalizationAndStandardization}
 ################################################################################
@@ -41,8 +140,6 @@ library(MetabolomicsPipeline)
 # Provide a path to Metabolon .xlsx file. 
 metabolon_path <- "Data/UNAZ-0501-22VW_ DATA TABLES.xlsx" 
 
-# Output data path
-Outfolder = "Data/Processed/"
 
 ###############################################################################
 ##### Load Data ###############################################################
@@ -80,13 +177,13 @@ ggplot(plot_data,aes(x=variable,y=value)) +
 ###### Standardization and Normalization ######################################
 ###############################################################################
 
-# Median standardization
+# 1 Median standardization
 med_std <- median_standardization(peak_data = dat@raw_peak)
 
-# Minimum Value imputation
+# 2 Minimum Value imputation
 impute <- min_val_impute(med_std)
 
-# Log Transformation
+# 2 Log Transformation
 log_trans_met <- log_transformation(impute)
 
 
@@ -113,9 +210,44 @@ ggplot(plot_data,aes(x=variable,y=value)) +
 
 dat@standardized_peak <-  log_trans_met
 
-#saveRDS(dat,file = "Path.RDS")
+#saveRDS(dat,file = "../UserData/normalized.RDS")
 
 ```
+
+## Analysis Data Creation
+Before we can complete the analysis, we must create the analysis data which contains
+the standardized peak data and the required sample metadata analysis variables. We start
+by loading the data into the MetPipe object. Here we are using the internal data of 
+the package however we have added the loadMetPipeFromMetabolon in the comments so 
+all you would have to do is add the path to the Metabolon.xlsx file. 
+
+#### Additional Metadata
+It may be possible that you have additional sample metadata that you would like
+to include in the analysis. If this is the case you can load the additional metadata
+and add it to the sample meta data in the MetPipe object. To do this you will just need
+to provide a path to the additional metadata. The additional meta data must contain
+the variable "PARENT_SAMPLE_NAME" to allow us to merge the sample metadata files. 
+
+#### Create analysis data steps
+
+To create the analysis data you will need to take the following steps. 
+
+1. Load Data
+
+- Provide paths to the Metabolon.xlsx file and potentially the additional meta data file. 
+
+2. Enter metadata variables for analysis
+
+- You will need to provide a vector of sample metadata variable to include in the analysis. 
+
+3. Add the analysis data to MetPipe
+
+4. Create table 1
+- Allows us to see the distribution of sample types
+
+- Requires you to update labels for the table 1 variables
+
+5. Save the data as .Rds
 
 
 ```{r AnalysisDataCreation, echo=FALSE}
@@ -124,17 +256,17 @@ dat@standardized_peak <-  log_trans_met
 ################################################################################
 
 # Create MetPipe Object From .xlsx
-#dat <- loadMetPipeFromMetabolon(metabolon_path = met_excel)
+#dat <- loadMetPipeFromMetabolon(metabolon_path = "Path/To/MEtabolomics.xlsx")
 
 # Manually create MetPipe Object
-dat <- createMetPipe(raw_peak = peak_data,
-                     standardized_peak = peak_data_standardized,
-                     meta = meta_data,
-                     chemical_annotation = Chemical_Annotation)
+dat <- createMetPipe(raw_peak = MetabolomicsPipeline::peak_data,
+                     standardized_peak = MetabolomicsPipeline::peak_data_standardized,
+                     meta = MetabolomicsPipeline::meta_data,
+                     chemical_annotation = MetabolomicsPipeline::Chemical_Annotation)
 
 
 #### Load additional Metadata
-# meta_data_additional <- read.xlsx(additional_metaPath) 
+# meta_data_additional <- read.xlsx(additional_metaPath.xlsx) 
 meta_data_additional <- MetabolomicsPipeline::AdditionalMeta
 
 
@@ -198,16 +330,68 @@ print(tbl1)
 ################################################################################
 
 # saveRDS(dat, file = "data/demo.Rds")
-
-
-
-
 ```
+
+
+## Exploratory Analysis
+In data exploration, we use several methods to help us better understand the 
+underlying patterns in the data without using a formal hypothesis test. In this
+pipeline, we are going to focus on two methods for data exploration:
+
+A.) Principal component analysis
+
+B.) Heatmaps
+
+#### Principal Component Analysis (PCA)
+In general, Principal component analysis (PCA) reduces the number of variables 
+in a dataset while preserving as much information from the data as possible. At 
+a high level, PCA is constructed such that the first principal component accounts
+for the largest possible amount of variance within the data. The second principal
+component accounts for the largest amount of remaining variance, and so on. 
+Additionally, each of the principal components produced by PCA is uncorrelated 
+with each of the other principal components. PCA can allow us to 
+visualize sources of variation in the data. The metabolite_pca function allows us
+to specifiy a sample metadata variable to label the points in the plot by. 
+
+Suppose you notice a variable with clearly separated groups, and is not a 
+variable of interest. In that case, you may want to consider stratifying your 
+analysis downstream by the values of that variable. For example, if we are 
+looking at the effects of a specific drug, and we notice in the above plot that 
+the samples are grouped by sex, then we may want to consider stratifying the 
+analysis by male and female.
+
+#### Heatmaps
+Another exploratory analysis tool we can use is heatmaps, which is a gridded plot
+based on the x-axis- and y-axis labels. The color of the spot on the grid is based on the 
+value's intensity. For our heatmap, the x-axis will be the samples, and the y-axis
+will be the metabolites. The values determining the colors will be the log 
+peak value for each chemical in each observation. We can order our observations 
+to see intensity patterns based on our experimental conditions. This is another
+way of visualizing sources of variation within our data.
+
+
+#### Exploratory analysis steps
+
+1. Load data 
+
+2. Run PCA
+ 
+ - You will need to specify which variable you would like to label the points in the
+ plot by. 
+ 
+3. Create heatmaps
+
+- Use the metabolite_heatmap function to create the heatmap
+
+- See ?metabolite_heatmap for details about this function. 
 
 ```{r ExploratoryAnalysis}
 ################################################################################
 ### Load Data ##################################################################
 ################################################################################
+
+# Create MetPipe Object From .xlsx
+# load("../UserData/file.rds)
 
 # MetPipe data
 demo = MetabolomicsPipeline::demo
@@ -243,7 +427,7 @@ metabolite_heatmap(demo,top_mets = 50,
                    GROUP_NAME, desc(TIME1))
 
 
-# Heatmap with 3 groups
+# Heatmap with 2 group and stratified
  metabolite_heatmap(demo,top_mets = 50,
                    group_vars = c("GROUP_NAME","TIME1"),
                    strat_var = "Gender",
@@ -255,10 +439,109 @@ metabolite_heatmap(demo,top_mets = 50,
 
 ```
 
+
+## Subpathway Analysis
+
+In the chemical annotation file, we will see that each metabolite is within a 
+sub-pathway, and each sub-pathway is within a super-pathway. There are several 
+metabolites within each sub-pathways and several sub-pathways within each 
+Super-pathway. We can utilize an Analysis of variance (ANOVA) model to test for 
+a difference in peak intensities between the treatment groups at the metabolite 
+level, which is already part of the Metabolon analysis. However, since multiple 
+metabolites are within a sub-pathway, it is challenging to test if the treatment 
+affected the peak data at the sub-pathway level. For this, we will be utilizing 
+a combined fisher probability test. The combined Fisher test combines the p-values
+from independent tests to test the hypothesis for an overall effect. For our use
+the Combined Fisher Probability is useful to test a model at the subpathway level 
+based on the pvalues from the the model at the metabolite level. 
+
+### Combined Fished Analysis
+we will test at the sub-pathway level by combining the p-values for each metabolite within the sub-pathway
+for each model. We use a combination function given by $\tilde{X}$ which combines
+the pvalues resulting in a chi-squared test statistic.
+
+$$
+\tilde{X} = -2\sum_{i=1}^k ln(p_i)
+$$
+where $k$ is the number of metabablites in the sub-pathway. We can get a p-value
+from $P(X \geq\tilde{X})$, knowing that $\tilde{X}\sim \chi^2_{2k}$.  You will notice that smaller
+pvalues will lead to a larger $\tilde{X}$. 
+
+##### Assumptions 
+Since we are first testing each metabolite utilizing ANOVA, we make the following
+assumptions for each metabolite,
+
+* *Independence:* Each observation is independent of all other observations. 
+Therefore, if you have collected multiple samples from the same subject then this
+assumption may be violated. 
+
+* *Normality:* The metabolite log-scaled intensities follow a normal distribution 
+within each of the treatment groups. 
+
+* *Homoscedasticity:* Equal variance between treatment groups. 
+
+In addition to the assumptions in the ANOVA models at the metabolite level, the
+Fisher's Combined probability places an independence assumptions between the metabolites
+being tested within the sub-pathway.  
+
+For more about the Combined Fisher Probability and other methods that can address 
+this problem see:
+
+Loughin, Thomas M. "A systematic comparison of methods for combining p-values from independent tests." Computational statistics & data analysis 47.3 (2004): 467-485.
+
+#### Models
+To test our hypothesis at the sub-pathway level, we first have to form our 
+hypothesis at the metabolite level. For each metabolite, we test three models.
+
+1.) Interaction: $log Peak = Treatment + block + Treatment*block$
+
+2.) Parallel: $log Peak = Treatment + block$
+
+3.) Single: $log Peak =  Treatment$
+
+For the interaction model, we are focusing only on the interaction term 
+"Treatment*block" for this to test if there is a  significant interaction between our 
+treatment and the block variable. The parallel model is testing if the block
+variable is explaining a significant amount of the metabolite variance,
+and the treatment model is testing if the treatment explains a 
+significant proportion of the variance for each metabolite. 
+
+Each model will be tested at the subpathway level with the Combined Fisher Probability. 
+
+
+#### Results Summaries
+
+With the MetabolomicsPipeline package we provide 3 different ways to summarize the 
+results from the subpathway analysis. 
+
+1. Number of significant subpathways by model type
+
+2. Percentage of significant subpathways within superpathways
+
+3. Metabolite model results within a specified subpathway
+
+
+#### Subpathway analysis steps
+
+1. Load data 
+
+2. Stratified Analysis
+
+- For the stratified analysis we use the "subpathway_analysis" function
+
+- We stratify the analysis by specifying the "strat_var" option. 
+
+- See ?subpathway_analysis for details.
+
+3. Results plots
+
 ```{r SubpathwayAnalysis}
 ################################################################################
 ### Load Data  #################################################################
 ################################################################################
+
+# Create MetPipe Object From .xlsx
+# load("../UserData/file.rds)
 
 # MetPipe data
 demo = MetabolomicsPipeline::demo
@@ -266,12 +549,6 @@ demo = MetabolomicsPipeline::demo
 ################################################################################
 ## Stratified Analysis #########################################################
 ################################################################################
-
-# Non stratified results
-non_stratified <- subpathway_analysis(demo,
-                                      treat_var = "GROUP_NAME",
-                                      block_var = "TIME1")
-
 
 # Stratified Analysis
 stratified = subpathway_analysis(demo,
@@ -291,11 +568,50 @@ subpath_by_model(stratified)
 subpath_within_superpath(stratified)
 
 # Metabolites within subpathway
-met_within_sub(stratified, subpathway = "Partially Characterized Molecules")
+tables <- met_within_sub(stratified, subpathway = "Partially Characterized Molecules")
 
+### Females
+tables$Females
 
+### Males
+tables$Males
 
 ```
+
+
+## Pairwise Analysis
+At the metabolite level, we can look at the pairwise comparisons for all experimental 
+groups. Metabolon includes this as part of their analysis, however, if you need to 
+make changes to the model you will need to rerun the pairwise analysis. The MetabolomicsPipeline
+pacakge provide functionality for you to do that. 
+
+#### Log Fold-Change Heatmap
+For the metabolites which had a significant overall p-value (which tested if the
+treatment group means were equal under the null hypothesis), we will produce a 
+heatmap of the log fold changes. This heatmap colors will only show if the 
+log fold-change is greater than log(2) or less than log(.5). Therefore, this heatmap
+will only focus on comparisons with a fold change of two or greater. Additioanlly, 
+when kniting this document to html, the heatmap produced will will be interactive. 
+
+#### P-Value Heatmap
+For the metabolites which had a significant overall p-value (which tested if the
+treatment group means were equal under the null hypothesis), we will now produce
+a heatmap based on the pairwise comparison p-values.
+
+
+#### Pairwise analysis steps
+
+1. Load data
+
+2. Run pairwise analysis
+
+- specify the "form" argument to create the model. 
+
+- See ?metabolite_pairwise for details
+
+3. Create estimate heatmap
+
+4. Create pvalue heatmap
 
 
 ```{r PairwiseAnalysis}
@@ -330,11 +646,30 @@ met_p_heatmap(strat_pairwise$Female, demo@chemical_annotation)
 
 ```
 
+
+## Boxplots and Lineplots
+Visualizations of the data can help us see the underlying trends. Two useful visualization
+is boxplots and line graphs. Metabolon provides customers with similar box plots,
+but the following will allow to look at the boxplots specifically with a sub-pathway.
+
+#### Boxplots and Lineplots steps
+
+1. Load Data
+
+2. Boxplots
+
+3. Lineplots
+
+
+
 ```{r BoxPlotsAndLinePlots}
 
 ################################################################################
 #### Load Data #################################################################
 ################################################################################
+
+# Create MetPipe Object From .xlsx
+# load("../UserData/file.rds)
 
 demo = MetabolomicsPipeline::demo
 

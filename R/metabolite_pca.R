@@ -4,8 +4,6 @@
 #' 
 #' @param analysis_data -  analysis data with metabolites in the columns
 #' 
-#' @param A vector of metabolites to include in the PCA. This is primarily to 
-#' to remove columns that do not include metabolite peak data.
 #' 
 #' @param meta_var A metadata variable to color code the PCA plot by.  
 #' 

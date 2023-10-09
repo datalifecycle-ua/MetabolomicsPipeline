@@ -12,9 +12,6 @@ metabolite_pca(MetPipe, meta_var)
 \item{analysis_data}{\itemize{
 \item analysis data with metabolites in the columns
 }}
-
-\item{A}{vector of metabolites to include in the PCA. This is primarily to
-to remove columns that do not include metabolite peak data.}
 }
 \value{
 A PCA plot of the first two principal components, colored by the metadata
