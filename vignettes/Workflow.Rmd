@@ -2,7 +2,9 @@
 title: "MetabolomicsPipeline Workflow"
 author: "Joel Parker"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  html_document: 
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Workflow}
   %\VignetteEngine{knitr::rmarkdown}
@@ -12,7 +14,10 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 10,
+  fig.height = 10,
+  warning = F
 )
 ```
 
@@ -132,7 +137,7 @@ standardization and normalization methods used by Metabolon by:
 Additionally, this module provide boxplots from a few metabolite before and after
 normalization and standardization.
 
-```{r NormalizationAndStandardization}
+```{r NormalizationAndStandardization, eval=FALSE}
 ################################################################################
 ##### Enter Info ###############################################################
 ################################################################################
@@ -308,22 +313,14 @@ var1 = "GROUP_NAME"
 var2 = "TIME1" 
 
 # 2. Choose a single variable to stratify the table by.
-stratified_var = "Gender" 
 
-# 3. Assign the variable a label name
-label(dat@analysis[,var1]) <- "Treatment Group" 
-
-label(dat@analysis[,var2]) <- "Time" 
-
-# 4. Assign a stratified variable a label name for the table. 
-label(dat@analysis[,stratified_var]) = "Gender" 
 
 # 5. Create table 1
 tbl1 <- table1(~ TIME1 + GROUP_NAME| Gender 
                , data = dat@analysis) 
 
 # 6. Display table 1
-print(tbl1)
+tbl1
 
 ################################################################################
 ### Save MetPipe Object ########################################################
@@ -571,10 +568,10 @@ subpath_within_superpath(stratified)
 tables <- met_within_sub(stratified, subpathway = "Partially Characterized Molecules")
 
 ### Females
-tables$Females
+tables[[1]]
 
 ### Males
-tables$Males
+tables[[2]]
 
 ```
 
