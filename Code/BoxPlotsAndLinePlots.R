@@ -1,14 +1,8 @@
 ################################################################################
-#### Load Data #################################################################
-################################################################################
-
-demo = MetabolomicsPipeline::demo
-
-################################################################################
 ### BoxPlots ###################################################################
 ################################################################################
 
-subpathway_boxplots(demo, subpathway = "Lactoyl Amino Acid", X=TIME1,
+subpathway_boxplots(dat, subpathway = "Lactoyl Amino Acid", X=TIME1,
                     groupBy = GROUP_NAME, Gender =="Female")
 
 
@@ -17,9 +11,9 @@ subpathway_boxplots(demo, subpathway = "Lactoyl Amino Acid", X=TIME1,
 ################################################################################
 
 # Set up data
-demo@analysis$TIME1 <- as.numeric(factor(demo@analysis$TIME1,
-                                         levels = c("PreSymp","Onset","End")))
+dat@analysis$TIME1 <- as.numeric(factor(dat@analysis$TIME1,
+                                        levels = c("PreSymp","Onset","End")))
 
 # Create line plots 
-subpathway_lineplots(demo, subpathway = "Lactoyl Amino Acid",
+subpathway_lineplots(dat, subpathway = "Lactoyl Amino Acid",
                      X= TIME1,groupBy = GROUP_NAME, Gender=="Female" )

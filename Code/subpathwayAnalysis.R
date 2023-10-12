@@ -1,37 +1,29 @@
 ################################################################################
-### Load Data  #################################################################
-################################################################################
-
-# MetPipe data
-load("data/demo.rda")
-
-################################################################################
 ## Stratified Analysis #########################################################
 ################################################################################
 
-# Non stratified results
-non_stratified <- subpathway_analysis(demo,
-                                      treat_var = "GROUP_NAME",
-                                      block_var = "TIME1")
-
-
 # Stratified Analysis
-stratified = subpathway_analysis(demo,
-                                     treat_var = "GROUP_NAME",
-                                     block_var = "TIME1",
-                                     strat_var = "Gender")
+stratified = subpathway_analysis(dat,
+                                 treat_var = "GROUP_NAME",
+                                 block_var = "TIME1",
+                                 strat_var = "Gender")
 
 
 ################################################################################
 ### Results Plots ##############################################################
 ################################################################################
 
-# significant subpathways by model type
+# 1. significant subpathways by model type
 subpath_by_model(stratified)
 
-# Percentage of signficant subpathways within superpathways
+# 2. Percentage of signficant subpathways within superpathways
 subpath_within_superpath(stratified)
 
-# Metabolites within subpathway
-met_within_sub(stratified, subpathway = "Partially Characterized Molecules")
+# 3. Metabolites within subpathway
+tables <- met_within_sub(stratified, subpathway = "Partially Characterized Molecules")
 
+### Females
+tables[[1]]
+
+### Males
+tables[[2]]

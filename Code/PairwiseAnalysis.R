@@ -1,21 +1,15 @@
 ################################################################################
-### Load Data ##################################################################
-################################################################################
-
-demo = MetabolomicsPipeline::demo
-
-################################################################################
 #### Run Pairwise Comparisons ##################################################
 ################################################################################
 
-strat_pairwise = metabolite_pairwise(demo,form = "GROUP_NAME*TIME1",strat_var = "Gender")
+strat_pairwise = metabolite_pairwise(dat,form = "GROUP_NAME*TIME1",strat_var = "Gender")
 
 
 ###############################################################################
 ## Create Estimate Heatmap #####################################################
 ################################################################################
 
-met_est_heatmap(strat_pairwise$Female, demo@chemical_annotation)
+met_est_heatmap(strat_pairwise$Female, dat)
 
 
 ################################################################################
@@ -23,5 +17,4 @@ met_est_heatmap(strat_pairwise$Female, demo@chemical_annotation)
 ################################################################################
 
 # Female
-met_p_heatmap(strat_pairwise$Female, demo@chemical_annotation)
-
+met_p_heatmap(strat_pairwise$Female, dat)
