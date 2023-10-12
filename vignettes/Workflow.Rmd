@@ -68,7 +68,7 @@ In this vignette, we will use data which consists of 86 samples (42
 males, 44 females), three treatment groups, and the samples were taken
 at three different time points. In the original experiment, the sex of
 each sample was not captured.
-Therefore, we have an additional metadata .xlsx file which contains the
+Therefore, we have an additional metadata Excel file which contains the
 additional sex variable, as well as a variable called
 "PARENT_SAMPLE_NAME, which allows us to link the extra metadata to
 the sample metadata.
@@ -106,7 +106,7 @@ step only requires the output from the previous step.
 ##### Load Data ###############################################################
 ###############################################################################
 # Provide a path to Metabolon .xlsx file. 
-metabolon_path <- "C:/Users/Owner/Box/Mouse Metabolon Data/Spinal Cord/Data/UNAZ-03-21VW SPINAL CORD DATA TABLES.XLSX" 
+metabolon_path <- "../data/UNAZ-0501-22VW_ DATA TABLES.xlsx" 
 
 #  Load raw peak data
 peak_data <- read_excel(metabolon_path, sheet = "Peak Area Data") 
