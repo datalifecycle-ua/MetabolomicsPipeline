@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 knitr::opts_chunk$set(fig.width=12, fig.height=12, warning = F)
 
 # Data 
-library(openxlsx)
+library(readxl)
 library(dplyr)
 
 # Tables
@@ -106,10 +106,10 @@ step only requires the output from the previous step.
 ##### Load Data ###############################################################
 ###############################################################################
 # Provide a path to Metabolon .xlsx file. 
-metabolon_path <- "../data/UNAZ-0501-22VW_ DATA TABLES.xlsx" 
+metabolon_path <- "C:/Users/Owner/Box/Mouse Metabolon Data/Spinal Cord/Data/UNAZ-03-21VW SPINAL CORD DATA TABLES.XLSX" 
 
 #  Load raw peak data
-peak_data <- read.xlsx(metabolon_path, sheet = "Peak Area Data") 
+peak_data <- read_excel(metabolon_path, sheet = "Peak Area Data") 
 
 
 ###############################################################################
@@ -169,10 +169,10 @@ We take the following steps to create the analysis data.
 ################################################################################
 
 # Load Metabolon data from the Excel file
-dat <- loadMetPipeFromMetabolon(metabolon_path = "../data/UNAZ-0501-22VW_ DATA TABLES.xlsx" )
+dat <- loadMetPipeFromMetabolon(metabolon_path = "../data/UNAZ-0501-22VW_ DATA TABLES.xlsx")
 
 # load additional metadata
-meta_data_additional <- read.xlsx("../data/AdditionalVars.xlsx")
+meta_data_additional <- read_excel("../data/AdditionalVars.xlsx")
 
 
 # 2. Merge additional vars to the meta data
@@ -190,8 +190,8 @@ if(nrow(meta_data_additional)>0){
 ### Enter Metadata Variables For Analysis ######################################
 ################################################################################
 metadata_variables <- c("PARENT_SAMPLE_NAME", 
-                        "GROUP_NAME", 
-                        "TIME1", 
+                        "GROUP_NAME",
+                        "TIME1",
                         "Gender") 
 
 
@@ -201,14 +201,15 @@ metadata_variables <- c("PARENT_SAMPLE_NAME",
 # 2. Create analysis data
 dat@analysis <- dat@meta %>% 
   select(all_of(metadata_variables)) %>% 
-  left_join(dat@standardized_peak,"PARENT_SAMPLE_NAME") 
+  left_join(dat@standardized_peak,"PARENT_SAMPLE_NAME") %>%
+  as.data.frame()
 
 
 ################################################################################
 ### Create Table 1 #############################################################
 ################################################################################
 # 5. Create table 1
-tbl1 <- table1(~ TIME1 + GROUP_NAME| Gender 
+tbl1 <- table1(~ GROUP_NAME + TIME1| Gender
                , data = dat@analysis) 
 
 # 6. Display table 1
@@ -323,10 +324,10 @@ as.ggplot(treatandtime)
 
  
 ## Female
-as.ggplot(strat_heat$Female)
+as.ggplot(strat_heat[[1]])
 
 # Male
-as.ggplot(strat_heat$Male)
+as.ggplot(strat_heat[[2]])
 
 ```
 

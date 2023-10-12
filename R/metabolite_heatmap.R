@@ -93,18 +93,15 @@ metabolite_heatmap<- function(MetPipe, top_mets=50, group_vars, strat_var = NULL
   if(!is.null(strat_var)){
     
     # Get stratas
-    strats = unique(MetPipe@analysis[,strat_var])
+    strats = split(MetPipe@analysis,MetPipe@analysis[[strat_var]])
     
     
-    # Create heatmaps list
-    heats = list()
-    
-    # Run for loop
-    for (i in 1:length(strats)) {
+    tabs <- lapply(names(strats),FUN = function(X){
       
-      heatmap_data = MetPipe@analysis[MetPipe@analysis[,strat_var]==strats[i],]%>%
+      # Get heatmap data
+      heatmap_data <- strats[[X]] %>%
         dplyr::select(all_of(c("PARENT_SAMPLE_NAME",
-                                  group_vars, select_variables$name))) %>%
+                               group_vars, select_variables$name))) %>%
         dplyr::arrange(...)
       
       rownames(heatmap_data) = NULL
@@ -127,19 +124,18 @@ metabolite_heatmap<- function(MetPipe, top_mets=50, group_vars, strat_var = NULL
       
       
       # Create heatmap 
-    
-       map <- pheatmap::pheatmap(mat = heatmap_data2,cluster_cols = F, cluster_rows = F, color = palette, 
-                                annotation_col = heatmap_meta_data, show_rownames = F, border_color = NA, show_colnames = F,
-                                main = paste0(caption," (",strats[i],")"), silent = T)
-    
-
-      # combine heatmaps
-      heats[[strats[i]]] =  map$gtable
       
-    }
+      map <- pheatmap::pheatmap(mat = heatmap_data2,cluster_cols = F, cluster_rows = F, color = palette, 
+                                annotation_col = heatmap_meta_data, show_rownames = F, border_color = NA, show_colnames = F,
+                                main = paste0(caption," (",X,")"),silent = T)
+      
+      return( map$gtable)
+      
+    })
+    
     
     # Return list
-    return(heats)
+    return(tabs)
   
   }
   

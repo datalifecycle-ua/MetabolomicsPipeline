@@ -20,9 +20,9 @@
 createMetPipe <- function(raw_peak=data.frame(), standardized_peak = data.frame(),
                           meta= data.frame(), chemical_annotation = data.frame()) {
   methods::new("MetPipe",
-               raw_peak = raw_peak,
-               standardized_peak = standardized_peak,
-               meta = meta,
-               chemical_annotation = chemical_annotation
+               raw_peak = as.data.frame(raw_peak),
+               standardized_peak = as.data.frame(standardized_peak),
+               meta = as.data.frame(meta),
+               chemical_annotation = as.data.frame(chemical_annotation)
   )
 }

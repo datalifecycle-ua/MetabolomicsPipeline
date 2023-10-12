@@ -34,7 +34,7 @@ metabolite_pca <- function(MetPipe,meta_var){
   # Create figure 
   pca_plot <- factoextra::fviz_pca_ind(res.pca, 
                  label = "none",
-                 habillage = as.factor(MetPipe@analysis[,meta_var])) 
+                 habillage = as.factor(MetPipe@analysis[[meta_var]])) 
   
   return(pca_plot)
 }

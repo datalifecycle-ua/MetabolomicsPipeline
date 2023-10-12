@@ -25,7 +25,7 @@ loadMetPipeFromMetabolon <- function(metabolon_path){
   standardized <- readxl::read_excel(metabolon_path, sheet = "Log Transformed Data")
   
   # Create the MetPipe object using the constructor
-  met_pipe <- createMetPipe(raw_data, standardized, meta, chem_data)
+  met_pipe <- createMetPipe(as.data.frame(raw_data), as.data.frame(standardized), as.data.frame(meta), as.data.frame(chem_data))
   
   # Return the MetPipe object
   return(met_pipe)

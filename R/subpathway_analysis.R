@@ -398,8 +398,8 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var,strat_var=NULL){
         
         # Create path data dataframe. 
         path_data <- data.frame(CHEM_ID = MetPipe@chemical_annotation$CHEM_ID,
-                                sub_pathway = MetPipe@chemical_annotation$SUB_PATHWAY$SUB_PATHWAY,
-                                chem_name = MetPipe@chemical_annotation$SUPER_PATHWAY$CHEMICAL_NAME,
+                                sub_pathway = MetPipe@chemical_annotation$SUB_PATHWAY,
+                                chem_name = MetPipe@chemical_annotation$CHEMICAL_NAME,
                                 super_pathway = MetPipe@chemical_annotation$SUPER_PATHWAY,
                                 single_pval = NA,
                                 single_fisher = NA,
