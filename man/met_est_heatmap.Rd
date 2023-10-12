@@ -4,12 +4,12 @@
 \alias{met_est_heatmap}
 \title{Metabolite Pairwise Estimate Interactive Heatmap.}
 \usage{
-met_est_heatmap(results_data, chem_data)
+met_est_heatmap(results_data, MetPipe)
 }
 \arguments{
 \item{results_data}{Results data frame of the pairwise comparisons produced by \code{\link{metabolite_pairwise}}.}
 
-\item{chem_data}{The chemical annotation data provided by Metabolome}
+\item{MetPipe:}{MetPipe object containing the experimental data.}
 }
 \value{
 An interactive heatmap of pairwise estimates.
@@ -18,9 +18,9 @@ An interactive heatmap of pairwise estimates.
 Produce an interactive heatmap of the estimates produced in \code{\link{metabolite_pairwise}}.
 }
 \details{
-For the metabolites which had a significant overall p-value (which tested if the
-treatment group means were equal under the null hypothesis), we will produce a
-heatmap of the log fold changes. This heatmap colors will only show if the
-log fold-change is greater than log(2) or less than log(.5). Therefore, this heatmap
-will only focus on comparisons with a fold change of two or greater.
+This function will produce a heatmap of the log fold changes for the metabolites
+with a significant overall p-value (which tested if the treatment group means
+were equal under the null hypothesis). The heatmap colors will only show if
+the log fold-change is greater than log(2) or less than log(.5). Therefore,
+this heatmap will only focus on comparisons with a fold change of two or greater.
 }

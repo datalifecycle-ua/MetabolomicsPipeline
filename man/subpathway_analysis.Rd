@@ -11,11 +11,12 @@ subpathway_analysis(MetPipe, treat_var, block_var, strat_var = NULL)
 
 \item{treat_var}{This is the name of the variable in the analysis data that is the main variable of interest.}
 
-\item{block_var}{Is the name of the blocking variable in the dataset.
+\item{block_var}{This is the name of the blocking variable in the dataset.
 If the the experimental design does not include a blocking variable, then the
 value of block_var=NULL.}
 
-\item{strat_var}{Variable to stratifiy the subpathway analysis by.}
+\item{strat_var}{Variable to stratify the subpathway analysis by. This is set
+to NULL by default and will not stratify the analysis unless specified.}
 }
 \value{
 A data frame with "CHEM_ID","sub_pathway","chem_name","interaction_pval","interaction_fisher","parallel_pval","parallel_fisher","single_pval","single_fisher",and "model" for each metabolite.
@@ -36,12 +37,13 @@ For each metabolite, we test three models using using ANOVA.
 }
 
 For the interaction model, we are focusing only on the interaction term
-"Treatment*block" for this to test if there is a  significant interaction between our
-treatment and the block variable. The parallel model is testing if the block
-variable is explaining a significant amount of the metabolite variance,
-and the treatment model is testing if the treatment explains a
-significant proportion of the variance for each metabolite.
-Then, each model will be tested at the subpathway level with the Combined Fisher Probability.
+"Treatment*block" to test if there is a significant interaction between our
+treatment and the block variable. The parallel model tests if the block variable
+explains a significant amount of the metabolite variance, and the treatment model
+tests if the treatment explains a significant proportion of the variance for
+each metabolite. Then, we use the Combined Fisher probability to test each model
+at the subpathway level.
+
 \deqn{\tilde{X} = -2\sum_{i=1}^k ln(p_i)}
 }
 \seealso{

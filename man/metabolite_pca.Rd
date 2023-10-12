@@ -9,14 +9,12 @@ metabolite_pca(MetPipe, meta_var)
 \arguments{
 \item{meta_var}{A metadata variable to color code the PCA plot by.}
 
-\item{analysis_data}{\itemize{
-\item analysis data with metabolites in the columns
-}}
+\item{analysis_data}{Analysis data, which contains the analysis variables and metabolites in the columns}
 }
 \value{
 A PCA plot of the first two principal components, colored by the metadata
 variable.
 }
 \description{
-Computes and plots the first two components of the PCA from metabolite data.
+Computes and plots the first two components of the PCA from the metabolite data.
 }

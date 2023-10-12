@@ -8,8 +8,8 @@
 #' * raw_peak: The raw peak data
 #' * standardized_peak: Standardized peak data from Metabolon
 #' * meta: Sample metadata
-#' * Chemical annotation file
-#' * Analysis data used for down stream analysis
+#' * chemical_annotation: Chemical annotation file
+#' * analysis: Analysis data used for the downstream analysis
 #' 
 #' @import readxl
 #' @import methods

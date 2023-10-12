@@ -1,27 +1,29 @@
 #' Metabolite Pairwise Comparisons.
 #' 
-#' Computes the pairwise comparison estimates and pvalues for each metabolite. 
+#' Computes the pairwise comparison estimates and p-values for each metabolite. 
 #' 
 #' 
-#' @details This function will analyze each metabolite individually. For each metabolite, the the metabolite_pairwise function
-#' will first test if any of the experimental groups explained a significant proportion
+#' @details This function will analyze each metabolite individually. For each metabolite, the metabolite_pairwise function
+#' will first test whether the model explained a significant proportion
 #' of the variance in the metabolite using an F-test. Since we will be looking at 
-#' multiple comparisons for the metabolite it is good practice to first look at the
-#' over-all p-value from the F-test before looking at the pairwise comparisons.
+#' multiple comparisons for the metabolite, it is good practice to first look at the
+#' overall p-value from the F-test before looking at the pairwise comparisons.
 #' The metabolite_pairwise function then looks at all pairwise comparisons utilizing
 #' the [emmeans](https://cran.r-project.org/web/packages/emmeans/index.html) package. 
-#' The metabolite_pairwise function returns a data frame with the metabolite, overall
-#' p-value, estimated difference in means for all experimental group combinations, and the p-value
-#' which test if the difference the groups is significantly different. 
+#' The metabolite_pairwise function returns a data frame with the metabolite overall
+#' p-value, log fold change for each group, and the p-value
+#' for each comparison.
 #' 
 #' @param  form: This is a character string the resembles the right hand side of a 
 #' simple linear regression model in R. For example form = "Group1 + Group2". 
 #'
-#' @param  data: The analysis data we will use for the pairwise comparisons. 
+#' @param  Metpipe: The analysis data we will use for the pairwise comparisons. The 
+#' data must be organized in a MetPipe object.  
 #'
-#' @param  Metabolites: A list of metabolites that we want to be analyzed. 
+#' @param  strat_var: A variable in the analysis data to stratify the model by. If this
+#' is specified, a list of results will be returned.  
 #' 
-#' @return The overall F-test pvalue, and the estimate and pvalue for each pairwise comparison.
+#' @return The overall F-test p-value, and the estimate and pvalue for each pairwise comparison.
 #' 
 #' @import emmeans
 #' 

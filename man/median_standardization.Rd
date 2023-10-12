@@ -8,7 +8,7 @@ median_standardization(peak_data)
 }
 \arguments{
 \item{peak_data}{Peak data with metabolites in the columns. The data also
-must include the "Parent_SAMPLE_NAME".}
+must include the "PARENT_SAMPLE_NAME".}
 }
 \value{
 Median standardized peak data.

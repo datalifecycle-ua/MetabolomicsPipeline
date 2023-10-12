@@ -3,7 +3,7 @@
 #' This function standardizes the metabolites by the median of the metabolite.
 #' 
 #' @param peak_data Peak data with metabolites in the columns. The data also 
-#' must include the "Parent_SAMPLE_NAME". 
+#' must include the "PARENT_SAMPLE_NAME". 
 #' 
 #' @returns Median standardized peak data. 
 #' 

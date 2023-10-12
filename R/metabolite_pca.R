@@ -1,8 +1,8 @@
 #' Metabolite PCA
 #' 
-#' Computes and plots the first two components of the PCA from metabolite data.
+#' Computes and plots the first two components of the PCA from the metabolite data.
 #' 
-#' @param analysis_data -  analysis data with metabolites in the columns
+#' @param analysis_data Analysis data, which contains the analysis variables and metabolites in the columns
 #' 
 #' 
 #' @param meta_var A metadata variable to color code the PCA plot by.  

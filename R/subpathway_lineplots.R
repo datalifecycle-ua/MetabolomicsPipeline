@@ -8,7 +8,7 @@
 #' sensitive and must be in the chemical annotation file.
 #' 
 #' @param X This the the name of the variable in the meta data that is used for the 
-#' X axis of the box plots.
+#' X axis of the line plots
 #' 
 #' @param groupBy This is a grouping variable. As a recommendation the treatment
 #' groups should be used in the groupBy argument as this will provide a different color

@@ -16,13 +16,13 @@ met_within_sub(
 \item{subpathway}{Character string of the subpathway of interest. This is case sensitive
 and must be listed in the subpath_results.}
 
-\item{mod}{model of interest. This can be a single model or a vector of model types
-that can take on the values interaction,parallel, or single.}
+\item{mod}{Model of interest. This can be a single model or a vector of model types
+that can take on the values "interaction", "parallel", or "single".}
 }
 \value{
-a table with the results from the model types specified and for each
+A table with the results from the model types specified and for each
 metabolite within the superpathway specified.
 }
 \description{
-Return the test results for each metabolite within a subpathway.
+Return the model results for each metabolite within a subpathway.
 }

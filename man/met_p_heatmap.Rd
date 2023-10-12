@@ -4,23 +4,18 @@
 \alias{met_p_heatmap}
 \title{Metabolite Pairwise P-Value Interactive Heatmap.}
 \usage{
-met_p_heatmap(results_data, chem_data)
+met_p_heatmap(results_data, MetPipe)
 }
 \arguments{
 \item{results_data}{Results data frame of the pairwise comparisons produced by \code{\link{metabolite_pairwise}}.}
 
-\item{chem_data}{The chemical annotation data provided by Metabolome}
+\item{MetPipe}{The analysis data}
 }
 \value{
-An interactive heatmap of pairwise pvalues.
-
-#' @details
-For the metabolites which had a significant overall p-value (which tested if the
-treatment group means were equal under the null hypothesis), we will produce a
-heatmap of the pairwise p-values.
+An interactive heatmap of pairwise p-values.
 }
 \description{
-Produce an interactive heatmap of the pvalues produced in \code{\link{metabolite_pairwise}}.
+Produce an interactive heatmap of the p-values produced in \code{\link{metabolite_pairwise}}.
 }
 \details{
 For the metabolites which had a significant overall p-value (which tested if the

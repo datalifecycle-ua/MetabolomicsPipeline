@@ -14,26 +14,26 @@ metabolite_heatmap(
 )
 }
 \arguments{
-\item{MetPipe}{Expirement MetPipe object}
+\item{MetPipe}{Experiment MetPipe object}
 
-\item{top_mets}{Number of metabolites to include in heatmap. Metabolites
-are choose based on highest variability.}
+\item{top_mets}{Number of metabolites to include in the heatmap. Metabolites
+are chosen based on the highest variability.}
 
 \item{group_vars}{Vector of variables to annotate heatmap with. Columns will
-be grouped by these variables}
+be grouped by these variables.}
 
 \item{strat_var}{Variable to stratify the heatmap by.}
 
-\item{caption}{A title for the heatmap.}
+\item{caption}{A title for the heatmap. If strat_var is used, the title will
+automatically include the stratum with the tile.}
 
-\item{...}{Additional arguments that can be passed into the arrange function.
+\item{...}{Additional arguments can be passed into the arrange function.
 This parameter will order the columns of the heatmap.}
 }
 \value{
-Heatmap plot with the columns arranged as specified in ...
-if a strata is specified then a list is returned, if strata=NULL
-then a single heatmap is returned.
+A gtable class with all of the information to build the heatmap. To view
+the heatmap use ggplotify::as.ggplot().
 }
 \description{
-This function creates metabolite heatmaps
+Create heatmaps which are arranged by the experimental conditions.
 }

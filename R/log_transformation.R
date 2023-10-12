@@ -1,6 +1,6 @@
 #' Log transformation of metabolite data
 #' 
-#' This function log trasforms each peak in Metabolome data
+#' This function log transforms each metabolite in the Metabolon data.
 #' 
 #' @param peak_data A matrix of peak data with metabolites in the columns
 #' 

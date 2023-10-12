@@ -7,10 +7,10 @@
 #' @returns A table of the number of significant subpathways by model type.
 #' 
 #' @details
-#' Each subpathway will only have one model type. We first test the interaction, 
-#' then the parellel, and the Single model is tested last. If a subpathway has 
-#' a significant interaction model type then the table will count it as a iteraction and
-#' not as a parellel or single. 
+#' Each subpathway will only have one model type. We first test the interaction,
+#'  and then the parallel and single models are tested last. Suppose a subpathway
+#'  has a significant interaction model type. In that case, the table will count
+#'   it as an interaction and not as a parallel or single.
 #' 
 #' 
 #' @import dplyr

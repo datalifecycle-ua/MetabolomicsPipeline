@@ -13,5 +13,5 @@ log_transformation(peak_data)
 log transformed peak data
 }
 \description{
-This function log trasforms each peak in Metabolome data
+This function log transforms each metabolite in the Metabolon data.
 }

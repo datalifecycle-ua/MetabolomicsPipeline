@@ -15,8 +15,8 @@ A MetPipe data object which contains 5 data slots.
 \item raw_peak: The raw peak data
 \item standardized_peak: Standardized peak data from Metabolon
 \item meta: Sample metadata
-\item Chemical annotation file
-\item Analysis data used for down stream analysis
+\item chemical_annotation: Chemical annotation file
+\item analysis: Analysis data used for the downstream analysis
 }
 }
 \description{

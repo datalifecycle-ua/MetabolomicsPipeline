@@ -3,12 +3,13 @@ Title: Metabolomics Pipeline Tools
 Version: 0.0.1
 Authors@R: 
     person("Joel", "Parker", , "joelparker@arizona.edu", role = c("aut", "cre"))
-Description: This package was developed to provide analysis tools and a workflow for analyzing metabolomics data produced by Metabolome.
+Description: This package was developed to provide analysis tools and a workflow for analyzing metabolomics data produced by Metabolon.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Suggests: 
+    ggplotify,
     magick,
     openxlsx,
     rmarkdown,

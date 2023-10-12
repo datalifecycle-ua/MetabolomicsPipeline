@@ -1,25 +1,25 @@
 #' Create metabolite heatmap
 #' 
-#' This function creates metabolite heatmaps
+#' Create heatmaps which are arranged by the experimental conditions. 
 #' 
-#' @param MetPipe Expirement MetPipe object 
+#' @param MetPipe Experiment MetPipe object 
 #' 
-#' @param top_mets Number of metabolites to include in heatmap. Metabolites
-#' are choose based on highest variability.
+#' @param top_mets Number of metabolites to include in the heatmap. Metabolites
+#' are chosen based on the highest variability.
 #' 
 #' @param group_vars Vector of variables to annotate heatmap with. Columns will
-#' be grouped by these variables
+#' be grouped by these variables.
 #' 
-#' @param caption A title for the heatmap.
+#' @param caption A title for the heatmap. If strat_var is used, the title will
+#' automatically include the stratum with the tile.
 #' 
 #' @param strat_var Variable to stratify the heatmap by. 
 #' 
-#' @param ... Additional arguments that can be passed into the arrange function. 
-#' This parameter will order the columns of the heatmap. 
+#' @param ...  Additional arguments can be passed into the arrange function. 
+#' This parameter will order the columns of the heatmap.  
 #' 
-#' @return Heatmap plot with the columns arranged as specified in ...
-#' if a strata is specified then a list is returned, if strata=NULL
-#' then a single heatmap is returned.
+#' @return A gtable class with all of the information to build the heatmap. To view
+#' the heatmap use ggplotify::as.ggplot().
 #' 
 #' 
 #' 
@@ -28,6 +28,7 @@
 #' @import grDevices
 #' @import tibble
 #' @import RColorBrewer
+#' @import tidyr
 #' 
 #' @export
 #' 
@@ -41,7 +42,7 @@ metabolite_heatmap<- function(MetPipe, top_mets=50, group_vars, strat_var = NULL
   select_variables <- MetPipe@standardized_peak %>% 
     select(-PARENT_SAMPLE_NAME) %>%
     summarise(across(everything(),\(x) mean(x,na.rm = T))) %>%
-    pivot_longer(cols = everything()) %>%
+    tidyr::pivot_longer(cols = everything()) %>%
     arrange(desc(value)) %>%
     slice(c(1:top_mets))
   
@@ -77,12 +78,12 @@ metabolite_heatmap<- function(MetPipe, top_mets=50, group_vars, strat_var = NULL
       # Create heatmap 
       map <- pheatmap::pheatmap(mat = heatmap_data2,cluster_cols = F, cluster_rows = F, color = palette, 
                       annotation_col = heatmap_meta_data, show_rownames = F, border_color = NA, show_colnames = F,
-                      main = caption) 
+                      main = caption, silent = T) 
       
       
       # return plot
       
-      return(map)
+      return(map$gtable)
   }
   
   
@@ -126,11 +127,14 @@ metabolite_heatmap<- function(MetPipe, top_mets=50, group_vars, strat_var = NULL
       
       
       # Create heatmap 
-      map <- pheatmap::pheatmap(mat = heatmap_data2,cluster_cols = F, cluster_rows = F, color = palette, 
-                                annotation_col = heatmap_meta_data, show_rownames = F, border_color = NA, show_colnames = F,
-                                main = paste0(caption," (",strats[i],")"))
     
-      heats[[strats[i]]] = map
+       map <- pheatmap::pheatmap(mat = heatmap_data2,cluster_cols = F, cluster_rows = F, color = palette, 
+                                annotation_col = heatmap_meta_data, show_rownames = F, border_color = NA, show_colnames = F,
+                                main = paste0(caption," (",strats[i],")"), silent = T)
+    
+
+      # combine heatmaps
+      heats[[strats[i]]] =  map$gtable
       
     }
     
@@ -140,6 +144,8 @@ metabolite_heatmap<- function(MetPipe, top_mets=50, group_vars, strat_var = NULL
   }
   
 }
+
+
 
 
 

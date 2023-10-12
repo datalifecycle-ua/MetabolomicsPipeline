@@ -1,10 +1,10 @@
 #' Metabolite Pairwise P-Value Interactive Heatmap.
 #' 
-#' Produce an interactive heatmap of the pvalues produced in \code{\link{metabolite_pairwise}}.
+#' Produce an interactive heatmap of the p-values produced in \code{\link{metabolite_pairwise}}.
 #' 
 #' @param results_data Results data frame of the pairwise comparisons produced by \code{\link{metabolite_pairwise}}.
 #' 
-#' @param chem_data The chemical annotation data provided by Metabolome
+#' @param MetPipe The analysis data
 #' 
 #' @details
 #' For the metabolites which had a significant overall p-value (which tested if the
@@ -12,12 +12,8 @@
 #' heatmap of the p-values.
 #'
 #'
-#' @returns An interactive heatmap of pairwise pvalues. 
+#' @returns An interactive heatmap of pairwise p-values. 
 #' 
-#' #' @details
-#' For the metabolites which had a significant overall p-value (which tested if the
-#' treatment group means were equal under the null hypothesis), we will produce a 
-#' heatmap of the pairwise p-values. 
 #' 
 #' @import dplyr
 #' @import reshape2
@@ -27,10 +23,10 @@
 #' 
 
 
-met_p_heatmap <- function(results_data, chem_data){
+met_p_heatmap <- function(results_data, MetPipe){
 
   # 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
-  data <- chem_data %>% 
+  data <- MetPipe@chemical_annotation %>% 
     dplyr::select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>% 
     merge(results_data, by.x = "CHEM_ID",by.y = "metabolite") %>% 
     dplyr::filter(Overall_pval < 0.05) %>%
@@ -43,7 +39,7 @@ met_p_heatmap <- function(results_data, chem_data){
     reshape2::melt(id.vars = c("CHEM_ID","SUB_PATHWAY","CHEMICAL_NAME"), variable.name = "Contrast",  
          value.name = "P_value") %>%  
     dplyr::mutate(Contrast = gsub("_PVALS","",Contrast), 
-           P_value = round(P_value,3)) %>% 
+           P_value = ifelse(P_value<0.05,round(P_value,3), NA)) %>% 
     dplyr::arrange(SUB_PATHWAY) %>% 
     plotly::plot_ly( 
       type = "heatmap", 

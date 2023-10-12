@@ -1,6 +1,8 @@
 #' Pairwise function 
 #' 
 #' This is the main function for metabolite_pairwise
+#' 
+#' @import stats
 
 pairwise <- function(out,form,data){
   # Define model
@@ -17,7 +19,9 @@ pairwise <- function(out,form,data){
   # Run model
   mod <- lm(model, data = data)
   
-  anov = anova(mod)
+  mod2 <- lm(outcome~1,data=data)
+  
+  anov = stats::anova(mod, mod2)
   
   # Get the F statistic pvalue
   overall <- anov$`Pr(>F)`[2]
