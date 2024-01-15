@@ -439,8 +439,8 @@ With the MetabolomicsPipeline package, we provide three different ways to summar
 # Stratified Analysis
 stratified = subpathway_analysis(dat,
                                      treat_var = "GROUP_NAME",
-                                     block_var = "TIME1",
-                                     strat_var = "Gender")
+                                 block_var = "TIME1",
+                                 strat_var = "Gender")
 
 
 ################################################################################
@@ -461,6 +461,7 @@ tables[[1]]
 
 ### Males
 tables[[2]]
+
 
 ```
 
@@ -534,9 +535,10 @@ the arguments are:
 
 * subpathway: The name of the subpathway you would like for focus on
 
-* X: The name of the variable for the X-axis
+* block_var: The name of the variable for the X-axis. We recommend using the
+"block_var" from the subpathway analysis. 
 
-* groupBy: Name of the variable to group the results by. For us, we are going to
+* treat_var: Name of the variable to group the results by. For us, we are going to
 focus on the GROUP_NAME variable since we want to compare the treatment groups.  
 
 * ... You can pass additional arguments to filter the results. In our example, we will focus on Gender=="Female" only.
@@ -548,8 +550,8 @@ focus on the GROUP_NAME variable since we want to compare the treatment groups.
 ### BoxPlots ###################################################################
 ################################################################################
 
-subpathway_boxplots(dat, subpathway = "Lactoyl Amino Acid", X=TIME1,
-                    groupBy = GROUP_NAME, Gender =="Female")
+subpathway_boxplots(dat, subpathway = "Lactoyl Amino Acid", block_var = TIME1,
+                    treat_var = GROUP_NAME, Gender =="Female")
 
 
 ################################################################################
@@ -562,7 +564,7 @@ dat@analysis$TIME1 <- as.numeric(factor(dat@analysis$TIME1,
 
 # Create line plots 
 subpathway_lineplots(dat, subpathway = "Lactoyl Amino Acid",
-                     X= TIME1,groupBy = GROUP_NAME, Gender=="Female" )
+                     block_var = TIME1,treat_var = GROUP_NAME, Gender=="Female" )
 
 
 ```

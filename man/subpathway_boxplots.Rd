@@ -4,7 +4,7 @@
 \alias{subpathway_boxplots}
 \title{Subpathway Boxplots}
 \usage{
-subpathway_boxplots(MetPipe, subpathway, X, groupBy, ...)
+subpathway_boxplots(MetPipe, subpathway, block_var, treat_var, ...)
 }
 \arguments{
 \item{MetPipe}{MetPipe data object}
@@ -12,11 +12,12 @@ subpathway_boxplots(MetPipe, subpathway, X, groupBy, ...)
 \item{subpathway}{Character value of the subpathway of interest. This is case
 sensitive and must be in the chemical annotation file.}
 
-\item{X}{This the the name of the variable in the meta data that is used for the
-X axis of the box plots.}
+\item{block_var}{This the the name of the variable in the meta data that is used for the
+X axis of the box plots. We recommend using the "block_var" from the subpathway
+analysis.}
 
-\item{groupBy}{This is a grouping variable. As a recommendation the treatment
-groups should be used in the groupBy argument as this will provide a different color
+\item{treat_var}{This is a grouping variable. As a recommendation the treatment
+groups should be used in the treat_var argument as this will provide a different color
 for each of the treatments making it easier to identify.}
 
 \item{...}{Additional arguments to filter the analysis data by.}

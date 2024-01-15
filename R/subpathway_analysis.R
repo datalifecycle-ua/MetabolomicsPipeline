@@ -47,7 +47,7 @@
 
 
 
-subpathway_analysis <- function(MetPipe, treat_var, block_var,strat_var=NULL){
+subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=NULL){
   
   if(is.null(strat_var)){
     if(!is.null(block_var)){

@@ -4,7 +4,7 @@
 \alias{subpathway_analysis}
 \title{Subpathway Analysis}
 \usage{
-subpathway_analysis(MetPipe, treat_var, block_var, strat_var = NULL)
+subpathway_analysis(MetPipe, treat_var, block_var = NULL, strat_var = NULL)
 }
 \arguments{
 \item{MetPipe}{MetPipe data object}

@@ -26,11 +26,15 @@
 met_within_sub <- function(subpath_results,subpathway,mod = c("interaction","parallel","single")){
   
   if(class(subpath_results)=="data.frame"){
+    
+    # Get model results in dataframe
+    mod_res = paste0(mod,"_pval")[paste0(mod,"_pval") %in% names(subpath_results)]
+    
     # create table
     table <- subpath_results %>% 
       dplyr::filter(sub_pathway=="Chemical") %>%
-      dplyr::select(chem_name,all_of(paste0(mod,"_pval"))) %>%
-      knitr::kable(digits = 3, col.names = c("Metabolite Name",stringr::str_to_title(paste0(mod," P-Value"))),caption = paste0("Metabolites within ",str_to_title(subpathway))) %>%
+      dplyr::select(chem_name,all_of(mod_res)) %>%
+      knitr::kable(digits = 3, col.names = c("Metabolite Name",stringr::str_to_title(paste0(mod_res," P-Value"))),caption = paste0("Metabolites within ",str_to_title(subpathway))) %>%
       kableExtra::kable_paper(full_width = F, html_font = "Cambria")
     
     return(table)
@@ -42,10 +46,13 @@ met_within_sub <- function(subpath_results,subpathway,mod = c("interaction","par
       
       stratum <- subpath_results[[name]]
       
+      # Get model results in dataframe
+      mod_res = paste0(mod,"_pval")[paste0(mod,"_pval") %in% names(stratum)]
+      
       stratum %>% 
         dplyr::filter(sub_pathway=="Chemical") %>%
-        dplyr::select(chem_name,all_of(paste0(mod,"_pval"))) %>%
-        knitr::kable(digits = 3, col.names = c("Metabolite Name",stringr::str_to_title(paste0(mod," P-Value"))),
+        dplyr::select(chem_name,all_of(mod_res)) %>%
+        knitr::kable(digits = 3, col.names = c("Metabolite Name",stringr::str_to_title(paste0(mod_res," P-Value"))),
                      caption = paste0("Metabolites within ",str_to_title(subpathway)," (",name,")")) %>%
         kableExtra::kable_paper(full_width = F, html_font = "Cambria")
     })
