@@ -33,8 +33,8 @@ Each step of the workflow is found in the Code folder.
 
 ## Installation of Package
 
-You can install the development version of MetabolomicsPipeline from
-[GitHub](https://github.com/) with:
+You will need to have the R-version \> 4.3.2 to install the development
+version of MetabolomicsPipeline from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
