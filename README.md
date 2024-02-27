@@ -84,7 +84,7 @@ Once all of the packages are up to date, you can install the
 
 ``` r
 install.packages("devtools")
-devtools::install_github("JoelParkerUofA/MetabolomicsPipeline")
+devtools::install_github("JoelParkerUofA/MetabolomicsPipeline", upgrade="never")
 ```
 
 This package will give you access to the many functions used throughout
