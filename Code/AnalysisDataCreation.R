@@ -1,12 +1,15 @@
+# Load required packages for analysis
+source("Code/Setup.R")
+
 ################################################################################
 ### Load Data ##################################################################
 ################################################################################
 
 # Load Metabolon data from the Excel file
-dat <- loadMetPipeFromMetabolon(metabolon_path = "../data/UNAZ-0501-22VW_ DATA TABLES.xlsx" )
+dat <- loadMetPipeFromMetabolon(metabolon_path = "data/UNAZ-0501-22VW_ DATA TABLES.xlsx" )
 
-# load additional metadata
-meta_data_additional <- read.xlsx("../data/AdditionalVars.xlsx")
+# load additional metadata Set as NULL is not applicable.
+meta_data_additional <- read.xlsx("data/AdditionalVars.xlsx")
 
 
 # 2. Merge additional vars to the meta data
@@ -50,4 +53,5 @@ tbl1
 
 
 # Save data
-# saveRDS(dat, file = "data/dat.Rds")
+saveRDS(dat, file = "data/dat.Rds")
+

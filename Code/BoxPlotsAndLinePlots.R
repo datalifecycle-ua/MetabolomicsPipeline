@@ -1,9 +1,15 @@
+# Load required packages for analysis
+source("Code/Setup.R")
+
+# Load Data from AnalysisDataCreation.R
+dat <- readRDS("data/dat.Rds")
+
 ################################################################################
 ### BoxPlots ###################################################################
 ################################################################################
 
-subpathway_boxplots(dat, subpathway = "Lactoyl Amino Acid", X=TIME1,
-                    groupBy = GROUP_NAME, Gender =="Female")
+subpathway_boxplots(dat, subpathway = "Lactoyl Amino Acid", block_var=TIME1,
+                    treat_var = GROUP_NAME, Gender =="Female")
 
 
 ################################################################################
@@ -16,4 +22,4 @@ dat@analysis$TIME1 <- as.numeric(factor(dat@analysis$TIME1,
 
 # Create line plots 
 subpathway_lineplots(dat, subpathway = "Lactoyl Amino Acid",
-                     X= TIME1,groupBy = GROUP_NAME, Gender=="Female" )
+                     block_var= TIME1, treat_var = GROUP_NAME, Gender=="Female" )

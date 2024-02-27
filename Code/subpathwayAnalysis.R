@@ -1,3 +1,10 @@
+# Load required packages for analysis
+source("Code/Setup.R")
+
+# Load Data from AnalysisDataCreation.R
+dat <- readRDS("data/dat.Rds")
+
+
 ################################################################################
 ## Stratified Analysis #########################################################
 ################################################################################
