@@ -49,15 +49,15 @@ requirement is not met, you will need to update to a newer version of R.
 Instructions for how to do this can be found at the [R project
 website](https://www.r-project.org/).
 
-### Download pipline
+### Download pipeline
 
 You can download the pipeline one of two different ways:
 
-1.) **Download pipeline as zip file:** Navigate to the top of the page
+1.) **Download pipeline as a zip file:** Navigate to the top of the page
 and click the green button that says “\<code\>” and then click “download
-zip”. This will download a zip file containing all of the files
-necessary for the pipeline. You will need to unzip this file in the
-destination of your choice.
+zip”. This will download a zip file containing all the files necessary
+for the pipeline. You will need to unzip this file to the destination of
+your choice.
 
 2.) **Clone pipeline:** If you are familiar with git and github, the
 “MetabolomicsPipeline” can be cloned using:
@@ -65,7 +65,7 @@ destination of your choice.
     git clone https://github.com/JoelParkerUofA/MetabolomicsPipeline.git
 
 You only need to utilize one of the two options above to download the
-pipeline. In the downloaded/cloned folder open the “Metabolomics
+pipeline. In the downloaded/cloned folder, open the “Metabolomics
 Pipeline.Rproj” to open the R project.
 
 ### Update and install packages
@@ -73,7 +73,7 @@ Pipeline.Rproj” to open the R project.
 To aid in the reproducibility of the results, it is best practice to
 ensure you are using the same package versions that were used to create
 the pipeline. To do this, you will need to synchronize your package
-versions with the versions used in this pipline by using:
+versions with the versions used in this pipeline by using:
 
 ``` r
 renv::restore()
@@ -98,6 +98,6 @@ We demonstrate a workflow using the MetabolomicsPipeline in the
 samples (42 males, 44 females), three treatment groups, and the samples
 were taken at three different time points. We walk through each analysis
 step and demonstrate how to use the MetabolomicPipeline package on
-metabolomic data from Metabolon. This data is included in the “data”
+metabolomic data from Metabolon. We include this data in the “data”
 folder. While the vignette is an excellent starting place, you can also
-run each analysis step from the .R file located in the “Code” folder.
+run each analysis step from the .R files in the “Code” folder.
