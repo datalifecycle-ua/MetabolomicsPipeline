@@ -4,19 +4,20 @@
 \alias{create_heatmap_Data}
 \title{Create metadata and matricies for metabolite heatmaps}
 \usage{
-create_heatmap_Data(.analysis_data, heatmap_variables, ...)
+create_heatmap_Data(data, heatmap_variables, assay = "normalized", ...)
 }
 \arguments{
-\item{.analysis_data}{The analysis data containing all of the metabolite and
-metadata information.}
+\item{data}{A SummarizedExperiment containing Metabolon data.}
 
 \item{heatmap_variables}{A vector of variable names that are NOT metabolites.}
+
+\item{assay}{Name of assay data to be used for heatmaps. Default="normalized".}
 
 \item{...}{Additional arguments that can be passed into the arrange function.
 This parameter will order the columns of the heatmap data.}
 }
 \value{
-A list of matricies including the heatmap variable (meta data for heatmap)
+A list of matrices including the heatmap variable (meta data for heatmap)
 and the values for the heatmap.
 }
 \description{

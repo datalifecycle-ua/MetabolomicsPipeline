@@ -7,7 +7,7 @@ Description: This package was developed to provide analysis tools and a workflow
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Suggests: 
     ggplotify,
     magick,
@@ -32,6 +32,7 @@ Imports:
     readxl,
     reshape2 (>= 1.4.4),
     stringr (>= 1.5.0),
+    SummarizedExperiment,
     tibble,
     tidyr (>= 1.3.0)
 Depends: 

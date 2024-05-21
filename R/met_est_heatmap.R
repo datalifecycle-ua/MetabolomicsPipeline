@@ -4,7 +4,7 @@
 #' 
 #' @param results_data Results data frame of the pairwise comparisons produced by \code{\link{metabolite_pairwise}}.
 #' 
-#' @param MetPipe: MetPipe object containing the experimental data. 
+#' @param data A SummarizedExperiment containing the Metabolon experiment data.   
 #' 
 #' @details
 #' This function will produce a heatmap of the log fold changes for the metabolites
@@ -19,18 +19,25 @@
 #' @import dplyr
 #' @import reshape2
 #' @import plotly
+#' @import SummarizedExperiment
+#' 
 #' @export
 #' 
 
 
-met_est_heatmap <- function(results_data, MetPipe){
+met_est_heatmap <- function(results_data, data){
   
   #1. filter results
   results_data <- results_data  %>% 
     dplyr::filter(Overall_pval < 0.05) 
   
+  # get chemical annotation file
+  chem = SummarizedExperiment::rowData(data) %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column(var = "CHEM_ID")
+  
   # 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
-  data <- MetPipe@chemical_annotation %>% 
+  data <- chem %>% 
     dplyr::select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>% 
     merge(results_data, by.x = "CHEM_ID",by.y = "metabolite") %>% 
     dplyr::arrange(SUB_PATHWAY)  

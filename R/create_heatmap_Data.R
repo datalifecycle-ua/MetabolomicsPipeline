@@ -2,17 +2,20 @@
 #' 
 #' This function creates the required matrices for the metabolite heatmaps. 
 #' 
-#' @param .analysis_data The analysis data containing all of the metabolite and 
-#' metadata information. 
+#' @param data A SummarizedExperiment containing Metabolon data. 
 #' 
 #' @param heatmap_variables A vector of variable names that are NOT metabolites.
+#' 
+#' @param assay Name of assay data to be used for heatmaps. Default="normalized".
 #' 
 #' @param ... Additional arguments that can be passed into the arrange function. 
 #' This parameter will order the columns of the heatmap data. 
 #' 
-#' @return A list of matricies including the heatmap variable (meta data for heatmap)
+#' @return A list of matrices including the heatmap variable (meta data for heatmap)
 #' and the values for the heatmap.
 #' 
+#' 
+#' @import SummarizedExperiment
 #' 
 #' @export
 #' 
@@ -20,19 +23,26 @@
 
 
 # This function creates heatmap data
-create_heatmap_Data <- function(.analysis_data,heatmap_variables,...){
+create_heatmap_Data <- function(data,heatmap_variables,assay="normalized",...){
   
-  heatmap_data =.analysis_data %>%
+  # Create analysis data
+  meta <- SummarizedExperiment::colData(data)
+  ass <- t(SummarizedExperiment::assay(data,assay))
+  
+  analysis_data <- merge(meta,ass,by="row.names")
+  
+  
+  heatmap_data =analysis_data %>%
    arrange(...)
   
   heatmap_meta_data <- heatmap_data %>%
-    column_to_rownames("PARENT_SAMPLE_NAME") %>%
+    column_to_rownames("Row.names") %>%
     select(all_of(heatmap_variables))
   
   
   heatmap_data2 <- heatmap_data %>%
-    select(-heatmap_variables[!(heatmap_variables %in% "PARENT_SAMPLE_NAME")]) %>%
-    column_to_rownames("PARENT_SAMPLE_NAME") %>%
+    select(-heatmap_variables[!(heatmap_variables %in% "Row.names")]) %>%
+    column_to_rownames("Row.names") %>%
     as.matrix() %>% t()
   
   return(list( heatmap_variables = heatmap_meta_data, heatmap_data_vals = heatmap_data2))

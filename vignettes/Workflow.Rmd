@@ -169,7 +169,7 @@ We take the following steps to create the analysis data.
 ################################################################################
 
 # Load Metabolon data from the Excel file
-dat <- loadMetPipeFromMetabolon(metabolon_path = "../data/UNAZ-0501-22VW_ DATA TABLES.xlsx")
+dat <- loadMetabolon(path = "../data/UNAZ-0501-22VW_ DATA TABLES.xlsx")
 
 # load additional metadata
 meta_data_additional <- read_excel("../data/AdditionalVars.xlsx")
