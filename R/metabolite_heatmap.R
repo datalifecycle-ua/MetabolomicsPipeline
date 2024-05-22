@@ -2,7 +2,7 @@
 #' 
 #' Create heatmaps which are arranged by the experimental conditions. 
 #' 
-#' @param MetPipe Experiment MetPipe object 
+#' @param data A SummarizedExperiment containing the Metabolon experiment data. 
 #' 
 #' @param top_mets Number of metabolites to include in the heatmap. Metabolites
 #' are chosen based on the highest variability.
@@ -14,6 +14,8 @@
 #' automatically include the stratum with the tile.
 #' 
 #' @param strat_var Variable to stratify the heatmap by. 
+#' 
+#' @param Assay Which assay data to use for the heatmap (default="normalized").
 #' 
 #' @param ...  Additional arguments can be passed into the arrange function. 
 #' This parameter will order the columns of the heatmap.  
@@ -29,30 +31,37 @@
 #' @import tibble
 #' @import RColorBrewer
 #' @import tidyr
+#' @import SummarizedExperiment
 #' 
 #' @export
 #' 
 #' 
 
 # This function creates heatmap data
-metabolite_heatmap<- function(MetPipe, top_mets=50, group_vars, strat_var = NULL,
-                              caption=NULL,...){
+metabolite_heatmap<- function(data, top_mets=50, group_vars, strat_var = NULL,
+                              caption=NULL,Assay="normalized",...){
   
   ## Get top metabolites
-  select_variables <- MetPipe@standardized_peak %>% 
-    select(-PARENT_SAMPLE_NAME) %>%
-    summarise(across(everything(),\(x) mean(x,na.rm = T))) %>%
-    tidyr::pivot_longer(cols = everything()) %>%
-    arrange(desc(value)) %>%
-    slice(c(1:top_mets))
+  select_variables <- SummarizedExperiment::assay(data,Assay) %>% 
+    apply(1, mean)
+  
+  select_variables = select_variables[order(select_variables, decreasing = T)][1:top_mets]
+  
+
   
 
 ############ Non Stratified case ##############################################  
   if(is.null(strat_var)){
     
-      heatmap_data = MetPipe@analysis %>%
+      
+    # Create analysis data
+    analysis <- SummarizedExperiment::colData(data) %>%
+      merge(t(SummarizedExperiment::assay(data,Assay)), by="row.names") %>%
+      dplyr::rename(PARENT_SAMPLE_NAME=Row.names)
+    
+    heatmap_data = analysis%>%
         dplyr::select(all_of(c("PARENT_SAMPLE_NAME",
-                                  group_vars,select_variables$name))) %>%
+                                  group_vars,names(select_variables)))) %>%
         dplyr::arrange(...)
       
       
@@ -64,7 +73,7 @@ metabolite_heatmap<- function(MetPipe, top_mets=50, group_vars, strat_var = NULL
       
       
       heatmap_data2 <- heatmap_data %>%
-        dplyr::select(PARENT_SAMPLE_NAME,dplyr::all_of(select_variables$name)) %>%
+        dplyr::select(PARENT_SAMPLE_NAME,dplyr::all_of(names(select_variables))) %>%
         tibble::column_to_rownames("PARENT_SAMPLE_NAME") %>%
         as.matrix() %>% t()
       
@@ -92,8 +101,20 @@ metabolite_heatmap<- function(MetPipe, top_mets=50, group_vars, strat_var = NULL
   
   if(!is.null(strat_var)){
     
+    # Create analysis data
+    analysis <- SummarizedExperiment::colData(data) %>%
+      merge(t(SummarizedExperiment::assay(data,Assay)), by="row.names") %>%
+      dplyr::rename(PARENT_SAMPLE_NAME=Row.names)
+    
+    heatmap_data = analysis%>%
+      dplyr::select(all_of(c("PARENT_SAMPLE_NAME",
+                             group_vars,names(select_variables)))) %>%
+      dplyr::arrange(...)
+    
+    
+    
     # Get stratas
-    strats = split(MetPipe@analysis,MetPipe@analysis[[strat_var]])
+    strats = split(analysis,analysis[[strat_var]])
     
     
     tabs <- lapply(names(strats),FUN = function(X){
@@ -101,7 +122,7 @@ metabolite_heatmap<- function(MetPipe, top_mets=50, group_vars, strat_var = NULL
       # Get heatmap data
       heatmap_data <- strats[[X]] %>%
         dplyr::select(all_of(c("PARENT_SAMPLE_NAME",
-                               group_vars, select_variables$name))) %>%
+                               group_vars, names(select_variables)))) %>%
         dplyr::arrange(...)
       
       rownames(heatmap_data) = NULL
@@ -112,7 +133,7 @@ metabolite_heatmap<- function(MetPipe, top_mets=50, group_vars, strat_var = NULL
       
       
       heatmap_data2 <- heatmap_data %>%
-        dplyr::select(PARENT_SAMPLE_NAME,dplyr::all_of(select_variables$name)) %>%
+        dplyr::select(PARENT_SAMPLE_NAME,dplyr::all_of(names(select_variables))) %>%
         tibble::column_to_rownames("PARENT_SAMPLE_NAME") %>%
         as.matrix() %>% t()
       

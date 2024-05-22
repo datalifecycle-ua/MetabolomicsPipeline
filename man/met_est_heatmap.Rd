@@ -4,12 +4,12 @@
 \alias{met_est_heatmap}
 \title{Metabolite Pairwise Estimate Interactive Heatmap.}
 \usage{
-met_est_heatmap(results_data, MetPipe)
+met_est_heatmap(results_data, data)
 }
 \arguments{
 \item{results_data}{Results data frame of the pairwise comparisons produced by \code{\link{metabolite_pairwise}}.}
 
-\item{MetPipe:}{MetPipe object containing the experimental data.}
+\item{data}{A SummarizedExperiment containing the Metabolon experiment data.}
 }
 \value{
 An interactive heatmap of pairwise estimates.

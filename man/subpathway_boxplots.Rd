@@ -4,10 +4,17 @@
 \alias{subpathway_boxplots}
 \title{Subpathway Boxplots}
 \usage{
-subpathway_boxplots(MetPipe, subpathway, block_var, treat_var, ...)
+subpathway_boxplots(
+  data,
+  subpathway,
+  block_var,
+  treat_var,
+  Assay = "normalized",
+  ...
+)
 }
 \arguments{
-\item{MetPipe}{MetPipe data object}
+\item{data}{SummarizedExperiment with Metabolon experiment data.}
 
 \item{subpathway}{Character value of the subpathway of interest. This is case
 sensitive and must be in the chemical annotation file.}
@@ -19,6 +26,8 @@ analysis.}
 \item{treat_var}{This is a grouping variable. As a recommendation the treatment
 groups should be used in the treat_var argument as this will provide a different color
 for each of the treatments making it easier to identify.}
+
+\item{Assay}{Name of the assay to be used for the pairwise analysis (default='normalized')}
 
 \item{...}{Additional arguments to filter the analysis data by.}
 }

@@ -4,14 +4,24 @@
 \alias{metabolite_pairwise}
 \title{Metabolite Pairwise Comparisons.}
 \usage{
-metabolite_pairwise(MetPipe, form, strat_var = NULL)
+metabolite_pairwise(
+  data,
+  form,
+  Assay = "normalized",
+  strat_var = NULL,
+  mets = NULL
+)
 }
 \arguments{
+\item{Assay}{Name of the assay to be used for the pairwise analysis (default='normalized')}
+
+\item{mets}{Chemical ID for the metabolites of interest. If NULL then the pairwise analysis
+is completed for all metabololites.}
+
 \item{form:}{This is a character string the resembles the right hand side of a
 simple linear regression model in R. For example form = "Group1 + Group2".}
 
-\item{Metpipe:}{The analysis data we will use for the pairwise comparisons. The
-data must be organized in a MetPipe object.}
+\item{data:}{SummarizedExperiment with Metabolon experiment data.}
 
 \item{strat_var:}{A variable in the analysis data to stratify the model by. If this
 is specified, a list of results will be returned.}

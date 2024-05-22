@@ -4,12 +4,14 @@
 \alias{metabolite_pca}
 \title{Metabolite PCA}
 \usage{
-metabolite_pca(MetPipe, meta_var)
+metabolite_pca(data, Assay = "normalized", meta_var)
 }
 \arguments{
-\item{meta_var}{A metadata variable to color code the PCA plot by.}
+\item{data}{SummarizedExperiment with Metabolon experiment data.}
 
-\item{analysis_data}{Analysis data, which contains the analysis variables and metabolites in the columns}
+\item{Assay}{Name of the assay to be used for the pairwise analysis (default='normalized')}
+
+\item{meta_var}{A metadata variable to color code the PCA plot by.}
 }
 \value{
 A PCA plot of the first two principal components, colored by the metadata

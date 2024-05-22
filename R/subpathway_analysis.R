@@ -26,18 +26,36 @@
 #' @seealso [Loughin, Thomas M. "A systematic comparison of methods for combining p-values from independent tests." Computational statistics & data analysis 47.3 (2004): 467-485.](https://www.sciencedirect.com/science/article/pii/S0167947303002950)
 
 #' 
-#' @param MetPipe MetPipe data object
+#' @param data SummarizedExperiment with Metabolon experiment data.
+#' 
+#' 
 #' @param treat_var This is the name of the variable in the analysis data that is the main variable of interest. 
+#' 
 #' @param block_var This is the name of the blocking variable in the dataset.
 #' If the the experimental design does not include a blocking variable, then the 
 #' value of block_var=NULL.
+#' 
 #' @param strat_var Variable to stratify the subpathway analysis by. This is set 
 #' to NULL by default and will not stratify the analysis unless specified.
+#' 
+#' @param Assay Name of the assay to be used for the pairwise analysis (default='normalized')
+#' 
+#' @param subPathwayName Column name for subpathway variable as defined in the chemical annotation worksheet.
+#' 
+#' @param chemName Column name for chemical name variable as defined in the chemical annotation worksheet.
+#' 
+#' @param superPathwayName Column name for super-pathway variable as defined in the chemical annotation worksheet.
+#' 
+#' 
+#' 
 #' 
 #' @returns A data frame with "CHEM_ID","sub_pathway","chem_name","interaction_pval","interaction_fisher","parallel_pval","parallel_fisher","single_pval","single_fisher",and "model" for each metabolite. 
 #' 
 #' 
 #' @import dplyr
+#' 
+#' @import SummarizedExperiment
+#' 
 #' 
 #' 
 #' @export
@@ -47,16 +65,26 @@
 
 
 
-subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=NULL){
+subpathway_analysis <- function(data, treat_var, block_var = NULL,strat_var=NULL, Assay="normalized",
+                                subPathwayName = "SUB_PATHWAY", chemName="CHEMICAL_NAME", superPathwayName="SUPER_PATHWAY"){
+  
+  # Create analysis data
+  analysis <- SummarizedExperiment::colData(data) %>%
+    merge(t(SummarizedExperiment::assay(data,Assay)), by="row.names") %>%
+    dplyr::rename(PARENT_SAMPLE_NAME=Row.names)
+  
+  
+  # chemdata
+  chem <- SummarizedExperiment::rowData(data)
   
   if(is.null(strat_var)){
     if(!is.null(block_var)){
       
       # Create results dataframe
-      path_data <- data.frame(CHEM_ID = MetPipe@chemical_annotation$CHEM_ID,
-                                sub_pathway = MetPipe@chemical_annotation$SUB_PATHWAY,
-                               chem_name = MetPipe@chemical_annotation$CHEMICAL_NAME,
-                              super_pathway = MetPipe@chemical_annotation$SUPER_PATHWAY,
+      path_data <- data.frame(CHEM_ID = rownames(chem),
+                                sub_pathway = chem[,subPathwayName],
+                               chem_name = chem[,chemName],
+                              super_pathway = chem[,superPathwayName],
                                interaction_pval = NA,
                                interaction_fisher = NA,
                                parallel_pval = NA,
@@ -74,7 +102,7 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=N
         
         # Calculate p values for each linear model
         for(var in var_names){
-          outcome <- MetPipe@analysis[[as.character(var)]]
+          outcome <- analysis[,as.character(var)]
           
           if(is.null(outcome)) next
           
@@ -87,7 +115,7 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=N
             )
           )
           
-          int_mod <- lm(inter_formula, data = MetPipe@analysis)
+          int_mod <- lm(inter_formula, data = analysis)
            
           # TryCatch for Anova Modeling
           tryCatch(
@@ -110,7 +138,7 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=N
                   sep = "~"
             )
           )
-          par_mod <- lm(par_formula, data = MetPipe@analysis)
+          par_mod <- lm(par_formula, data = analysis)
            
           # Anova modling for the parallel model. 
           tryCatch(
@@ -132,7 +160,7 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=N
                   sep = "~"
             )
           )
-          treat_mod <- lm(treat_formula, data = MetPipe@analysis)
+          treat_mod <- lm(treat_formula, data = analysis)
           
           # Anova model for treatment. 
           tryCatch(
@@ -184,10 +212,10 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=N
     if(is.null(block_var)==T){
       
       # Create path data dataframe. 
-      path_data <- data.frame(CHEM_ID = MetPipe@chemical_annotation$CHEM_ID,
-                              sub_pathway = MetPipe@chemical_annotation$SUB_PATHWAY,
-                              chem_name = MetPipe@chemical_annotation$CHEMICAL_NAME,
-                              super_pathway = MetPipe@chemical_annotation$SUPER_PATHWAY,
+      path_data <- data.frame(CHEM_ID = rownames(chem),
+                              sub_pathway = chem[,subPathwayName],
+                              chem_name = chem[,chemName],
+                              super_pathway = chem[,superPathwayName],
                               single_pval = NA,
                               single_fisher = NA,
                               model = NA) %>%
@@ -199,7 +227,7 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=N
         
         # Calculate p values for each linear model
         for(var in var_names){
-          outcome <- MetPipe@analysis[[as.character(var)]]
+          outcome <- analysis[,as.character(var)]
           
           if(is.null(outcome)) next
           
@@ -211,7 +239,7 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=N
                   sep = "~"
             )
           )
-          treat_mod <- lm(treat_formula, data = MetPipe@analysis)
+          treat_mod <- lm(treat_formula, data = analysis)
          
           tryCatch(
             {
@@ -251,8 +279,11 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=N
   
   if(!is.null(strat_var)){
     
+    
+    analysisFull = analysis
+    
     # get stratas
-    strats = unique(MetPipe@analysis[,strat_var])
+    strats = unique(analysis[,strat_var])
     
     
     # Subpathresults
@@ -261,15 +292,15 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=N
     for (i in 1:length(strats)) {
       
       # Subsetted analysis data
-      analysis <- MetPipe@analysis[MetPipe@analysis[,strat_var]==strats[i],]
+      analysis <- analysisFull[analysisFull[,strat_var]==strats[i],]
       
       if(!is.null(block_var)){
         
         # Create results dataframe
-        path_data <- data.frame(CHEM_ID = MetPipe@chemical_annotation$CHEM_ID,
-                                sub_pathway = MetPipe@chemical_annotation$SUB_PATHWAY,
-                                chem_name = MetPipe@chemical_annotation$CHEMICAL_NAME,
-                                super_pathway = MetPipe@chemical_annotation$SUPER_PATHWAY,
+        path_data <- data.frame(CHEM_ID = rownames(chem),
+                                sub_pathway = chem[,subPathwayName],
+                                chem_name = chem[,chemName],
+                                super_pathway = chem[,superPathwayName],
                                 interaction_pval = NA,
                                 interaction_fisher = NA,
                                 parallel_pval = NA,
@@ -287,7 +318,7 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=N
           
           # Calculate p values for each linear model
           for(var in var_names){
-            outcome <- analysis[[as.character(var)]]
+            outcome <- analysis[,as.character(var)]
             
             if(is.null(outcome)) next
             
@@ -397,10 +428,10 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=N
       if(is.null(block_var)==T){
         
         # Create path data dataframe. 
-        path_data <- data.frame(CHEM_ID = MetPipe@chemical_annotation$CHEM_ID,
-                                sub_pathway = MetPipe@chemical_annotation$SUB_PATHWAY,
-                                chem_name = MetPipe@chemical_annotation$CHEMICAL_NAME,
-                                super_pathway = MetPipe@chemical_annotation$SUPER_PATHWAY,
+        path_data <- data.frame(CHEM_ID = rownames(chem),
+                                sub_pathway = chem[,subPathwayName],
+                                chem_name = chem[,chemName],
+                                super_pathway = chem[,superPathwayName],
                                 single_pval = NA,
                                 single_fisher = NA,
                                 model = NA) %>%
@@ -412,7 +443,7 @@ subpathway_analysis <- function(MetPipe, treat_var, block_var = NULL,strat_var=N
           
           # Calculate p values for each linear model
           for(var in var_names){
-            outcome <- analysis[[as.character(var)]]
+            outcome <- analysis[,as.character(var)]
             
             if(is.null(outcome)) next
             

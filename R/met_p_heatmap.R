@@ -4,7 +4,7 @@
 #' 
 #' @param results_data Results data frame of the pairwise comparisons produced by \code{\link{metabolite_pairwise}}.
 #' 
-#' @param MetPipe The analysis data
+#' @param data A SummarizedExperiment containing Metabolon experiment data.
 #' 
 #' @details
 #' For the metabolites which had a significant overall p-value (which tested if the
@@ -18,15 +18,19 @@
 #' @import dplyr
 #' @import reshape2
 #' @import plotly
+#' @import SummarizedExperiment
+#' @import tibble
 #' 
 #' @export
 #' 
 
 
-met_p_heatmap <- function(results_data, MetPipe){
+met_p_heatmap <- function(results_data, data){
 
   # 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
-  data <- MetPipe@chemical_annotation %>% 
+  dat <- rowData(data) %>% 
+    as.data.frame() %>%
+    tibble::rownames_to_column("CHEM_ID") %>%
     dplyr::select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>% 
     merge(results_data, by.x = "CHEM_ID",by.y = "metabolite") %>% 
     dplyr::filter(Overall_pval < 0.05) %>%
@@ -34,8 +38,8 @@ met_p_heatmap <- function(results_data, MetPipe){
   
   
   # 3. Produce Heatmap
-  p = data %>% 
-    dplyr::select(CHEM_ID,SUB_PATHWAY,CHEMICAL_NAME, all_of(names(data)[grepl("PVALS",names(data))])) %>%  
+  p = dat %>% 
+    dplyr::select(CHEM_ID,SUB_PATHWAY,CHEMICAL_NAME, all_of(names(dat)[grepl("PVALS",names(dat))])) %>%  
     reshape2::melt(id.vars = c("CHEM_ID","SUB_PATHWAY","CHEMICAL_NAME"), variable.name = "Contrast",  
          value.name = "P_value") %>%  
     dplyr::mutate(Contrast = gsub("_PVALS","",Contrast), 

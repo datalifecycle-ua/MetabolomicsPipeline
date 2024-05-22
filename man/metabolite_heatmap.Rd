@@ -5,16 +5,17 @@
 \title{Create metabolite heatmap}
 \usage{
 metabolite_heatmap(
-  MetPipe,
+  data,
   top_mets = 50,
   group_vars,
   strat_var = NULL,
   caption = NULL,
+  Assay = "normalized",
   ...
 )
 }
 \arguments{
-\item{MetPipe}{Experiment MetPipe object}
+\item{data}{A SummarizedExperiment containing the Metabolon experiment data.}
 
 \item{top_mets}{Number of metabolites to include in the heatmap. Metabolites
 are chosen based on the highest variability.}
@@ -26,6 +27,8 @@ be grouped by these variables.}
 
 \item{caption}{A title for the heatmap. If strat_var is used, the title will
 automatically include the stratum with the tile.}
+
+\item{Assay}{Which assay data to use for the heatmap (default="normalized").}
 
 \item{...}{Additional arguments can be passed into the arrange function.
 This parameter will order the columns of the heatmap.}

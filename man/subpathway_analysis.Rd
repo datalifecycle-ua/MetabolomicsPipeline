@@ -4,10 +4,19 @@
 \alias{subpathway_analysis}
 \title{Subpathway Analysis}
 \usage{
-subpathway_analysis(MetPipe, treat_var, block_var = NULL, strat_var = NULL)
+subpathway_analysis(
+  data,
+  treat_var,
+  block_var = NULL,
+  strat_var = NULL,
+  Assay = "normalized",
+  subPathwayName = "SUB_PATHWAY",
+  chemName = "CHEMICAL_NAME",
+  superPathwayName = "SUPER_PATHWAY"
+)
 }
 \arguments{
-\item{MetPipe}{MetPipe data object}
+\item{data}{SummarizedExperiment with Metabolon experiment data.}
 
 \item{treat_var}{This is the name of the variable in the analysis data that is the main variable of interest.}
 
@@ -17,6 +26,14 @@ value of block_var=NULL.}
 
 \item{strat_var}{Variable to stratify the subpathway analysis by. This is set
 to NULL by default and will not stratify the analysis unless specified.}
+
+\item{Assay}{Name of the assay to be used for the pairwise analysis (default='normalized')}
+
+\item{subPathwayName}{Column name for subpathway variable as defined in the chemical annotation worksheet.}
+
+\item{chemName}{Column name for chemical name variable as defined in the chemical annotation worksheet.}
+
+\item{superPathwayName}{Column name for super-pathway variable as defined in the chemical annotation worksheet.}
 }
 \value{
 A data frame with "CHEM_ID","sub_pathway","chem_name","interaction_pval","interaction_fisher","parallel_pval","parallel_fisher","single_pval","single_fisher",and "model" for each metabolite.

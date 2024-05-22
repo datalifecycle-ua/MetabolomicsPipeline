@@ -4,12 +4,12 @@
 \alias{met_p_heatmap}
 \title{Metabolite Pairwise P-Value Interactive Heatmap.}
 \usage{
-met_p_heatmap(results_data, MetPipe)
+met_p_heatmap(results_data, data)
 }
 \arguments{
 \item{results_data}{Results data frame of the pairwise comparisons produced by \code{\link{metabolite_pairwise}}.}
 
-\item{MetPipe}{The analysis data}
+\item{data}{A SummarizedExperiment containing Metabolon experiment data.}
 }
 \value{
 An interactive heatmap of pairwise p-values.

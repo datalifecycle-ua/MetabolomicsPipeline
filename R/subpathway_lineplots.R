@@ -2,7 +2,7 @@
 #' 
 #' Create line plots for each metabolite within a subpathway. 
 #' 
-#' @param MetPipe MetPipe data object
+#' @param data SummarizedExperiment with Metabolon experiment data.
 #' 
 #' @param subpathway Character value of the subpathway of interest. This is case 
 #' sensitive and must be in the chemical annotation file.
@@ -14,6 +14,8 @@
 #' @param treat_var This is a grouping variable. As a recommendation the treatment
 #' groups should be used in the groupBy argument as this will provide a different color
 #' for each of the treatments making it easier to identify.
+#' 
+#' @param Assay Name of the assay to be used for the pairwise analysis (default='normalized')
 #' 
 #' @param ... Additional arguments to filter the analysis data by. 
 #' 
@@ -30,15 +32,27 @@
 #' 
 
 
-subpathway_lineplots <- function(MetPipe,subpathway,block_var, treat_var,...){
+subpathway_lineplots <- function(data,subpathway,block_var, treat_var,Assay="normalized",...){
+  
+  # Create analysis data
+  analysis <- SummarizedExperiment::colData(data) %>%
+    merge(t(SummarizedExperiment::assay(data,Assay)), by="row.names") %>%
+    dplyr::rename(PARENT_SAMPLE_NAME=Row.names)
+  
+  
+  # Create chem data
+  chem <- SummarizedExperiment::rowData(data) %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column("CHEM_ID")
+  
   
   return(
-  MetPipe@analysis %>%
+    analysis %>%
     dplyr::filter(...) %>%
     dplyr::select(treat = {{treat_var}}, X = {{block_var}},
-           as.character(MetPipe@chemical_annotation$CHEM_ID[which(MetPipe@chemical_annotation$SUB_PATHWAY == subpathway)])) %>%
+           as.character(chem$CHEM_ID[which(chem$SUB_PATHWAY == subpathway)])) %>%
     tidyr::pivot_longer(cols = -c(treat, X)) %>%
-    merge(MetPipe@chemical_annotation,by.x = "name",by.y = "CHEM_ID") %>%
+    merge(chem,by.x = "name",by.y = "CHEM_ID") %>%
     ggplot2::ggplot(aes(x = X, y = value, color = treat)) +
     ggplot2::geom_jitter() +
     ggplot2::geom_smooth(method = "lm") +

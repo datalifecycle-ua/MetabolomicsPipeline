@@ -4,10 +4,17 @@
 \alias{subpathway_lineplots}
 \title{Subpathway Lineplots}
 \usage{
-subpathway_lineplots(MetPipe, subpathway, block_var, treat_var, ...)
+subpathway_lineplots(
+  data,
+  subpathway,
+  block_var,
+  treat_var,
+  Assay = "normalized",
+  ...
+)
 }
 \arguments{
-\item{MetPipe}{MetPipe data object}
+\item{data}{SummarizedExperiment with Metabolon experiment data.}
 
 \item{subpathway}{Character value of the subpathway of interest. This is case
 sensitive and must be in the chemical annotation file.}
@@ -19,6 +26,8 @@ subpathway analyis.}
 \item{treat_var}{This is a grouping variable. As a recommendation the treatment
 groups should be used in the groupBy argument as this will provide a different color
 for each of the treatments making it easier to identify.}
+
+\item{Assay}{Name of the assay to be used for the pairwise analysis (default='normalized')}
 
 \item{...}{Additional arguments to filter the analysis data by.}
 }

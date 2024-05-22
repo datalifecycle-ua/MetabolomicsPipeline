@@ -2,9 +2,10 @@
 #' 
 #' Computes and plots the first two components of the PCA from the metabolite data.
 #' 
-#' @param analysis_data Analysis data, which contains the analysis variables and metabolites in the columns
+#' @param data SummarizedExperiment with Metabolon experiment data.
 #' 
-#' 
+#' @param Assay Name of the assay to be used for the pairwise analysis (default='normalized')
+#
 #' @param meta_var A metadata variable to color code the PCA plot by.  
 #' 
 #' @returns A PCA plot of the first two principal components, colored by the metadata
@@ -12,29 +13,29 @@
 #' 
 #' @import FactoMineR
 #' @import factoextra
+#' @import SummarizedExperiment
 #' 
 #' @export
 
 
-metabolite_pca <- function(MetPipe,meta_var){
+metabolite_pca <- function(data, Assay ="normalized",meta_var){
   
-  # Get metabolite
-  mets <- intersect(names(MetPipe@standardized_peak),
-                    MetPipe@chemical_annotation$CHEM_ID)
-  
-  # Create PCA data containing only metabolite data
-  pca_dat <- MetPipe@analysis[,mets]
+  # Create analsysis data
+  # Create analysis data
+  analysis <- SummarizedExperiment::colData(data) %>%
+    merge(t(SummarizedExperiment::assay(data,Assay)), by="row.names") %>%
+    dplyr::rename(PARENT_SAMPLE_NAME=Row.names)
   
   
   # Run PCA of the pca_dat matrix containing only the metabolites.   
-  res.pca <- FactoMineR::PCA(pca_dat, 
+  res.pca <- FactoMineR::PCA(analysis[,rownames(data)], 
                  graph = F)
   
   
   # Create figure 
   pca_plot <- factoextra::fviz_pca_ind(res.pca, 
                  label = "none",
-                 habillage = as.factor(MetPipe@analysis[[meta_var]])) 
+                 habillage = as.factor(analysis[,meta_var])) 
   
   return(pca_plot)
 }

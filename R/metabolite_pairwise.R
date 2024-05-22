@@ -17,15 +17,21 @@
 #' @param  form: This is a character string the resembles the right hand side of a 
 #' simple linear regression model in R. For example form = "Group1 + Group2". 
 #'
-#' @param  Metpipe: The analysis data we will use for the pairwise comparisons. The 
-#' data must be organized in a MetPipe object.  
+#' @param  data: SummarizedExperiment with Metabolon experiment data.  
+#' 
+#' @param Assay Name of the assay to be used for the pairwise analysis (default='normalized')
 #'
 #' @param  strat_var: A variable in the analysis data to stratify the model by. If this
-#' is specified, a list of results will be returned.  
+#' is specified, a list of results will be returned. 
+#' 
+#' @param mets Chemical ID for the metabolites of interest. If NULL then the pairwise analysis
+#' is completed for all metabololites.  
 #' 
 #' @return The overall F-test p-value, and the estimate and pvalue for each pairwise comparison.
 #' 
 #' @import emmeans
+#' 
+#' @import SummarizedExperiment
 #' 
 #' @export
 #' 
@@ -34,16 +40,28 @@
 
 
 
-metabolite_pairwise <- function(MetPipe,form,strat_var=NULL){
+metabolite_pairwise <- function(data,form,Assay="normalized",strat_var=NULL,mets=NULL){
+  
+  # Create analysis data
+  analysis <- SummarizedExperiment::colData(data) %>%
+    merge(t(SummarizedExperiment::assay(data,Assay)), by="row.names") %>%
+    dplyr::rename(PARENT_SAMPLE_NAME=Row.names)
+  
+  
+  # Get metabolites
+  if(is.null(mets)){
+    mets <- rownames(SummarizedExperiment::rowData(data))
+  }
+  
   
   if(is.null(strat_var)){
     
     # Get metabolites
-    mets <- intersect(names(MetPipe@analysis),MetPipe@chemical_annotation$CHEM_ID)
+    
     
     # Get pairwise comparisons
-    res <- apply(MetPipe@analysis[,mets], MARGIN=2, FUN = function(X){
-                                                            pairwise(X,form = form,data = MetPipe@analysis)})
+    res <- apply(analysis[,mets], MARGIN=2, FUN = function(X){
+                                                            pairwise(X,form = form,data = analysis)})
     
     results <- do.call(rbind,res)
     
@@ -55,11 +73,10 @@ metabolite_pairwise <- function(MetPipe,form,strat_var=NULL){
   
   if(!is.null(strat_var)){
     
-    # Get Metabolites
-    mets <- intersect(names(MetPipe@analysis),MetPipe@chemical_annotation$CHEM_ID)
+   
     
     # Split data
-    data <- split(MetPipe@analysis,f=MetPipe@analysis[,strat_var])
+    data <- split(analysis,f= analysis[,strat_var])
     
     # Get results
     results <- lapply(data, function(X){
