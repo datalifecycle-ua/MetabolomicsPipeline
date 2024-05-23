@@ -4,6 +4,7 @@ Version: 0.0.1
 Authors@R: 
     c(person("Joel", "Parker", email = "joelparker@arizona.edu", role = c("aut", "cre")))
 Description: This package was developed to provide analysis tools and a workflow for analyzing metabolomics data produced by Metabolon.
+biocViews: SummarizedExperiment, Software
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -36,7 +37,7 @@ Imports:
     tibble,
     tidyr (>= 1.3.0)
 Depends: 
-    R (>= 3.6)
+    R (>= 4.4.0)
 LazyData: true
 VignetteBuilder: knitr
 Author: Joel Parker [aut, cre]

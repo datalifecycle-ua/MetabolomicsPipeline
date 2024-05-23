@@ -4,100 +4,75 @@
 # MetabolomicsPipeline
 
 <!-- badges: start -->
+
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-experimental-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Last
+Commit](https://img.shields.io/github/last-commit/JoelParkerUofA/MetabolomicsPipeline.svg)](https://github.com/JoelParkerUofA/MetabolomicsPipeline/commits/master)
 <!-- badges: end -->
+
+## Overview
 
 The purpose of the MetabolomicsPipeline is to provide tools for
 additional analyses to complement the metabolomic analysis done by
-Metabolon. Below is a demonstration of a potential workflow using the
-MetabolomicsPipeline Package. We demonstrate this workflow in the
-“Workflow” vignette.
+Metabolon. The MetabolomicsPipeline organizes Metabolon data in a
+[SummarizedExperiment](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html)
+to allow for easy integration with with other packages available on
+Bioconductor.
 
-<img src="Workflow.png"/>
+<img src="SEOrganization.png" style="width:75.0%" />
 
-Each step of the workflow is found in the “Code” folder.
+Our package also provides functionality for:
 
-1.  Normalization and Standardization
-    (NormalizationAndStandardization.R)
+1.  Loading Metabolon data into a Summarized Experiment
+    (loadMetabolon())
 
-- This step is optional as it is already provided by Metabolon.
+2.  Exploratory analysis
 
-2.  Analysis Data Creation (AnalysisDataCreation.R)
+- Heatmaps (metabolite_heatmap())
 
-3.  Exploratory Analysis (ExploratoryAnalysis.R)
+- PCA plots (metabolite_pca())
 
-4.  SubpathwayAnalysis (subpathwayAnalysis.R)
+3.  Subpathway analysis (subpathway_analysis())
 
-5.  Pairwise Comparisons (PairwiseAnalysis)
+4.  Pairwise Comparisons (metabolite_pairwise())
 
-6.  Boxplots and Lineplots (BoxPlotsAndLinePlots.R)
+5.  Boxplots and Line plots (subpathway_boxplots() and
+    subpathway_lineplots())
 
-## Download MetabolomicsPipeline
+Below is a simple workflow using the MetabolomicsPipeline package.
 
-### Check R version
+<img src="Workflow.png" style="width:75.0%" />
 
-You will need to have the R-version \> 4.3.2 to install the development
-version of MetabolomicsPipeline from
-[GitHub](https://github.com/JoelParkerUofA/MetabolomicsPipeline). To see
-the R version you currently have installed you can use the command
+## Installation
 
-``` r
-R.version
-```
+The MetabolomicsPipeline requires R-version \>= 4.4.0.
 
-Check to make sure the R version is at least R 4.3.2. If this
-requirement is not met, you will need to update to a newer version of R.
-Instructions for how to do this can be found at the [R project
-website](https://www.r-project.org/).
-
-### Download pipeline
-
-You can download the pipeline one of two different ways:
-
-1.) **Download pipeline as a zip file:** Navigate to the top of the page
-and click the green button that says “\<code\>” and then click “download
-zip”. This will download a zip file containing all the files necessary
-for the pipeline. You will need to unzip this file to the destination of
-your choice.
-
-2.) **Clone pipeline:** If you are familiar with git and github, the
-“MetabolomicsPipeline” can be cloned using:
-
-    git clone https://github.com/JoelParkerUofA/MetabolomicsPipeline.git
-
-You only need to utilize one of the two options above to download the
-pipeline. In the downloaded/cloned folder, open the “Metabolomics
-Pipeline.Rproj” to open the R project.
-
-### Update and install packages
-
-To aid in the reproducibility of the results, it is best practice to
-ensure you are using the same package versions that were used to create
-the pipeline. To do this, you will need to synchronize your package
-versions with the versions used in this pipeline by using:
+### Install the release version from Bioconductor
 
 ``` r
-renv::restore()
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(version="release")
+
+BiocManager::install("MetabolomicsPipeline")
 ```
 
-Once all of the packages are up to date, you can install the
-“MetabolomicsPipeline” package using:
+### Install from github
 
 ``` r
-install.packages("devtools")
-devtools::install_github("JoelParkerUofA/MetabolomicsPipeline", upgrade="never")
+if (!requireNamespace("devtools", quietly=TRUE))
+    install.packages("devtools")
+    
+devtools::install_github("JoelParkerUofA/MetabolomicsPipeline")
 ```
-
-This package will give you access to the many functions used throughout
-this pipeline. After this step, you will be ready to use the
-MetabolomicsPipeline.
 
 ## Getting Started
 
 We demonstrate a workflow using the MetabolomicsPipeline in the
 “Workflow” vignette. In this vignette, we use data which consists of 86
 samples (42 males, 44 females), three treatment groups, and the samples
-were taken at three different time points. We walk through each analysis
-step and demonstrate how to use the MetabolomicPipeline package on
-metabolomic data from Metabolon. We include this data in the “data”
-folder. While the vignette is an excellent starting place, you can also
-run each analysis step from the .R files in the “Code” folder.
+were taken at three different time points. We walk through each of the
+above analyses and demonstrate additional functionality for displaying
+the results.

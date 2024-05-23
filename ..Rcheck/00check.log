@@ -1,0 +1,183 @@
+* using log directory 'C:/Users/Owner/Desktop/MetabolomicsPipeline/..Rcheck'
+* using R version 4.4.0 (2024-04-24 ucrt)
+* using platform: x86_64-w64-mingw32
+* R was compiled by
+    gcc.exe (GCC) 13.2.0
+    GNU Fortran (GCC) 13.2.0
+* running under: Windows 11 x64 (build 22631)
+* using session charset: UTF-8
+* checking for file './DESCRIPTION' ... OK
+* this is package 'MetabolomicsPipeline' version '0.0.1'
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .Rhistory
+  .Rprofile
+  .gitignore
+  Code/.Rhistory
+  renv/.gitignore
+  ..Rcheck
+  .Rproj.user
+  .git
+These were most likely included in error. See section 'Package
+structure' in the 'Writing R Extensions' manual.
+* checking for portable file names ... OK
+* checking whether package 'MetabolomicsPipeline' can be installed ... WARNING
+Found the following significant warnings:
+  Warning: replacing previous import 'dplyr::group_rows' by 'kableExtra::group_rows' when loading 'MetabolomicsPipeline'
+  Warning: replacing previous import 'ggplot2::last_plot' by 'plotly::last_plot' when loading 'MetabolomicsPipeline'
+  Warning: replacing previous import 'SummarizedExperiment::start' by 'stats::start' when loading 'MetabolomicsPipeline'
+  Warning: replacing previous import 'dplyr::lag' by 'stats::lag' when loading 'MetabolomicsPipeline'
+  Warning: replacing previous import 'SummarizedExperiment::end' by 'stats::end' when loading 'MetabolomicsPipeline'
+  Warning: replacing previous import 'plotly::filter' by 'stats::filter' when loading 'MetabolomicsPipeline'
+See 'C:/Users/Owner/Desktop/MetabolomicsPipeline/..Rcheck/00install.out' for details.
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Checking should be performed on sources prepared by 'R CMD build'.
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... WARNING
+Found the following directory with the name of a check directory:
+  ./..Rcheck
+Most likely, these were included erroneously.
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+all_sig_subpath: no visible binding for global variable 'model'
+all_sig_subpath: no visible binding for global variable 'sub_pathway'
+all_sig_subpath: no visible binding for global variable 'pval'
+median_standardization: no visible binding for global variable
+  'PARENT_SAMPLE_NAME'
+met_est_heatmap: no visible binding for global variable 'Overall_pval'
+met_est_heatmap: no visible binding for global variable 'SUB_PATHWAY'
+met_est_heatmap: no visible binding for global variable 'CHEMICAL_NAME'
+met_est_heatmap: no visible binding for global variable 'CHEM_ID'
+met_est_heatmap: no visible binding for global variable 'Contrast'
+met_est_heatmap: no visible binding for global variable 'logFoldChange'
+met_p_heatmap: no visible binding for global variable 'SUB_PATHWAY'
+met_p_heatmap: no visible binding for global variable 'CHEMICAL_NAME'
+met_p_heatmap: no visible binding for global variable 'CHEM_ID'
+met_p_heatmap: no visible binding for global variable 'Overall_pval'
+met_p_heatmap: no visible binding for global variable 'Contrast'
+met_p_heatmap: no visible binding for global variable 'P_value'
+met_within_sub: no visible binding for global variable 'sub_pathway'
+met_within_sub: no visible binding for global variable 'chem_name'
+met_within_sub : <anonymous>: no visible binding for global variable
+  'sub_pathway'
+met_within_sub : <anonymous>: no visible binding for global variable
+  'chem_name'
+metabolite_heatmap: no visible binding for global variable 'Row.names'
+metabolite_heatmap: no visible binding for global variable
+  'PARENT_SAMPLE_NAME'
+metabolite_heatmap : <anonymous>: no visible binding for global
+  variable 'PARENT_SAMPLE_NAME'
+metabolite_pairwise: no visible binding for global variable 'Row.names'
+metabolite_pca: no visible binding for global variable 'Row.names'
+min_val_impute: no visible binding for global variable
+  'PARENT_SAMPLE_NAME'
+subpath_by_model: no visible binding for global variable 'model'
+subpath_by_model: no visible binding for global variable 'sub_pathway'
+subpath_within_superpath: no visible binding for global variable
+  'model'
+subpath_within_superpath: no visible binding for global variable
+  'sub_pathway'
+subpath_within_superpath: no visible binding for global variable
+  'super_pathway'
+subpath_within_superpath: no visible binding for global variable
+  'percent_sig'
+subpath_within_superpath: no visible binding for global variable
+  'sig_paths'
+subpath_within_superpath: no visible binding for global variable
+  'subpaths'
+subpathway_analysis: no visible binding for global variable 'Row.names'
+subpathway_analysis: no visible binding for global variable
+  'sub_pathway'
+subpathway_boxplots: no visible binding for global variable 'Row.names'
+subpathway_boxplots: no visible binding for global variable 'group'
+subpathway_boxplots: no visible binding for global variable 'X'
+subpathway_boxplots: no visible binding for global variable 'value'
+subpathway_lineplots: no visible binding for global variable
+  'Row.names'
+subpathway_lineplots: no visible binding for global variable 'treat'
+subpathway_lineplots: no visible binding for global variable 'X'
+subpathway_lineplots: no visible binding for global variable 'value'
+Undefined global functions or variables:
+  CHEMICAL_NAME CHEM_ID Contrast Overall_pval PARENT_SAMPLE_NAME
+  P_value Row.names SUB_PATHWAY X chem_name group logFoldChange model
+  percent_sig pval sig_paths sub_pathway subpaths super_pathway treat
+  value
+* checking Rd files ... NOTE
+checkRd: (-1) subpathway_analysis.Rd:48: Lost braces in \itemize; meant \describe ?
+checkRd: (-1) subpathway_analysis.Rd:50: Lost braces in \itemize; meant \describe ?
+checkRd: (-1) subpathway_analysis.Rd:52: Lost braces in \itemize; meant \describe ?
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  'demoDat'
+Undocumented data sets:
+  'demoDat'
+All user-level objects in a package should have documentation entries.
+See chapter 'Writing R documentation files' in the 'Writing R
+Extensions' manual.
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in Rd file 'metabolite_pairwise.Rd'
+  'data' 'form' 'strat_var'
+Documented arguments not in \usage in Rd file 'metabolite_pairwise.Rd':
+  'form:' 'data:' 'strat_var:'
+
+Undocumented arguments in Rd file 'pairwise.Rd'
+  'out' 'form' 'data'
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter 'Writing R documentation files' in the 'Writing R
+Extensions' manual.
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of 'data' directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking LazyData ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking files in 'vignettes' ... WARNING
+Files in the 'vignettes' directory but no files in 'inst/doc':
+  'Workflow.Rmd' 'Workflow.html'
+Files named as vignettes but with no recognized vignette engine:
+   'vignettes/Workflow.Rmd'
+(Is a VignetteBuilder field missing?)
+* checking examples ... NONE
+* checking for unstated dependencies in 'tests' ... OK
+* checking tests ... OK
+  Running 'testthat.R'
+* checking package vignettes ... NOTE
+Package has 'vignettes' subdirectory but apparently no vignettes.
+Perhaps the 'VignetteBuilder' information is missing from the
+DESCRIPTION file?
+* checking PDF version of manual ... WARNING
+LaTeX errors when creating PDF version.
+This typically indicates Rd problems.
+LaTeX errors found:
+!pdfTeX error: pdflatex (file t1-zi4r-0): Font t1-zi4r-0 at 600 not found
+ ==> Fatal error occurred, no output PDF file produced!
+* checking PDF version of manual without index ... OK
+* DONE
+Status: 6 WARNINGs, 5 NOTEs
