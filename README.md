@@ -20,7 +20,7 @@ Metabolon. The MetabolomicsPipeline organizes Metabolon data in a
 to allow for easy integration with with other packages available on
 Bioconductor.
 
-<img src="SEOrganization.png" style="width:75.0%" />
+<img src="SEOrganization.png" style="width:60.0%" />
 
 Our package also provides functionality for:
 
@@ -42,7 +42,7 @@ Our package also provides functionality for:
 
 Below is a simple workflow using the MetabolomicsPipeline package.
 
-<img src="Workflow.png" style="width:75.0%" />
+<img src="Workflow.png" style="width:60.0%" />
 
 ## Installation
 
