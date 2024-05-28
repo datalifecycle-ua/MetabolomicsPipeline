@@ -18,10 +18,10 @@ metabolite_pairwise(
 \item{mets}{Chemical ID for the metabolites of interest. If NULL then the pairwise analysis
 is completed for all metabololites.}
 
+\item{data:}{SummarizedExperiment with Metabolon experiment data.}
+
 \item{form:}{This is a character string the resembles the right hand side of a
 simple linear regression model in R. For example form = "Group1 + Group2".}
-
-\item{data:}{SummarizedExperiment with Metabolon experiment data.}
 
 \item{strat_var:}{A variable in the analysis data to stratify the model by. If this
 is specified, a list of results will be returned.}

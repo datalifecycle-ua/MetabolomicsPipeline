@@ -13,10 +13,12 @@
 #' @returns A table with the results from the model types specified and for each 
 #' metabolite within the superpathway specified.
 #' 
-#' @import dplyr
-#' @import knitr
-#' @import kableExtra
-#' @import stringr
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_paper
+#' @importFrom stringr str_to_title
+#' 
 #' 
 #' @export
 #' 

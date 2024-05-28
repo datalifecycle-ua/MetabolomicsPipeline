@@ -15,11 +15,13 @@
 #' @returns An interactive heatmap of pairwise p-values. 
 #' 
 #' 
-#' @import dplyr
-#' @import reshape2
-#' @import plotly
-#' @import SummarizedExperiment
-#' @import tibble
+#' @importFrom dplyr filter
+#' @importFrom dplyr arrange
+#' @importFrom dplyr mutate
+#' @importFrom tibble rownames_to_column
+#' @importFrom reshape2 melt 
+#' @importFrom plotly plot_ly
+#' @importFrom SummarizedExperiment rowData
 #' 
 #' @export
 #' 

@@ -7,7 +7,7 @@
 #' 
 #' @returns Median standardized peak data. 
 #' 
-#' @import dplyr
+#' @importFrom dplyr summarise_all
 #' @export
 
 

@@ -7,9 +7,14 @@
 #' @return A table of all significant subpathways. Including the significant model type
 #' and model type p-value.
 #' 
-#' @import dplyr
-#' @import knitr
-#' @import kableExtra
+#' @importFrom  dplyr case_when
+#' @importFrom  dplyr mutate 
+#' @importFrom  dplyr select 
+#' @importFrom dplyr distinct  
+#' @importFrom dplyr filter
+#' @importFrom dplyr arrange 
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_classic
 #' @export 
 
 

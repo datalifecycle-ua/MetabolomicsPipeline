@@ -32,7 +32,7 @@
 #' @import readxl
 #' @import methods
 #' @import tibble
-#' @import SummarizedExperiment
+#' @importFrom SummarizedExperiment SummarizedExperiment
 #'
 #' @export
 #' 

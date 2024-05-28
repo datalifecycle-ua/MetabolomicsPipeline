@@ -6,7 +6,7 @@
 #' 
 #' @param heatmap_variables A vector of variable names that are NOT metabolites.
 #' 
-#' @param assay Name of assay data to be used for heatmaps. Default="normalized".
+#' @param Assay Name of assay data to be used for heatmaps. Default="normalized".
 #' 
 #' @param ... Additional arguments that can be passed into the arrange function. 
 #' This parameter will order the columns of the heatmap data. 
@@ -15,7 +15,9 @@
 #' and the values for the heatmap.
 #' 
 #' 
-#' @import SummarizedExperiment
+#' @importFrom SummarizedExperiment colData
+#' @importFrom SummarizedExperiment rowData
+#' @importFrom SummarizedExperiment assay
 #' 
 #' @export
 #' 
@@ -23,11 +25,11 @@
 
 
 # This function creates heatmap data
-create_heatmap_Data <- function(data,heatmap_variables,assay="normalized",...){
+create_heatmap_Data <- function(data,heatmap_variables,Assay="normalized",...){
   
   # Create analysis data
   meta <- SummarizedExperiment::colData(data)
-  ass <- t(SummarizedExperiment::assay(data,assay))
+  ass <- t(SummarizedExperiment::assay(data,Assay))
   
   analysis_data <- merge(meta,ass,by="row.names")
   

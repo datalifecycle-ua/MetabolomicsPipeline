@@ -25,13 +25,12 @@
 #' 
 #' 
 #' 
-#' @import dplyr
-#' @import pheatmap
-#' @import grDevices
-#' @import tibble
+#' @importFrom dplyr rename
+#' @importFrom dplyr all_of
+#' @importFrom pheatmap pheatmap 
+#' @importFrom grDevices colorRampPalette 
+#' @importFrom tibble column_to_rownames 
 #' @import RColorBrewer
-#' @import tidyr
-#' @import SummarizedExperiment
 #' 
 #' @export
 #' 

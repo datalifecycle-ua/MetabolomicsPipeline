@@ -23,9 +23,15 @@
 #' @returns Line plots stratified by metabolite.
 #' 
 #' 
-#' @import ggplot2
-#' @import tidyr
-#' @import dplyr
+#' @importFrom SummarizedExperiment colData
+#' @importFrom SummarizedExperiment assay
+#' @importFrom SummarizedExperiment rowData
+#' 
+#' @importFrom tidyr pivot_longer
+#' @importFrom dplyr rename 
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
+#' 
 #' 
 #' @export
 #' 

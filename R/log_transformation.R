@@ -6,7 +6,8 @@
 #' 
 #' @return log transformed peak data
 #' 
-#' @import dplyr
+#' @importFrom dplyr mutate_if
+#' @importFrom magrittr %>%
 #' @export
 #'
 #'
@@ -16,7 +17,7 @@
 log_transformation <- function(peak_data){
   
   # 1. Log transform all of the values
-  peak_data_log <- peak_data %>% 
+  peak_data_log <- peak_data %>%
     dplyr::mutate_if(is.numeric, log) 
   
   # Return log tranformed data

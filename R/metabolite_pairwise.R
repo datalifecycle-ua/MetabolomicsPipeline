@@ -14,10 +14,12 @@
 #' p-value, log fold change for each group, and the p-value
 #' for each comparison.
 #' 
+#' @param  data: SummarizedExperiment with Metabolon experiment data. 
+#' 
 #' @param  form: This is a character string the resembles the right hand side of a 
 #' simple linear regression model in R. For example form = "Group1 + Group2". 
 #'
-#' @param  data: SummarizedExperiment with Metabolon experiment data.  
+#'  
 #' 
 #' @param Assay Name of the assay to be used for the pairwise analysis (default='normalized')
 #'
@@ -29,9 +31,6 @@
 #' 
 #' @return The overall F-test p-value, and the estimate and pvalue for each pairwise comparison.
 #' 
-#' @import emmeans
-#' 
-#' @import SummarizedExperiment
 #' 
 #' @export
 #' 
