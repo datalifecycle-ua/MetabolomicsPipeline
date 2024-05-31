@@ -4,3 +4,6 @@
 .httr-oauth
 .DS_Store
 .quarto
+..Rcheck
+data/.DS_Store
+R/.DS_Store
