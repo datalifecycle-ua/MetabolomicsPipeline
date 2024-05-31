@@ -13,18 +13,18 @@ metabolite_pairwise(
 )
 }
 \arguments{
+\item{data}{SummarizedExperiment with Metabolon experiment data.}
+
+\item{form}{This is a character string the resembles the right hand side of a
+simple linear regression model in R. For example form = "Group1 + Group2".}
+
 \item{Assay}{Name of the assay to be used for the pairwise analysis (default='normalized')}
+
+\item{strat_var}{A variable in the analysis data to stratify the model by. If this
+is specified, a list of results will be returned.}
 
 \item{mets}{Chemical ID for the metabolites of interest. If NULL then the pairwise analysis
 is completed for all metabololites.}
-
-\item{data:}{SummarizedExperiment with Metabolon experiment data.}
-
-\item{form:}{This is a character string the resembles the right hand side of a
-simple linear regression model in R. For example form = "Group1 + Group2".}
-
-\item{strat_var:}{A variable in the analysis data to stratify the model by. If this
-is specified, a list of results will be returned.}
 }
 \value{
 The overall F-test p-value, and the estimate and pvalue for each pairwise comparison.
@@ -43,4 +43,13 @@ the \href{https://cran.r-project.org/web/packages/emmeans/index.html}{emmeans} p
 The metabolite_pairwise function returns a data frame with the metabolite overall
 p-value, log fold change for each group, and the p-value
 for each comparison.
+}
+\examples{
+# Load data
+dat = MetabolomicsPipeline::demoDat
+
+# Run pairwise analysis
+strat_pairwise = metabolite_pairwise(dat,form = "GROUP_NAME*TIME1",strat_var = "Gender")
+
+
 }

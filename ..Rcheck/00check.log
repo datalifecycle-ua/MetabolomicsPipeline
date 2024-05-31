@@ -1,13 +1,13 @@
-* using log directory 'C:/Users/Owner/Desktop/MetabolomicsPipeline/..Rcheck'
-* using R version 4.4.0 (2024-04-24 ucrt)
-* using platform: x86_64-w64-mingw32
+* using log directory ‘/Users/joelparker/Downloads/MetabolomicsPipeline/..Rcheck’
+* using R version 4.4.0 (2024-04-24)
+* using platform: x86_64-apple-darwin20
 * R was compiled by
-    gcc.exe (GCC) 13.2.0
-    GNU Fortran (GCC) 13.2.0
-* running under: Windows 11 x64 (build 22631)
+    Apple clang version 14.0.0 (clang-1400.0.29.202)
+    GNU Fortran (GCC) 12.2.0
+* running under: macOS Monterey 12.7.5
 * using session charset: UTF-8
-* checking for file './DESCRIPTION' ... OK
-* this is package 'MetabolomicsPipeline' version '0.0.1'
+* checking for file ‘./DESCRIPTION’ ... OK
+* this is package ‘MetabolomicsPipeline’ version ‘0.0.1’
 * package encoding: UTF-8
 * checking package namespace information ... OK
 * checking package dependencies ... OK
@@ -16,30 +16,185 @@
 * checking for executable files ... OK
 * checking for hidden files and directories ... NOTE
 Found the following hidden files and directories:
+  .DS_Store
   .Rhistory
   .Rprofile
   .gitignore
-  Code/.Rhistory
-  renv/.gitignore
+  R/.DS_Store
+  data/.DS_Store
   ..Rcheck
   .Rproj.user
   .git
-These were most likely included in error. See section 'Package
-structure' in the 'Writing R Extensions' manual.
-* checking for portable file names ... OK
-* checking whether package 'MetabolomicsPipeline' can be installed ... WARNING
-Found the following significant warnings:
-  Warning: replacing previous import 'dplyr::group_rows' by 'kableExtra::group_rows' when loading 'MetabolomicsPipeline'
-  Warning: replacing previous import 'ggplot2::last_plot' by 'plotly::last_plot' when loading 'MetabolomicsPipeline'
-  Warning: replacing previous import 'SummarizedExperiment::start' by 'stats::start' when loading 'MetabolomicsPipeline'
-  Warning: replacing previous import 'dplyr::lag' by 'stats::lag' when loading 'MetabolomicsPipeline'
-  Warning: replacing previous import 'SummarizedExperiment::end' by 'stats::end' when loading 'MetabolomicsPipeline'
-  Warning: replacing previous import 'plotly::filter' by 'stats::filter' when loading 'MetabolomicsPipeline'
-See 'C:/Users/Owner/Desktop/MetabolomicsPipeline/..Rcheck/00install.out' for details.
+These were most likely included in error. See section ‘Package
+structure’ in the ‘Writing R Extensions’ manual.
+* checking for portable file names ... NOTE
+Found the following non-portable file paths:
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/F1DC1ADFccf64af8/chunks.json
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/F1DC1ADFfe1f196e/chunks.json
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/00000f.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000010.html
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000010.json
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000010.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000011.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000012.html
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000012.json
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000012.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000013.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000014.html
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000014.json
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000014.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000015.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000016.html
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000016.json
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000016.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000017.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cbjclocq8ctmt/000011.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cbjclocq8ctmt/000012.error
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cd1u1a5syr5nd/00000f.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfxqfdph972ga/00000f.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfxqfdph972ga/000010.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfxqfdph972ga/000010.png
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/00000f.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000010.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000010.png
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000011.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000012.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000012.png
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000013.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000014.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000014.png
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000015.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000016.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000016.png
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/chunks.json
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000013.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000014.html
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000014.json
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000014.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000015.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000016.html
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000016.json
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000016.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000017.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/00000f.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/000010.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/000010.png
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/000011.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/000012.metadata
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/000012.png
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/000013.csv
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.css.map
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/bootstrap.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/bootstrap.css.map
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/bootstrap.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/cerulean.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/cosmo.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/darkly.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/flatly.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/Lato.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/LatoBold.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/LatoItalic.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/NewsCycle.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/NewsCycleBold.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSans.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansBold.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansBoldItalic.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansItalic.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansLight.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/OpenSansLightItalic.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/Raleway.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/RalewayBold.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/Roboto.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/RobotoBold.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/RobotoLight.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/RobotoMedium.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansPro.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansProBold.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansProItalic.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/SourceSansProLight.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts/Ubuntu.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/journal.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/lumen.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/paper.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/readable.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/sandstone.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/simplex.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/spacelab.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/united.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/yeti.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.eot
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.svg
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.ttf
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.woff
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/fonts/glyphicons-halflings-regular.woff2
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/js/bootstrap.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/js/bootstrap.min.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/js/npm.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/shim/html5shiv.min.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/shim/respond.min.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/crosstalk-1.2.1/css/crosstalk.min.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/crosstalk-1.2.1/js/crosstalk.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/crosstalk-1.2.1/js/crosstalk.js.map
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/crosstalk-1.2.1/js/crosstalk.min.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/crosstalk-1.2.1/js/crosstalk.min.js.map
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/crosstalk-1.2.1/scss/crosstalk.scss
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/htmltools-fill-0.5.8.1/fill.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/htmlwidgets-1.6.4/htmlwidgets.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/jquery-3.5.1/jquery-AUTHORS.txt
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/jquery-3.5.1/jquery.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/jquery-3.5.1/jquery.min.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/jquery-3.5.1/jquery.min.map
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/jquery-3.6.0/jquery-3.6.0.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/jquery-3.6.0/jquery-3.6.0.min.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/jquery-3.6.0/jquery-3.6.0.min.map
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/kePrint-0.0.1/kePrint.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/lightable-0.0.1/lightable.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/plotly-binding-4.10.4/plotly.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/plotly-main-2.11.1/plotly-latest.min.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/table1-1.0/table1_defaults.css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/typedarray-0.1/typedarray.min.js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/F1DC1ADFccf64af8
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/F1DC1ADFfe1f196e
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cbjclocq8ctmt
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cd1u1a5syr5nd
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfxqfdph972ga
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/fonts
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/shim
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/crosstalk-1.2.1/css
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/crosstalk-1.2.1/js
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/crosstalk-1.2.1/scss
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/htmltools-fill-0.5.8.1
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/htmlwidgets-1.6.4
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/jquery-3.5.1
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/jquery-3.6.0
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/kePrint-0.0.1
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/lightable-0.0.1
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/plotly-binding-4.10.4
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/plotly-htmlwidgets-css-2.11.1
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/plotly-main-2.11.1
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/table1-1.0
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/typedarray-0.1
+
+Tarballs are only required to store paths of up to 100 bytes and cannot
+store those of more than 256 bytes, with restrictions including to 100
+bytes for the final component.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘MetabolomicsPipeline’ can be installed ... OK
 * checking installed package size ... OK
 * checking package directory ... OK
 * checking DESCRIPTION meta-information ... NOTE
-Checking should be performed on sources prepared by 'R CMD build'.
+Checking should be performed on sources prepared by ‘R CMD build’.
 * checking top-level files ... OK
 * checking for left-over files ... OK
 * checking index information ... OK
@@ -59,125 +214,32 @@ Most likely, these were included erroneously.
 * checking S3 generic/method consistency ... OK
 * checking replacement functions ... OK
 * checking foreign function calls ... OK
-* checking R code for possible problems ... NOTE
-all_sig_subpath: no visible binding for global variable 'model'
-all_sig_subpath: no visible binding for global variable 'sub_pathway'
-all_sig_subpath: no visible binding for global variable 'pval'
-median_standardization: no visible binding for global variable
-  'PARENT_SAMPLE_NAME'
-met_est_heatmap: no visible binding for global variable 'Overall_pval'
-met_est_heatmap: no visible binding for global variable 'SUB_PATHWAY'
-met_est_heatmap: no visible binding for global variable 'CHEMICAL_NAME'
-met_est_heatmap: no visible binding for global variable 'CHEM_ID'
-met_est_heatmap: no visible binding for global variable 'Contrast'
-met_est_heatmap: no visible binding for global variable 'logFoldChange'
-met_p_heatmap: no visible binding for global variable 'SUB_PATHWAY'
-met_p_heatmap: no visible binding for global variable 'CHEMICAL_NAME'
-met_p_heatmap: no visible binding for global variable 'CHEM_ID'
-met_p_heatmap: no visible binding for global variable 'Overall_pval'
-met_p_heatmap: no visible binding for global variable 'Contrast'
-met_p_heatmap: no visible binding for global variable 'P_value'
-met_within_sub: no visible binding for global variable 'sub_pathway'
-met_within_sub: no visible binding for global variable 'chem_name'
-met_within_sub : <anonymous>: no visible binding for global variable
-  'sub_pathway'
-met_within_sub : <anonymous>: no visible binding for global variable
-  'chem_name'
-metabolite_heatmap: no visible binding for global variable 'Row.names'
-metabolite_heatmap: no visible binding for global variable
-  'PARENT_SAMPLE_NAME'
-metabolite_heatmap : <anonymous>: no visible binding for global
-  variable 'PARENT_SAMPLE_NAME'
-metabolite_pairwise: no visible binding for global variable 'Row.names'
-metabolite_pca: no visible binding for global variable 'Row.names'
-min_val_impute: no visible binding for global variable
-  'PARENT_SAMPLE_NAME'
-subpath_by_model: no visible binding for global variable 'model'
-subpath_by_model: no visible binding for global variable 'sub_pathway'
-subpath_within_superpath: no visible binding for global variable
-  'model'
-subpath_within_superpath: no visible binding for global variable
-  'sub_pathway'
-subpath_within_superpath: no visible binding for global variable
-  'super_pathway'
-subpath_within_superpath: no visible binding for global variable
-  'percent_sig'
-subpath_within_superpath: no visible binding for global variable
-  'sig_paths'
-subpath_within_superpath: no visible binding for global variable
-  'subpaths'
-subpathway_analysis: no visible binding for global variable 'Row.names'
-subpathway_analysis: no visible binding for global variable
-  'sub_pathway'
-subpathway_boxplots: no visible binding for global variable 'Row.names'
-subpathway_boxplots: no visible binding for global variable 'group'
-subpathway_boxplots: no visible binding for global variable 'X'
-subpathway_boxplots: no visible binding for global variable 'value'
-subpathway_lineplots: no visible binding for global variable
-  'Row.names'
-subpathway_lineplots: no visible binding for global variable 'treat'
-subpathway_lineplots: no visible binding for global variable 'X'
-subpathway_lineplots: no visible binding for global variable 'value'
-Undefined global functions or variables:
-  CHEMICAL_NAME CHEM_ID Contrast Overall_pval PARENT_SAMPLE_NAME
-  P_value Row.names SUB_PATHWAY X chem_name group logFoldChange model
-  percent_sig pval sig_paths sub_pathway subpaths super_pathway treat
-  value
-* checking Rd files ... NOTE
-checkRd: (-1) subpathway_analysis.Rd:48: Lost braces in \itemize; meant \describe ?
-checkRd: (-1) subpathway_analysis.Rd:50: Lost braces in \itemize; meant \describe ?
-checkRd: (-1) subpathway_analysis.Rd:52: Lost braces in \itemize; meant \describe ?
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
 * checking Rd metadata ... OK
 * checking Rd cross-references ... OK
-* checking for missing documentation entries ... WARNING
-Undocumented code objects:
-  'demoDat'
-Undocumented data sets:
-  'demoDat'
-All user-level objects in a package should have documentation entries.
-See chapter 'Writing R documentation files' in the 'Writing R
-Extensions' manual.
+* checking for missing documentation entries ... OK
 * checking for code/documentation mismatches ... OK
-* checking Rd \usage sections ... WARNING
-Undocumented arguments in Rd file 'metabolite_pairwise.Rd'
-  'data' 'form' 'strat_var'
-Documented arguments not in \usage in Rd file 'metabolite_pairwise.Rd':
-  'form:' 'data:' 'strat_var:'
-
-Undocumented arguments in Rd file 'pairwise.Rd'
-  'out' 'form' 'data'
-
-Functions with \usage entries need to have the appropriate \alias
-entries, and all their arguments documented.
-The \usage entries must correspond to syntactically valid R code.
-See chapter 'Writing R documentation files' in the 'Writing R
-Extensions' manual.
+* checking Rd \usage sections ... OK
 * checking Rd contents ... OK
 * checking for unstated dependencies in examples ... OK
-* checking contents of 'data' directory ... OK
+* checking contents of ‘data’ directory ... OK
 * checking data for non-ASCII characters ... OK
 * checking LazyData ... OK
 * checking data for ASCII and uncompressed saves ... OK
-* checking files in 'vignettes' ... WARNING
+* checking files in ‘vignettes’ ... WARNING
 Files in the 'vignettes' directory but no files in 'inst/doc':
-  'Workflow.Rmd' 'Workflow.html'
-Files named as vignettes but with no recognized vignette engine:
-   'vignettes/Workflow.Rmd'
-(Is a VignetteBuilder field missing?)
+  ‘MetabolomicsPipeline-vignette.Rmd’
 * checking examples ... NONE
-* checking for unstated dependencies in 'tests' ... OK
+* checking for unstated dependencies in ‘tests’ ... OK
 * checking tests ... OK
-  Running 'testthat.R'
-* checking package vignettes ... NOTE
-Package has 'vignettes' subdirectory but apparently no vignettes.
-Perhaps the 'VignetteBuilder' information is missing from the
-DESCRIPTION file?
-* checking PDF version of manual ... WARNING
-LaTeX errors when creating PDF version.
-This typically indicates Rd problems.
-LaTeX errors found:
-!pdfTeX error: pdflatex (file t1-zi4r-0): Font t1-zi4r-0 at 600 not found
- ==> Fatal error occurred, no output PDF file produced!
-* checking PDF version of manual without index ... OK
+  Running ‘testthat.R’
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes ... WARNING
+Directory 'inst/doc' does not exist.
+Package vignette without corresponding single PDF/HTML:
+  ‘MetabolomicsPipeline-vignette.Rmd’
+* checking re-building of vignette outputs ... OK
+* checking PDF version of manual ... OK
 * DONE
-Status: 6 WARNINGs, 5 NOTEs
+Status: 3 WARNINGs, 3 NOTEs

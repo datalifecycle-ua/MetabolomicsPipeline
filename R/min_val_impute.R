@@ -6,7 +6,8 @@
 #' 
 #' @returns Metabolite imputed peak data.
 #' 
-#' @import dplyr
+#' @importFrom dplyr select
+#' @importFrom dplyr summarise_all
 #' @export
 
 

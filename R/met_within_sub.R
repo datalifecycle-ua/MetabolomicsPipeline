@@ -27,7 +27,7 @@
 
 met_within_sub <- function(subpath_results,subpathway,mod = c("interaction","parallel","single")){
   
-  if(class(subpath_results)=="data.frame"){
+  if(inherits(subpath_results,"data.frame")){
     
     # Get model results in dataframe
     mod_res = paste0(mod,"_pval")[paste0(mod,"_pval") %in% names(subpath_results)]
@@ -42,7 +42,7 @@ met_within_sub <- function(subpath_results,subpathway,mod = c("interaction","par
     return(table)
   }
   
-  if(class(subpath_results)=="list"){
+  if(inherits(subpath_results,"list")){
     
     tables <- lapply(names(subpath_results), function(name) {
       

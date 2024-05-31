@@ -11,9 +11,25 @@
 #' @returns A PCA plot of the first two principal components, colored by the metadata
 #' variable. 
 #' 
-#' @import FactoMineR
-#' @import factoextra
-#' @import SummarizedExperiment
+#' @examples
+#' 
+#' # load data
+#' dat = MetabolomicsPipeline::demoDat
+#' 
+#' # Define PCA label from metadata
+#'  meta_var = "Gender"
+#' 
+#' # Run PCA
+#' pca <- metabolite_pca( dat,
+#'                       meta_var = meta_var)
+#'
+#'
+#' # Show PCA
+#' pca
+#' 
+#' 
+#' @importFrom  FactoMineR PCA
+#' @importFrom  factoextra fviz_pca_ind
 #' 
 #' @export
 

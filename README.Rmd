@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 The purpose of the MetabolomicsPipeline is to provide tools for additional analyses to complement the metabolomic analysis done by Metabolon. The MetabolomicsPipeline organizes Metabolon data in a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html) to allow for easy integration with with other packages available on Bioconductor.
 
 
-![](SEOrganization.png){width=60%}
+![](WorkflowIMGs/SEOrganization.png){width=60%}
 
 Our package also provides functionality for:
 
@@ -45,7 +45,7 @@ Our package also provides functionality for:
 
 Below is a simple workflow using the MetabolomicsPipeline package. 
 
-![](Workflow.png){width=60%}
+![](WorkflowIMGs/Workflow.png){width=60%}
 
 
 ## Installation

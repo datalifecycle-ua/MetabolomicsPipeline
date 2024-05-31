@@ -14,22 +14,30 @@
 #' p-value, log fold change for each group, and the p-value
 #' for each comparison.
 #' 
-#' @param  data: SummarizedExperiment with Metabolon experiment data. 
+#' @param  data SummarizedExperiment with Metabolon experiment data. 
 #' 
-#' @param  form: This is a character string the resembles the right hand side of a 
+#' @param  form This is a character string the resembles the right hand side of a 
 #' simple linear regression model in R. For example form = "Group1 + Group2". 
 #'
 #'  
 #' 
 #' @param Assay Name of the assay to be used for the pairwise analysis (default='normalized')
 #'
-#' @param  strat_var: A variable in the analysis data to stratify the model by. If this
+#' @param  strat_var A variable in the analysis data to stratify the model by. If this
 #' is specified, a list of results will be returned. 
 #' 
 #' @param mets Chemical ID for the metabolites of interest. If NULL then the pairwise analysis
 #' is completed for all metabololites.  
 #' 
 #' @return The overall F-test p-value, and the estimate and pvalue for each pairwise comparison.
+#' 
+#' 
+#' @examples
+#' # Load data
+#' dat = MetabolomicsPipeline::demoDat
+#' 
+#' # Run pairwise analysis
+#' strat_pairwise = metabolite_pairwise(dat,form = "GROUP_NAME*TIME1",strat_var = "Gender")
 #' 
 #' 
 #' @export

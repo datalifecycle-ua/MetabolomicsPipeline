@@ -1,7 +1,7 @@
 
-R version 4.4.0 (2024-04-24 ucrt) -- "Puppy Cup"
+R version 4.4.0 (2024-04-24) -- "Puppy Cup"
 Copyright (C) 2024 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64
+Platform: x86_64-apple-darwin20
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -25,17 +25,10 @@ Type 'q()' to quit R.
 > 
 > library(testthat)
 > library(MetabolomicsPipeline)
-Warning messages:
-1: replacing previous import 'dplyr::group_rows' by 'kableExtra::group_rows' when loading 'MetabolomicsPipeline' 
-2: replacing previous import 'ggplot2::last_plot' by 'plotly::last_plot' when loading 'MetabolomicsPipeline' 
-3: replacing previous import 'SummarizedExperiment::start' by 'stats::start' when loading 'MetabolomicsPipeline' 
-4: replacing previous import 'dplyr::lag' by 'stats::lag' when loading 'MetabolomicsPipeline' 
-5: replacing previous import 'SummarizedExperiment::end' by 'stats::end' when loading 'MetabolomicsPipeline' 
-6: replacing previous import 'plotly::filter' by 'stats::filter' when loading 'MetabolomicsPipeline' 
 > 
 > test_check("MetabolomicsPipeline")
 [ FAIL 0 | WARN 0 | SKIP 0 | PASS 1 ]
 > 
 > proc.time()
    user  system elapsed 
-   4.90    0.51    5.82 
+  5.595   0.295   6.054 

@@ -1,242 +1,40 @@
 Hmm ... looks like a package
 Converting parsed Rd's to LaTeX .
 Creating pdf output from LaTeX ...
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex.fmt)
+
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex)
  restricted \write18 enabled.
 entering extended mode
-(Rd2.tex
 LaTeX2e <2023-11-01> patch level 1
-L3 programming layer <2024-01-04>
-
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\book.cls
+L3 programming layer <2024-04-11>
+(./Rd2.tex
+(/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/base/book.cls
 Document Class: book 2023/05/17 v1.4n Standard LaTeX document class
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\bk10.clo))
-(C:/PROGRA~1/R/R-44~1.0/share/texmf/tex/latex\Rd.sty
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/tools\longtable.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/tools\bm.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\alltt.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/tools\verbatim.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\textcomp.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+(/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/base/bk10.clo)) (/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/tools/longtable.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/tools/bm.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/base/alltt.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/tools/verbatim.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/url/url.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/base/textcomp.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/amsmath/amsmath.sty
 For additional information on amsmath, use the `?' option.
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty)
-(C:\Program Files\MiKTeX\tex/latex/jknappen\mathrsfs.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty)
-(C:\Program Files\MiKTeX\tex/latex/psnfss\times.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.sty
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg)
-
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
-)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
-) (C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
-(C:\Program Files\MiKTeX\tex/generic/infwarerr\infwarerr.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
-(C:\Program Files\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty)
-(C:\Program Files\MiKTeX\tex/generic/kvdefinekeys\kvdefinekeys.sty)
-(C:\Program Files\MiKTeX\tex/generic/pdfescape\pdfescape.sty
-(C:\Program Files\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds
-.sty)) (C:\Program Files\MiKTeX\tex/latex/hycolor\hycolor.sty)
-(C:\Program Files\MiKTeX\tex/latex/letltxmacro\letltxmacro.sty)
-(C:\Program Files\MiKTeX\tex/latex/auxhook\auxhook.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
-(C:\Program Files\MiKTeX\tex/latex/refcount\refcount.sty)
-(C:\Program Files\MiKTeX\tex/generic/gettitlestring\gettitlestring.sty
-(C:\Program Files\MiKTeX\tex/latex/kvoptions\kvoptions.sty)))
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def)
-(C:\Program Files\MiKTeX\tex/generic/intcalc\intcalc.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
-(C:\Program Files\MiKTeX\tex/generic/bitset\bitset.sty
-(C:\Program Files\MiKTeX\tex/generic/bigintcalc\bigintcalc.sty))
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\atbegshi-ltx.sty))
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\atveryend-ltx.sty)
-(C:\Program Files\MiKTeX\tex/latex/rerunfilecheck\rerunfilecheck.sty
-(C:\Program Files\MiKTeX\tex/generic/uniquecounter\uniquecounter.sty))))
-(C:\Program Files\MiKTeX\tex/latex/psnfss\t1ptm.fd)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
-tex.def)
-No file Rd2.aux.
-
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
-ii
-[Loading MPS to PDF converter (version 2006.09.02).]
-) (C:\Program Files\MiKTeX\tex/latex/psnfss\t1pcr.fd)
-No file Rd2.toc.
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
-(C:\Program Files\MiKTeX\tex/latex/jknappen\ursfs.fd) [1{C:/Users/Owner/AppData
-/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/Owner/AppData/Local/Program
-s/MiKTeX/fonts/enc/dvips/base/8r.enc}]
-Overfull \hbox (30.78088pt too wide) in paragraph at lines 70--70
- []\T1/pcr/m/n/10 create_heatmap_Data(data, heatmap_variables, assay = "normali
-zed", ...) 
-[2] [3] [4] [5]
-Overfull \hbox (4.58618pt too wide) in paragraph at lines 269--279
-[]\T1/ptm/m/n/10 This func-tion will an-a-lyze each metabo-lite in-di-vid-u-all
-y. For each metabo-lite, the metabo-lite_pairwise
+(/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/amsmath/amstext.sty (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/amsmath/amsgen.sty)) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/amsmath/amsbsy.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/amsmath/amsopn.sty)) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/amsfonts.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/amssymb.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/eucal.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/base/fontenc.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/psnfss/times.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/inconsolata/zi4.sty `inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/xkeyval/xkeyval.sty (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/xkeyval/xkeyval.tex (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/xkeyval/xkvutils.tex (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/xkeyval/keyval.tex))))) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/graphics/color.sty (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx)) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty))) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/auxhook/auxhook.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty))) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty)) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/base/atbegshi-ltx.sty)) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/base/atveryend-ltx.sty) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty)))) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/psnfss/t1ptm.fd) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def) (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpZTLVwB/Rd2pdf11c8413df4a72/Rd2.aux) (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpZTLVwB/Rd2pdf11c8413df4a72/Rd2.out) (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpZTLVwB/Rd2pdf11c8413df4a72/Rd2.out) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/inconsolata/t1zi4.fd) (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpZTLVwB/Rd2pdf11c8413df4a72/Rd2.toc (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd) (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd) [1{/Users/joelparker/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/Users/joelparker/Library/TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc}{/Users/joelparker/Library/TinyTeX/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}]) [2] [3] [4] [5]
+Overfull \hbox (4.58618pt too wide) in paragraph at lines 281--291
+[]\T1/ptm/m/n/10 This func-tion will an-a-lyze each metabo-lite in-di-vid-u-ally. For each metabo-lite, the metabo-lite_pairwise
 [6]
-Overfull \hbox (37.26851pt too wide) in paragraph at lines 324--325
-[]\T1/ptm/m/n/10 Results data frame of the pair-wise com-par-isons pro-duced by
- [][][]\T1/pcr/m/n/10 metabolite_pairwise[][][]\T1/ptm/m/n/10 . 
+Overfull \hbox (18.26851pt too wide) in paragraph at lines 336--337
+[]\T1/ptm/m/n/10 Results data frame of the pair-wise com-par-isons pro-duced by [][][]\T1/zi4/m/n/10 metabolite_pairwise[][][][]\T1/ptm/m/n/10 . 
 
-Overfull \hbox (37.26851pt too wide) in paragraph at lines 355--356
-[]\T1/ptm/m/n/10 Results data frame of the pair-wise com-par-isons pro-duced by
- [][][]\T1/pcr/m/n/10 metabolite_pairwise[][][]\T1/ptm/m/n/10 . 
-[7] [8] [9] (C:\Program Files\MiKTeX\tex/latex/psnfss\ts1ptm.fd)
-Overfull \hbox (274.03314pt too wide) in paragraph at lines 505--506
-[]\T1/ptm/m/n/10 A data frame with "CHEM_ID","sub_pathway","chem_name","interac
-tion_pval","interaction_fisher","parallel_pval","parallel_fisher","single_pval"
-,"single_fisher",and
-[10] [11] [12] [13] (Rd2.aux)
-
-Package rerunfilecheck Warning: File `Rd2.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
- )
+Overfull \hbox (18.26851pt too wide) in paragraph at lines 367--368
+[]\T1/ptm/m/n/10 Results data frame of the pair-wise com-par-isons pro-duced by [][][]\T1/zi4/m/n/10 metabolite_pairwise[][][][]\T1/ptm/m/n/10 . 
+[7] [8] [9]
+Overfull \hbox (274.03314pt too wide) in paragraph at lines 527--528
+[]\T1/ptm/m/n/10 A data frame with "CHEM_ID","sub_pathway","chem_name","interaction_pval","interaction_fisher","parallel_pval","parallel_fisher","single_pval","single_fisher",and
+[10] [11] [12]
+No file Rd2.ind.
+[13] (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpZTLVwB/Rd2pdf11c8413df4a72/Rd2.aux) )
 (see the transcript file for additional information)
-pdfTeX warning (dest): name{Rfn.SummarizedExperiment::SummarizedExperiment} has
- been referenced but does not exist, replaced by a fixed one
+pdfTeX warning (dest): name{Rfn.SummarizedExperiment::SummarizedExperiment} has been referenced but does not exist, replaced by a fixed one
 
-<C:/Users/Owner/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
-ex10.pfb><C:/Users/Owner/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmmi10.pfb><C:/Users/Owner/AppData/Local/Programs/MiKTeX/fonts/type1/pub
-lic/amsfonts/cm/cmmi7.pfb><C:/Users/Owner/AppData/Local/Programs/MiKTeX/fonts/t
-ype1/public/amsfonts/cm/cmr10.pfb><C:/Users/Owner/AppData/Local/Programs/MiKTeX
-/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Owner/AppData/Local/Programs
-/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Owner/AppData/Local
-/Programs/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/Owner/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/Owner/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/Owner/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/Owner/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Rd2.pdf (13 pages, 175046 bytes).
+</Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (13 pages, 154230 bytes).
 Transcript written on Rd2.log.
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex.fmt)
- restricted \write18 enabled.
-entering extended mode
-(Rd2.tex
-LaTeX2e <2023-11-01> patch level 1
-L3 programming layer <2024-01-04>
-
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\book.cls
-Document Class: book 2023/05/17 v1.4n Standard LaTeX document class
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\bk10.clo))
-(C:/PROGRA~1/R/R-44~1.0/share/texmf/tex/latex\Rd.sty
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/tools\longtable.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/tools\bm.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\alltt.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/tools\verbatim.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\textcomp.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
-For additional information on amsmath, use the `?' option.
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty)
-(C:\Program Files\MiKTeX\tex/latex/jknappen\mathrsfs.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty)
-(C:\Program Files\MiKTeX\tex/latex/psnfss\times.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.sty
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg)
-
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
-)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
-) (C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
-(C:\Program Files\MiKTeX\tex/generic/infwarerr\infwarerr.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
-(C:\Program Files\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty)
-(C:\Program Files\MiKTeX\tex/generic/kvdefinekeys\kvdefinekeys.sty)
-(C:\Program Files\MiKTeX\tex/generic/pdfescape\pdfescape.sty
-(C:\Program Files\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds
-.sty)) (C:\Program Files\MiKTeX\tex/latex/hycolor\hycolor.sty)
-(C:\Program Files\MiKTeX\tex/latex/letltxmacro\letltxmacro.sty)
-(C:\Program Files\MiKTeX\tex/latex/auxhook\auxhook.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
-(C:\Program Files\MiKTeX\tex/latex/refcount\refcount.sty)
-(C:\Program Files\MiKTeX\tex/generic/gettitlestring\gettitlestring.sty
-(C:\Program Files\MiKTeX\tex/latex/kvoptions\kvoptions.sty)))
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def)
-(C:\Program Files\MiKTeX\tex/generic/intcalc\intcalc.sty)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
-(C:\Program Files\MiKTeX\tex/generic/bitset\bitset.sty
-(C:\Program Files\MiKTeX\tex/generic/bigintcalc\bigintcalc.sty))
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\atbegshi-ltx.sty))
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/base\atveryend-ltx.sty)
-(C:\Program Files\MiKTeX\tex/latex/rerunfilecheck\rerunfilecheck.sty
-(C:\Program Files\MiKTeX\tex/generic/uniquecounter\uniquecounter.sty))))
-(C:\Program Files\MiKTeX\tex/latex/psnfss\t1ptm.fd)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
-tex.def) (Rd2.aux)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
-ii
-[Loading MPS to PDF converter (version 2006.09.02).]
-) (Rd2.out) (Rd2.out) (C:\Program Files\MiKTeX\tex/latex/psnfss\t1pcr.fd)
-(Rd2.toc
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
-(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
-(C:\Program Files\MiKTeX\tex/latex/jknappen\ursfs.fd) [1{C:/Users/Owner/AppData
-/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/Owner/AppData/Local/Program
-s/MiKTeX/fonts/enc/dvips/base/8r.enc}])
-Overfull \hbox (30.78088pt too wide) in paragraph at lines 70--70
- []\T1/pcr/m/n/10 create_heatmap_Data(data, heatmap_variables, assay = "normali
-zed", ...) 
-[2] [3] [4] [5]
-Overfull \hbox (4.58618pt too wide) in paragraph at lines 269--279
-[]\T1/ptm/m/n/10 This func-tion will an-a-lyze each metabo-lite in-di-vid-u-all
-y. For each metabo-lite, the metabo-lite_pairwise
-[6]
-Overfull \hbox (37.26851pt too wide) in paragraph at lines 324--325
-[]\T1/ptm/m/n/10 Results data frame of the pair-wise com-par-isons pro-duced by
- [][][]\T1/pcr/m/n/10 metabolite_pairwise[][][]\T1/ptm/m/n/10 . 
-
-Overfull \hbox (37.26851pt too wide) in paragraph at lines 355--356
-[]\T1/ptm/m/n/10 Results data frame of the pair-wise com-par-isons pro-duced by
- [][][]\T1/pcr/m/n/10 metabolite_pairwise[][][]\T1/ptm/m/n/10 . 
-[7] [8] [9] (C:\Program Files\MiKTeX\tex/latex/psnfss\ts1ptm.fd)
-Overfull \hbox (274.03314pt too wide) in paragraph at lines 505--506
-[]\T1/ptm/m/n/10 A data frame with "CHEM_ID","sub_pathway","chem_name","interac
-tion_pval","interaction_fisher","parallel_pval","parallel_fisher","single_pval"
-,"single_fisher",and
-[10] [11] [12] [13] (Rd2.aux) )
-(see the transcript file for additional information)
-pdfTeX warning (dest): name{Rfn.SummarizedExperiment::SummarizedExperiment} has
- been referenced but does not exist, replaced by a fixed one
-
-<C:/Users/Owner/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
-ex10.pfb><C:/Users/Owner/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmmi10.pfb><C:/Users/Owner/AppData/Local/Programs/MiKTeX/fonts/type1/pub
-lic/amsfonts/cm/cmmi7.pfb><C:/Users/Owner/AppData/Local/Programs/MiKTeX/fonts/t
-ype1/public/amsfonts/cm/cmr10.pfb><C:/Users/Owner/AppData/Local/Programs/MiKTeX
-/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Owner/AppData/Local/Programs
-/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Owner/AppData/Local
-/Programs/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/Owner/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/Owner/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/Owner/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/Owner/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Rd2.pdf (13 pages, 184900 bytes).
-Transcript written on Rd2.log.
-Saving output to 'MetabolomicsPipeline-manual.pdf' ...
+Saving output to ‘MetabolomicsPipeline-manual.pdf’ ...
 Done
-You may want to clean up by 'rm -Rf C:/Users/Owner/AppData/Local/Temp/RtmpoPnk5p/Rd2pdf4cd050f72955'
+You may want to clean up by 'rm -Rf /var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T//RtmpZTLVwB/Rd2pdf11c8413df4a72'

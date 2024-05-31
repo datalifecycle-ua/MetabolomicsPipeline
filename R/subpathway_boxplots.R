@@ -21,13 +21,42 @@
 #' @param ... Additional arguments to filter the analysis data by.
 #' 
 #' 
+#' @examples
+#' # load data
+#' dat = MetabolomicsPipeline::demoDat
+#' 
+#' ################################################################################
+#' ### BoxPlots ###################################################################
+#' ################################################################################
+#'
+#' subpathway_boxplots(dat, subpathway = "Lactoyl Amino Acid", block_var = TIME1,
+#'                    treat_var = GROUP_NAME, Assay = "normalized",Gender =="Female")
+#'
+#'
+#' ################################################################################
+#' ## Line plots ##################################################################
+#' ################################################################################
+#'
+#' # Set up data
+#' dat$TIME1 <- as.numeric(factor(dat$TIME1,
+#'                               levels = c("PreSymp","Onset","End")))
+
+#'# Create line plots 
+#'subpathway_lineplots(dat, subpathway = "Lactoyl Amino Acid",
+#'                     block_var = TIME1,treat_var = GROUP_NAME, Assay = "normalized",Gender=="Female" ) +
+#'  xlab("Time")
+#' 
+#' 
+#' 
 #' @returns Boxplots stratified by metabolites.
 #' 
-#' @import ggplot2
-#' @import dplyr
-#' @import tidyr
-#' @import SummarizedExperiment
-#' @import tibble
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 geom_boxplot
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 facet_wrap
+#' @importFrom ggplot2 theme_bw
+#' @importFrom tibble rownames_to_column
+#' @importFrom tidyr pivot_longer
 #' 
 #' @export
 

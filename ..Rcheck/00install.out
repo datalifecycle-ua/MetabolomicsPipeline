@@ -1,33 +1,15 @@
-* installing *source* package 'MetabolomicsPipeline' ...
+* installing *source* package ‘MetabolomicsPipeline’ ...
 ** using staged installation
 ** R
 ** data
 *** moving datasets to lazyload DB
 ** byte-compile and prepare package for lazy loading
-Warning: replacing previous import 'dplyr::group_rows' by 'kableExtra::group_rows' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'ggplot2::last_plot' by 'plotly::last_plot' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'SummarizedExperiment::start' by 'stats::start' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'dplyr::lag' by 'stats::lag' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'SummarizedExperiment::end' by 'stats::end' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'plotly::filter' by 'stats::filter' when loading 'MetabolomicsPipeline'
 ** help
 *** installing help indices
 *** copying figures
 ** building package indices
 ** installing vignettes
 ** testing if installed package can be loaded from temporary location
-Warning: replacing previous import 'dplyr::group_rows' by 'kableExtra::group_rows' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'ggplot2::last_plot' by 'plotly::last_plot' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'SummarizedExperiment::start' by 'stats::start' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'dplyr::lag' by 'stats::lag' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'SummarizedExperiment::end' by 'stats::end' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'plotly::filter' by 'stats::filter' when loading 'MetabolomicsPipeline'
 ** testing if installed package can be loaded from final location
-Warning: replacing previous import 'dplyr::group_rows' by 'kableExtra::group_rows' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'ggplot2::last_plot' by 'plotly::last_plot' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'SummarizedExperiment::start' by 'stats::start' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'dplyr::lag' by 'stats::lag' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'SummarizedExperiment::end' by 'stats::end' when loading 'MetabolomicsPipeline'
-Warning: replacing previous import 'plotly::filter' by 'stats::filter' when loading 'MetabolomicsPipeline'
 ** testing if installed package keeps a record of temporary installation path
 * DONE (MetabolomicsPipeline)

@@ -7,7 +7,7 @@
 #' @return log transformed peak data
 #' 
 #' @importFrom dplyr mutate_if
-#' @importFrom magrittr %>%
+#' @importFrom magrittr `%>%`
 #' @export
 #'
 #'

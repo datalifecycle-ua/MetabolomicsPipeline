@@ -43,13 +43,13 @@ Subpathway analysis for metabolite data.
 }
 \details{
 For each metabolite, we test three models using using ANOVA.
-\itemize{
+\enumerate{
 
-\item{Interaction:}{ \eqn{log Peak = Treatment + block + Treatment*block}}
+\item Interaction:  \eqn{log Peak = Treatment + block + Treatment*block}
 
-\item{Parallel: }{ \eqn{log Peak = Treatment + block}}
+\item Parallel: \eqn{log Peak = Treatment + block}
 
-\item{Single: }{ \eqn{log Peak =  Treatment}}
+\item Single: \eqn{log Peak =  Treatment}
 
 }
 
@@ -62,6 +62,38 @@ each metabolite. Then, we use the Combined Fisher probability to test each model
 at the subpathway level.
 
 \deqn{\tilde{X} = -2\sum_{i=1}^k ln(p_i)}
+}
+\examples{
+
+# Load data
+dat = MetabolomicsPipeline::demoDat
+
+# Run subpathway analysis
+stratified = subpathway_analysis(dat,
+  treat_var = "GROUP_NAME",
+  block_var = "TIME1",
+  strat_var = "Gender",
+  Assay = "normalized")
+  
+################################################################################
+### Results Plots ##############################################################
+################################################################################
+
+# 1. significant subpathways by model type
+subpath_by_model(stratified)
+
+# 2. Percentage of signficant subpathways within superpathways
+subpath_within_superpath(stratified)
+
+# 3. Metabolites within subpathway
+tables <- met_within_sub(stratified, subpathway = "Partially Characterized Molecules")
+
+### Females
+tables[[1]]
+
+### Males
+tables[[2]]
+
 }
 \seealso{
 \href{https://www.sciencedirect.com/science/article/pii/S0167947303002950}{Loughin, Thomas M. "A systematic comparison of methods for combining p-values from independent tests." Computational statistics & data analysis 47.3 (2004): 467-485.}

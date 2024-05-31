@@ -20,3 +20,21 @@ variable.
 \description{
 Computes and plots the first two components of the PCA from the metabolite data.
 }
+\examples{
+
+# load data
+dat = MetabolomicsPipeline::demoDat
+
+# Define PCA label from metadata
+ meta_var = "Gender"
+
+# Run PCA
+pca <- metabolite_pca( dat,
+                      meta_var = meta_var)
+
+
+# Show PCA
+pca
+
+
+}

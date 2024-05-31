@@ -8,9 +8,8 @@
 #' @returns A table with the proportion (and percent) of significant subpathways within superpathways.
 #' 
 #' 
-#' @import dplyr
-#' @import knitr
-#' @import kableExtra
+#' @importFrom dplyr case_when
+#' @importFrom kableExtra kable_paper 
 #' 
 #' @export
 #' 
@@ -20,7 +19,7 @@ subpath_within_superpath <- function(subpath_results){
   
   
   
-  if(class(subpath_results)=="data.frame"){
+  if(inherits(subpath_results,"data.frame")){
     
     
     
@@ -67,7 +66,7 @@ subpath_within_superpath <- function(subpath_results){
   return(superPath)
   }
   
-  if(class(subpath_results)=="list"){
+  if(inherits(subpath_results,"list")){
     
     for (i in 1:length(subpath_results)) {
       

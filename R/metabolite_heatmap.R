@@ -24,6 +24,20 @@
 #' the heatmap use ggplotify::as.ggplot().
 #' 
 #' 
+#' @examples
+#' # load data
+#' dat = MetabolomicsPipeline::demoDat
+#' 
+#' # Heatmap with one group
+#' treat_heatmap <- metabolite_heatmap(dat,top_mets = 50,
+#'                                    group_vars = "GROUP_NAME",
+#'                                    strat_var = NULL,
+#'                                    caption = "Heatmap Arranged By Group",
+#'                                    Assay = "normalized",
+#'                                    GROUP_NAME)
+#' 
+#' as.ggplot(treat_heatmap)
+#'
 #' 
 #' @importFrom dplyr rename
 #' @importFrom dplyr all_of

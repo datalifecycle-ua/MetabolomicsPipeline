@@ -3,13 +3,13 @@
 #' Subpathway analysis for metabolite data. 
 #' 
 #' @details For each metabolite, we test three models using using ANOVA.
-#' \itemize{
+#' \enumerate{
 #'  
-#'  \item{Interaction:}{ \eqn{log Peak = Treatment + block + Treatment*block}}
+#'  \item Interaction:  \eqn{log Peak = Treatment + block + Treatment*block}
 #'  
-#'  \item{Parallel: }{ \eqn{log Peak = Treatment + block}}
+#'  \item Parallel: \eqn{log Peak = Treatment + block}
 #'  
-#'  \item{Single: }{ \eqn{log Peak =  Treatment}}
+#'  \item Single: \eqn{log Peak =  Treatment} 
 #' 
 #' }
 #' 
@@ -52,9 +52,38 @@
 #' @returns A data frame with "CHEM_ID","sub_pathway","chem_name","interaction_pval","interaction_fisher","parallel_pval","parallel_fisher","single_pval","single_fisher",and "model" for each metabolite. 
 #' 
 #' 
-#' @import dplyr
+#' @examples
+#'
+#' # Load data
+#' dat = MetabolomicsPipeline::demoDat
 #' 
-#' @import SummarizedExperiment
+#' # Run subpathway analysis
+#' stratified = subpathway_analysis(dat,
+#'   treat_var = "GROUP_NAME",
+#'   block_var = "TIME1",
+#'   strat_var = "Gender",
+#'   Assay = "normalized")
+#'   
+#' ################################################################################
+#' ### Results Plots ##############################################################
+#' ################################################################################
+#'
+#' # 1. significant subpathways by model type
+#'subpath_by_model(stratified)
+#'
+#'# 2. Percentage of signficant subpathways within superpathways
+#'subpath_within_superpath(stratified)
+#'
+#' # 3. Metabolites within subpathway
+#' tables <- met_within_sub(stratified, subpathway = "Partially Characterized Molecules")
+#'
+#' ### Females
+#' tables[[1]]
+#'
+#' ### Males
+#' tables[[2]]
+#' 
+#' @importFrom  dplyr rename
 #' 
 #' 
 #' 

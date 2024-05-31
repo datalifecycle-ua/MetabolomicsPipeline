@@ -1,6 +1,7 @@
 all_sig_subpath         Table of Significant Subpathways
 create_heatmap_Data     Create metadata and matricies for metabolite
                         heatmaps
+demoDat                 Demo data for the MetabolomicsPipeline,
 loadMetabolon           Load Metabolomic Data as SummarizedExperiment
 log_transformation      Log transformation of metabolite data
 median_standardization

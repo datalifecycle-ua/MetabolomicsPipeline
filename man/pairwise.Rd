@@ -6,6 +6,13 @@
 \usage{
 pairwise(out, form, data)
 }
+\arguments{
+\item{out}{Outcome used as reponse}
+
+\item{form}{form of the model}
+
+\item{data}{data used for modeling}
+}
 \description{
 This is the main function for metabolite_pairwise
 }

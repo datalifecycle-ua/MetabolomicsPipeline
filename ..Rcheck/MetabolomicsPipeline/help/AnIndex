@@ -1,5 +1,6 @@
 all_sig_subpath	all_sig_subpath
 create_heatmap_Data	create_heatmap_Data
+demoDat	demoDat
 loadMetabolon	loadMetabolon
 log_transformation	log_transformation
 median_standardization	median_standardization

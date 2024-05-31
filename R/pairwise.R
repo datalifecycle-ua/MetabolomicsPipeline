@@ -2,7 +2,14 @@
 #' 
 #' This is the main function for metabolite_pairwise
 #' 
-#' @import stats
+#' @param out Outcome used as reponse
+#' 
+#' @param form form of the model
+#' 
+#' @param data data used for modeling
+#' 
+#' @importFrom emmeans emmeans
+#' @importFrom stats anova
 
 pairwise <- function(out,form,data){
   # Define model

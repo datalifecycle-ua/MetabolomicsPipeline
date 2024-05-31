@@ -22,6 +22,7 @@
 #' @importFrom tibble rownames_to_column
 #' @importFrom reshape2 melt 
 #' @importFrom plotly plot_ly
+#' @importFrom plotly layout
 #' @importFrom SummarizedExperiment rowData
 #' 
 #' @export
@@ -66,7 +67,7 @@ met_est_heatmap <- function(results_data, data){
                             "Log Fold-Change: %{z}<br>",
                             "<extra></extra>"),
       colorbar = list(title ="<b>Log Fold-Change</b>")) %>%
-    layout(title = "<b>Log Fold-Change Heatmap</b>",
+      plotly::layout(title = "<b>Log Fold-Change Heatmap</b>",
            xaxis = list(title="<b>Contrasts</b>"),
            yaxis = list(title = "")) 
   

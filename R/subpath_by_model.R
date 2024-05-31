@@ -13,16 +13,19 @@
 #'   it as an interaction and not as a parallel or single.
 #' 
 #' 
-#' @import dplyr
-#' @import knitr
-#' @import kableExtra
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom dplyr distinct
+#' @importFrom dplyr count
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_paper
 #' 
 #' @export
 #' 
 
 subpath_by_model <- function(subpath_results){
   
-  if(class(subpath_results)=="data.frame"){
+  if(inherits(subpath_results,"data.frame")){
       # 2. Structure levels
       if(sum(grepl("interaction",names(subpath_results)))==0){
         levs <- c("Single","None") 
@@ -50,7 +53,7 @@ subpath_by_model <- function(subpath_results){
       return(sig_subPaths)
   }
   
-  if(class(subpath_results)=="list"){
+  if(inherits(subpath_results,"list")){
     # 2. Structure levels
     if(sum(grepl("interaction",names(subpath_results[[1]])))==0){
       levs <- c("Single","None") 

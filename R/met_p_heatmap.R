@@ -59,7 +59,7 @@ met_p_heatmap <- function(results_data, data){
                             "P-Value: %{z}<br>", 
                             "<extra></extra>"), 
       colorbar = list(title ="<b>P-value</b>")) %>% 
-    layout(title = "<b>P-Value Heatmap</b>", 
+   plotly::layout(title = "<b>P-Value Heatmap</b>", 
            xaxis = list(title="<b>Contrasts</b>"), 
            yaxis = list(title = "")) 
   
