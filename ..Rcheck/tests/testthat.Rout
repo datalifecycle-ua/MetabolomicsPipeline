@@ -27,8 +27,8 @@ Type 'q()' to quit R.
 > library(MetabolomicsPipeline)
 > 
 > test_check("MetabolomicsPipeline")
-[ FAIL 0 | WARN 0 | SKIP 0 | PASS 1 ]
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 20 ]
 > 
 > proc.time()
    user  system elapsed 
-  5.595   0.295   6.054 
+  7.127   0.395   7.635 

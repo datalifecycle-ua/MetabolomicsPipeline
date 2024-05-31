@@ -62,6 +62,11 @@ each metabolite. Then, we use the Combined Fisher probability to test each model
 at the subpathway level.
 
 \deqn{\tilde{X} = -2\sum_{i=1}^k ln(p_i)}
+
+where \eqn{k} is the number of metabolites in the subpathway. We can
+get a p-value from \eqn{P(X \geq\tilde{X})}, knowing that
+\eqn{\tilde{X}\sim \chi^2_{2k}}. You will notice that smaller p-values will
+lead to a larger \eqn{\tilde{X}}.
 }
 \examples{
 
@@ -72,27 +77,19 @@ dat = MetabolomicsPipeline::demoDat
 stratified = subpathway_analysis(dat,
   treat_var = "GROUP_NAME",
   block_var = "TIME1",
-  strat_var = "Gender",
+  strat_var = NULL,
   Assay = "normalized")
   
 ################################################################################
 ### Results Plots ##############################################################
 ################################################################################
 
-# 1. significant subpathways by model type
+# significant subpathways by model type
 subpath_by_model(stratified)
 
-# 2. Percentage of signficant subpathways within superpathways
+# Percentage of signficant subpathways within superpathways
 subpath_within_superpath(stratified)
 
-# 3. Metabolites within subpathway
-tables <- met_within_sub(stratified, subpathway = "Partially Characterized Molecules")
-
-### Females
-tables[[1]]
-
-### Males
-tables[[2]]
 
 }
 \seealso{

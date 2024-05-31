@@ -1,9 +1,10 @@
 Package: MetabolomicsPipeline
 Title: Metabolomics Pipeline Tools
-Version: 0.0.1
+Version: 0.99.0
 Authors@R: 
-    c(person("Joel", "Parker", email = "joelparker@arizona.edu", role = c("aut", "cre")))
-Description: This package was developed to provide analysis tools and a workflow for analyzing metabolomics data produced by Metabolon.
+    c(person("Joel", "Parker", email = "joelparker@arizona.edu", role = c("aut")),
+    person("Bonnie", "Lafleur", email = "blafleur@arizona.edu", role = c("aut", "cre")))
+Description: This package was developed to provide analysis tools for analyzing metabolomics data produced by Metabolon.
 biocViews: SummarizedExperiment, Software
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -21,6 +22,6 @@ Imports: dplyr (>= 1.1.3), emmeans (>= 1.8.8), factoextra (>= 1.0.7),
 Depends: R (>= 4.4.0)
 LazyData: true
 VignetteBuilder: knitr
-Author: Joel Parker [aut, cre]
-Maintainer: Joel Parker <joelparker@arizona.edu>
-Built: R 4.4.0; ; 2024-05-30 23:25:11 UTC; unix
+Author: Joel Parker [aut]
+Maintainer: Bonnie Lafleur [aut,cre] <blafleur@arizona.edu>
+Built: R 4.4.0; ; 2024-05-31 22:36:00 UTC; unix

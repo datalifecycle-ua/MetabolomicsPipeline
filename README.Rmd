@@ -73,9 +73,13 @@ devtools::install_github("JoelParkerUofA/MetabolomicsPipeline")
 
 
 ## Getting Started {#sec-GettingStarted}
-We demonstrate a workflow using the MetabolomicsPipeline in the "Workflow" vignette.  In this vignette, we use data which consists of 86 samples (42 males, 44 females), three treatment groups, and the samples were taken
+We demonstrate a workflow using the MetabolomicsPipeline in a vignette.  In this vignette, we use data which consists of 86 samples (42 males, 44 females), three treatment groups, and the samples were taken
 at three different time points. We walk through each of the above analyses and demonstrate 
-additional functionality for displaying the results. 
+additional functionality for displaying the results. You can view the vignette by using:
+
+```r
+browseVignettes("MetabolomicsPipeline")
+```
 
 
 

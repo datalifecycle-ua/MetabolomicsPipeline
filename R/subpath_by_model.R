@@ -18,6 +18,7 @@
 #' @importFrom dplyr distinct
 #' @importFrom dplyr count
 #' @importFrom knitr kable
+#' @importFrom dplyr left_join
 #' @importFrom kableExtra kable_paper
 #' 
 #' @export
@@ -78,7 +79,7 @@ subpath_by_model <- function(subpath_results){
     } else {
       # Join strata results
       sig_subPaths <-sig_subPaths %>%
-        left_join(dplyr::count(table_data, model) %>% 
+        dplyr::left_join(dplyr::count(table_data, model) %>% 
         dplyr::arrange((model)),by="model") 
     }
     }

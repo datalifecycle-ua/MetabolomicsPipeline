@@ -36,7 +36,6 @@
 #'                                    Assay = "normalized",
 #'                                    GROUP_NAME)
 #' 
-#' as.ggplot(treat_heatmap)
 #'
 #' 
 #' @importFrom dplyr rename

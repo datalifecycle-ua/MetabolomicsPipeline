@@ -10,6 +10,9 @@
 #' 
 #' @importFrom dplyr case_when
 #' @importFrom kableExtra kable_paper 
+#' @importFrom dplyr  summarise
+#' @importFrom dplyr  n
+#' 
 #' 
 #' @export
 #' 
@@ -96,7 +99,7 @@ subpath_within_superpath <- function(subpath_results){
       # 4. Formulate the Super-pathway results table.
         superPath <- table_data %>% 
           dplyr::group_by(super_pathway) %>%
-          summarise(
+          dplyr::summarise(
             subpaths = n(),
             sig_paths = sum(model !="None", na.rm = T),
             percent_sig = mean(model !="None",na.rm = T)*100) %>%
@@ -108,7 +111,7 @@ subpath_within_superpath <- function(subpath_results){
         
         strat <- table_data %>% 
           dplyr::group_by(super_pathway) %>%
-          summarise(
+          dplyr::summarise(
             subpaths = n(),
             sig_paths = sum(model !="None"),
             percent_sig = mean(model !="None")*100) %>%

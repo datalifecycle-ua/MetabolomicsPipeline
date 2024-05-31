@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.14)  30 MAY 2024 16:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.14)  31 MAY 2024 15:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -289,7 +289,7 @@ File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 File: l3backend-pdftex.def 2024-04-11 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count295
 \l__pdf_internal_box=\box58
-) (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpZTLVwB/Rd2pdf11c8413df4a72/Rd2.aux)
+) (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpaSUrtj/Rd2pdfbfc5bea0e7a/Rd2.aux)
 \openout1 = `Rd2.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
@@ -311,7 +311,7 @@ LaTeX Font Info:    ... okay on input line 8.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 8.
 LaTeX Font Info:    ... okay on input line 8.
 Package hyperref Info: Link coloring ON on input line 8.
- (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpZTLVwB/Rd2pdf11c8413df4a72/Rd2.out) (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpZTLVwB/Rd2pdf11c8413df4a72/Rd2.out)
+ (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpaSUrtj/Rd2pdfbfc5bea0e7a/Rd2.out) (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpaSUrtj/Rd2pdfbfc5bea0e7a/Rd2.out)
 \@outlinefile=\write4
 \openout4 = `Rd2.out'.
 
@@ -321,7 +321,7 @@ File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
 (Font)              scaled to size 10.0pt on input line 39.
- (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpZTLVwB/Rd2pdf11c8413df4a72/Rd2.toc
+ (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpaSUrtj/Rd2pdfbfc5bea0e7a/Rd2.toc
 LaTeX Font Info:    Trying to load font information for U+msa on input line 1.
  (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -336,52 +336,75 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \tf@toc=\write5
 \openout5 = `Rd2.toc'.
 
- [2] [3] [4] [5]
-Overfull \hbox (4.58618pt too wide) in paragraph at lines 281--291
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 56.
+ (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+) [2] [3] [4] [5]
+LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
+(Font)              scaled to size 9.0pt on input line 267.
+ [6]
+Overfull \hbox (4.58618pt too wide) in paragraph at lines 319--329
 []\T1/ptm/m/n/10 This func-tion will an-a-lyze each metabo-lite in-di-vid-u-ally. For each metabo-lite, the metabo-lite_pairwise
  []
 
-[6]
-Overfull \hbox (18.26851pt too wide) in paragraph at lines 336--337
+[7] [8]
+Overfull \hbox (18.26851pt too wide) in paragraph at lines 407--408
 []\T1/ptm/m/n/10 Results data frame of the pair-wise com-par-isons pro-duced by [][][]\T1/zi4/m/n/10 metabolite_pairwise[][][][]\T1/ptm/m/n/10 . 
  []
 
 
-Overfull \hbox (18.26851pt too wide) in paragraph at lines 367--368
+Overfull \hbox (18.26851pt too wide) in paragraph at lines 438--439
 []\T1/ptm/m/n/10 Results data frame of the pair-wise com-par-isons pro-duced by [][][]\T1/zi4/m/n/10 metabolite_pairwise[][][][]\T1/ptm/m/n/10 . 
  []
 
-[7] [8] [9]
-Overfull \hbox (274.03314pt too wide) in paragraph at lines 527--528
+[9] [10] [11]
+Overfull \hbox (274.03314pt too wide) in paragraph at lines 603--604
 []\T1/ptm/m/n/10 A data frame with "CHEM_ID","sub_pathway","chem_name","interaction_pval","interaction_fisher","parallel_pval","parallel_fisher","single_pval","single_fisher",and
  []
 
-[10] [11] [12]
+[12] [13]
+Overfull \hbox (17.195pt too wide) in paragraph at lines 706--706
+ []                    \T1/zi4/m/n/9 block_var = TIME1,treat_var = GROUP_NAME, Assay = "normalized",Gender=="Female" )[] 
+ []
+
+[14]
+LaTeX Font Info:    Trying to load font information for TS1+zi4 on input line 758.
+ (/Users/joelparker/Library/TinyTeX/texmf-dist/tex/latex/inconsolata/ts1zi4.fd
+File: ts1zi4.fd 2018/01/14 TS1/zi4 (Inconsolata)
+)
+LaTeX Font Info:    Font shape `TS1/zi4/m/n' will be
+(Font)              scaled to size 9.0pt on input line 758.
+
+Overfull \hbox (17.195pt too wide) in paragraph at lines 778--778
+ []                    \T1/zi4/m/n/9 block_var = TIME1,treat_var = GROUP_NAME, Assay = "normalized",Gender=="Female" )[] 
+ []
+
+[15{/Users/joelparker/Library/TinyTeX/texmf-dist/fonts/enc/dvips/inconsolata/i4-ts1.enc}]
 No file Rd2.ind.
-[13] (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpZTLVwB/Rd2pdf11c8413df4a72/Rd2.aux)
+[16] (/private/var/folders/75/qvbrb4_s3qg8lb09z3hy9h64wpzdg1/T/RtmpaSUrtj/Rd2pdfbfc5bea0e7a/Rd2.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-04-11>
  ***********
 Package rerunfilecheck Info: File `Rd2.out' has not changed.
-(rerunfilecheck)             Checksum: 003F2607A5550D14B5EF8DACD67AFF24;2780.
+(rerunfilecheck)             Checksum: A972E34CB7DEFC5D03C72D4E1475AB47;2995.
  ) 
 Here is how much of TeX's memory you used:
- 10301 strings out of 476010
- 158006 string characters out of 5790356
+ 10373 strings out of 476010
+ 159323 string characters out of 5790356
  1941751 words of memory out of 5000000
- 32176 multiletter control sequences out of 15000+600000
- 588068 words of font info for 72 fonts, out of 8000000 for 9000
+ 32225 multiletter control sequences out of 15000+600000
+ 590623 words of font info for 76 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 92i,6n,95p,282b,701s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 92i,6n,95p,292b,737s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 pdfTeX warning (dest): name{Rfn.SummarizedExperiment::SummarizedExperiment} has been referenced but does not exist, replaced by a fixed one
 
 </Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></Users/joelparker/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Rd2.pdf (13 pages, 154230 bytes).
+Output written on Rd2.pdf (16 pages, 163546 bytes).
 PDF statistics:
- 367 PDF objects out of 1000 (max. 8388607)
- 326 compressed objects within 4 object streams
- 140 named destinations out of 1000 (max. 500000)
- 153 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 401 PDF objects out of 1000 (max. 8388607)
+ 356 compressed objects within 4 object streams
+ 154 named destinations out of 1000 (max. 500000)
+ 161 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,3 +1,4 @@
+MetabolomicsPipeline-package	MetabolomicsPipeline-package
 all_sig_subpath	all_sig_subpath
 create_heatmap_Data	create_heatmap_Data
 demoDat	demoDat
@@ -7,6 +8,7 @@ median_standardization	median_standardization
 metabolite_heatmap	metabolite_heatmap
 metabolite_pairwise	metabolite_pairwise
 metabolite_pca	metabolite_pca
+MetabolomicsPipeline	MetabolomicsPipeline-package
 met_est_heatmap	met_est_heatmap
 met_p_heatmap	met_p_heatmap
 met_within_sub	met_within_sub

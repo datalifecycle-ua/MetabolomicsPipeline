@@ -7,7 +7,7 @@
 * running under: macOS Monterey 12.7.5
 * using session charset: UTF-8
 * checking for file ‘./DESCRIPTION’ ... OK
-* this is package ‘MetabolomicsPipeline’ version ‘0.0.1’
+* this is package ‘MetabolomicsPipeline’ version ‘0.99.0’
 * package encoding: UTF-8
 * checking package namespace information ... OK
 * checking package dependencies ... OK
@@ -29,60 +29,10 @@ These were most likely included in error. See section ‘Package
 structure’ in the ‘Writing R Extensions’ manual.
 * checking for portable file names ... NOTE
 Found the following non-portable file paths:
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/F1DC1ADFccf64af8/chunks.json
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/F1DC1ADFfe1f196e/chunks.json
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/00000f.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000010.html
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000010.json
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000010.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000011.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000012.html
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000012.json
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000012.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000013.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000014.html
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000014.json
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000014.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000015.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000016.html
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000016.json
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000016.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3/000017.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cbjclocq8ctmt/000011.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cbjclocq8ctmt/000012.error
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/ccwrjd1370nwu/00000f.csv
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cd1u1a5syr5nd/00000f.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfxqfdph972ga/00000f.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfxqfdph972ga/000010.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfxqfdph972ga/000010.png
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/00000f.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000010.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000010.png
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000011.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000012.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000012.png
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000013.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000014.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000014.png
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000015.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000016.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc/000016.png
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/chunks.json
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000013.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000014.html
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000014.json
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000014.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000015.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000016.html
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000016.json
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000016.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi/000017.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/00000f.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/000010.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/000010.png
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/000011.csv
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/000012.metadata
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/000012.png
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04/000013.csv
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.css
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.css.map
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/bootstrap-theme.min.css
@@ -156,15 +106,9 @@ Found the following non-portable file paths:
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/plotly-main-2.11.1/plotly-latest.min.js
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/table1-1.0/table1_defaults.css
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/typedarray-0.1/typedarray.min.js
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/F1DC1ADFccf64af8
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/F1DC1ADFfe1f196e
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/c61hjiqwvs5p3
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cbjclocq8ctmt
+  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/ccwrjd1370nwu
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cd1u1a5syr5nd
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfxqfdph972ga
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cfzlj3gj95wqc
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cnpfwflf5dcbi
-  MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/cqcf01fnfsv04
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/css/fonts
   MetabolomicsPipeline/.Rproj.user/shared/notebooks/ED1E1CE6-MetabolomicsPipeline-vignette/1/s/lib/bootstrap-3.3.5/fonts
@@ -191,7 +135,11 @@ bytes for the final component.
 See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
 * checking for sufficient/correct file permissions ... OK
 * checking whether package ‘MetabolomicsPipeline’ can be installed ... OK
-* checking installed package size ... OK
+* checking installed package size ... NOTE
+  installed size is  6.4Mb
+  sub-directories of 1Mb or more:
+    data   1.2Mb
+    doc    5.0Mb
 * checking package directory ... OK
 * checking DESCRIPTION meta-information ... NOTE
 Checking should be performed on sources prepared by ‘R CMD build’.
@@ -227,19 +175,17 @@ Most likely, these were included erroneously.
 * checking data for non-ASCII characters ... OK
 * checking LazyData ... OK
 * checking data for ASCII and uncompressed saves ... OK
+* checking installed files from ‘inst/doc’ ... OK
 * checking files in ‘vignettes’ ... WARNING
-Files in the 'vignettes' directory but no files in 'inst/doc':
+Files in the 'vignettes' directory newer than all files in 'inst/doc':
   ‘MetabolomicsPipeline-vignette.Rmd’
-* checking examples ... NONE
+* checking examples ... OK
 * checking for unstated dependencies in ‘tests’ ... OK
 * checking tests ... OK
   Running ‘testthat.R’
 * checking for unstated dependencies in vignettes ... OK
-* checking package vignettes ... WARNING
-Directory 'inst/doc' does not exist.
-Package vignette without corresponding single PDF/HTML:
-  ‘MetabolomicsPipeline-vignette.Rmd’
+* checking package vignettes ... OK
 * checking re-building of vignette outputs ... OK
 * checking PDF version of manual ... OK
 * DONE
-Status: 3 WARNINGs, 3 NOTEs
+Status: 2 WARNINGs, 4 NOTEs

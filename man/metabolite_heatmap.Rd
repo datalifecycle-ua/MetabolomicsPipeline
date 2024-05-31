@@ -52,7 +52,6 @@ treat_heatmap <- metabolite_heatmap(dat,top_mets = 50,
                                    Assay = "normalized",
                                    GROUP_NAME)
 
-as.ggplot(treat_heatmap)
 
 
 }

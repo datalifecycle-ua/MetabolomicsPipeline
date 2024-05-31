@@ -43,8 +43,7 @@
 
 #'# Create line plots 
 #'subpathway_lineplots(dat, subpathway = "Lactoyl Amino Acid",
-#'                     block_var = TIME1,treat_var = GROUP_NAME, Assay = "normalized",Gender=="Female" ) +
-#'  xlab("Time")
+#'                     block_var = TIME1,treat_var = GROUP_NAME, Assay = "normalized",Gender=="Female" ) 
 #' 
 #' 
 #' 
@@ -55,6 +54,8 @@
 #' @importFrom ggplot2 geom_point
 #' @importFrom ggplot2 facet_wrap
 #' @importFrom ggplot2 theme_bw
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 position_jitterdodge
 #' @importFrom tibble rownames_to_column
 #' @importFrom tidyr pivot_longer
 #' 

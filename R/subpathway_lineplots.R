@@ -45,8 +45,7 @@
 
 #'# Create line plots 
 #'subpathway_lineplots(dat, subpathway = "Lactoyl Amino Acid",
-#'                     block_var = TIME1,treat_var = GROUP_NAME, Assay = "normalized",Gender=="Female" ) +
-#'  xlab("Time")
+#'                     block_var = TIME1,treat_var = GROUP_NAME, Assay = "normalized",Gender=="Female" )
 #' 
 #' 
 #' 
