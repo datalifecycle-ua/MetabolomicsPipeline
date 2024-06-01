@@ -52,8 +52,8 @@ library(SummarizedExperiment)
 ## Introduction
 
 The purpose of the MetabolomicPipeline package is to provide additional tools to
-complement the analysis done by Metabolon. In this vignette we demonstrate how to use
-MetabolomicsPipeline package for:
+complement the analysis done by Metabolon. In this vignette we demonstrate how to
+use MetabolomicsPipeline package for:
 
 * Exploratory Analysis
 
@@ -90,8 +90,9 @@ dataset is on within the Metabolon Excel file.
 #### Load analysis data
 
 The MetabolomicsPipeline package provides a convenient way to load each
-of these datasets together as a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html) using loadMetabolon(). However, for this vignette we are using the
-demo data provided with the package. This data is accessed using MetabolomicsPipeline::demoDat. In the following chunk we:
+of these datasets together as a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html) using loadMetabolon().
+However, for this vignette we are using the demo data provided with the package.
+This data is accessed using MetabolomicsPipeline::demoDat. In the following chunk we:
 
 1. Load the demo data
 

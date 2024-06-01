@@ -65,7 +65,7 @@ BiocManager::install("MetabolomicsPipeline")
 if (!requireNamespace("devtools", quietly=TRUE))
     install.packages("devtools")
     
-devtools::install_github("JoelParkerUofA/MetabolomicsPipeline")
+ devtools::install_github("JoelParkerUofA/MetabolomicsPipeline", build_vignettes = TRUE)
 ```
 
 ## Getting Started
