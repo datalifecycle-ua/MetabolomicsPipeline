@@ -74,7 +74,7 @@ data("demoDataSmall", package = "MetabolomicsPipeline")
 dat <- demoDataSmall
 
 # Runsubpathay analysis
-sub_analysis = subpathway_analysis(dat,
+sub_analysis <- subpathway_analysis(dat,
                                   treat_var = "GROUP_NAME",
                                   block_var = "TIME1",
                                   strat_var = NULL,
