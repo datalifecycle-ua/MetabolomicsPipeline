@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.width = 10,
   fig.height = 10,
-  warning = F
+  warning = FALSE
 )
 
 # Data 

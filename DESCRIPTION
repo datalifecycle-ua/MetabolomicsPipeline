@@ -4,8 +4,10 @@ Version: 0.99.0
 Authors@R: 
     c(person("Joel", "Parker", email = "joelparker@arizona.edu", role = c("aut")),
     person("Bonnie", "Lafleur", email = "blafleur@arizona.edu", role = c("aut", "cre")))
-Description: This package was developed to provide analysis tools for analyzing metabolomics data produced by Metabolon.
-biocViews: SummarizedExperiment, Software
+Description: This package provides analysis tools for analyzing metabolomics data from Metabolon. The tools
+ in this package compliment the analysis from Metabolon. We provide functionality for hypothesis testing at
+the subpathway level, pairwise comparisons of metabolites, and tools for exploratory analysis. 
+biocViews: Metabolomics, Software
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -41,7 +43,5 @@ Imports:
     tidyr (>= 1.3.0)
 Depends: 
     R (>= 4.4.0)
-LazyData: true
 VignetteBuilder: knitr
-Author: Joel Parker [aut]
-Maintainer: Bonnie Lafleur [aut,cre] <blafleur@arizona.edu>
+
