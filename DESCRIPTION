@@ -6,7 +6,7 @@ Authors@R:
     person("Bonnie", "Lafleur", email = "blafleur@arizona.edu", role = c("aut", "cre")))
 Description: This package provides analysis tools for analyzing metabolomics data from Metabolon. The tools
  in this package compliment the analysis from Metabolon. We provide functionality for hypothesis testing at
-the subpathway level, pairwise comparisons of metabolites, and tools for exploratory analysis. 
+ the subpathway level, pairwise comparisons of metabolites, and tools for exploratory analysis. 
 biocViews: Metabolomics, Software
 License: MIT + file LICENSE
 Encoding: UTF-8

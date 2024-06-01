@@ -106,8 +106,9 @@ demo data provided with the package. This data is accessed using MetabolomicsPip
 
 # Load Metabolon data from the Excel file
 #dat <- loadMetabolon(path = "../data/Metabolon.xlsx")
-dat = MetabolomicsPipeline::demoDat
+data("demoDat",package = "MetabolomicsPipeline")
 
+dat = demoDat
 
 
 ################################################################################
