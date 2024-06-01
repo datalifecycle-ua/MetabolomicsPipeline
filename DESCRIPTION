@@ -46,4 +46,3 @@ Depends:
 Author: Joel Parker <joelparker@arizona.edu>
 Maintainer: Bonnie Lafleur <blafleur@arizona.edu>
 VignetteBuilder: knitr
-LazyData: true

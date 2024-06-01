@@ -17,7 +17,7 @@ This function log transforms each metabolite in the Metabolon data.
 }
 \examples{
 data("demoDataSmall", package = "MetabolomicsPipeline")
-peak <- assay(demoDataSmall, "peak")
+peak <- SummarizedExperiment::assay(demoDataSmall, "peak")
 
 # Median standardization
 peak_med <- median_standardization(peak_data = peak)
