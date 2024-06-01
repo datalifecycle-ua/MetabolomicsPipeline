@@ -43,5 +43,7 @@ Imports:
     tidyr (>= 1.3.0)
 Depends: 
     R (>= 4.4.0)
+Author: Joel Parker <joelparker@arizona.edu>
+Maintainer: Bonnie Lafleur <blafleur@arizona.edu>
 VignetteBuilder: knitr
 
