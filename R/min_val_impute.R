@@ -6,6 +6,20 @@
 #' 
 #' @returns Metabolite imputed peak data.
 #' 
+#' @examples
+#' data("demoDataSmall", package = "MetabolomicsPipeline")
+#' peak <- assay(demoDataSmall, "peak")
+#' 
+#' # Median standardization
+#' peak_med <- median_standardization(peak_data = peak)
+#' 
+#' # Min value imputation
+#' peakImpute <- min_val_impute(peak_data = peak_med)
+#' 
+#' # log transformation
+#' peak_log <- log_transformation(peak_data = peakImpute)
+#' 
+#' 
 #' @importFrom dplyr select
 #' @importFrom dplyr summarise_all
 #' @export
@@ -14,12 +28,12 @@
 min_val_impute <- function(peak_data){
   
   # 1. Initialize the new peak_data_imputed matrix
-  peak_data_imputed <- peak_data 
+  peak_data_imputed <- as.data.frame(t(peak_data)) 
   
   
   # 2. Find the minimum value for each metabolite and compute 1/5 of that value
   peak_data_mins <- peak_data_imputed %>%  
-    dplyr::select(-PARENT_SAMPLE_NAME) %>%  
+   # dplyr::select(-PARENT_SAMPLE_NAME) %>%  
     dplyr::summarise_all(min, na.rm = T)  
   
   

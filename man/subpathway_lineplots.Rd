@@ -38,8 +38,8 @@ Line plots stratified by metabolite.
 Create line plots for each metabolite within a subpathway.
 }
 \examples{
-#' # load data
-dat = MetabolomicsPipeline::demoDat
+data("demoDat", package = "MetabolomicsPipeline")
+dat = demoDat
 
 ################################################################################
 ### BoxPlots ###################################################################

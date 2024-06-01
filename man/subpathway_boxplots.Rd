@@ -42,7 +42,8 @@ Creates boxplots for each metabolite within a specified subpathway.
 }
 \examples{
 # load data
-dat = MetabolomicsPipeline::demoDat
+data("demoDat", package = "MetabolomicsPipeline")
+dat = demoDat
 
 ################################################################################
 ### BoxPlots ###################################################################

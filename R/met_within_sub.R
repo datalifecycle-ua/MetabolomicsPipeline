@@ -19,6 +19,29 @@
 #' @importFrom kableExtra kable_paper
 #' @importFrom stringr str_to_title
 #' 
+#' @examples
+#' data("demoDataSmall", package = "MetabolomicsPipeline")
+#'dat <- demoDataSmall
+#'
+#'# Runsubpathay analysis
+#' sub_analysis = subpathway_analysis(dat,
+#'                                   treat_var = "GROUP_NAME",
+#'                                   block_var = "TIME1",
+#'                                   strat_var = NULL,
+#'                                   Assay = "normalized")
+#'
+#'################################################################################
+#'### Results Plots ##############################################################
+#'################################################################################
+#'
+#' # significant subpathways by model type
+#'subpath_by_model(sub_analysis)
+#'
+#'# Percentage of signficant subpathways within superpathways
+#'subpath_within_superpath(sub_analysis)
+#'
+#'met_within_sub(sub_analysis, subpathway = "Aminosugar Metabolism")
+#' 
 #' 
 #' @export
 #' 
@@ -34,9 +57,9 @@ met_within_sub <- function(subpath_results,subpathway,mod = c("interaction","par
     
     # create table
     table <- subpath_results %>% 
-      dplyr::filter(sub_pathway=="Chemical") %>%
+      dplyr::filter(sub_pathway==subpathway) %>%
       dplyr::select(chem_name,all_of(mod_res)) %>%
-      knitr::kable(digits = 3, col.names = c("Metabolite Name",stringr::str_to_title(paste0(mod_res," P-Value"))),caption = paste0("Metabolites within ",str_to_title(subpathway))) %>%
+      knitr::kable(digits = 3, col.names = c("Metabolite Name",stringr::str_to_title(paste0(mod_res," P-Value"))),caption = paste0("Metabolites within ",stringr::str_to_title(subpathway))) %>%
       kableExtra::kable_paper(full_width = F, html_font = "Cambria")
     
     return(table)
@@ -52,7 +75,7 @@ met_within_sub <- function(subpath_results,subpathway,mod = c("interaction","par
       mod_res = paste0(mod,"_pval")[paste0(mod,"_pval") %in% names(stratum)]
       
       stratum %>% 
-        dplyr::filter(sub_pathway=="Chemical") %>%
+        dplyr::filter(sub_pathway==subpathway) %>%
         dplyr::select(chem_name,all_of(mod_res)) %>%
         knitr::kable(digits = 3, col.names = c("Metabolite Name",stringr::str_to_title(paste0(mod_res," P-Value"))),
                      caption = paste0("Metabolites within ",str_to_title(subpathway)," (",name,")")) %>%

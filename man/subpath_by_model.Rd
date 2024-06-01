@@ -21,3 +21,30 @@ and then the parallel and single models are tested last. Suppose a subpathway
 has a significant interaction model type. In that case, the table will count
 it as an interaction and not as a parallel or single.
 }
+\examples{
+# Load data
+data("demoDataSmall", package = "MetabolomicsPipeline")
+dat <- demoDataSmall
+
+# Runsubpathay analysis
+sub_analysis = subpathway_analysis(dat,
+                                  treat_var = "GROUP_NAME",
+                                  block_var = "TIME1",
+                                  strat_var = NULL,
+                                  Assay = "normalized")
+
+################################################################################
+### Results Plots ##############################################################
+################################################################################
+
+# significant subpathways by model type
+subpath_by_model(sub_analysis)
+
+# Percentage of signficant subpathways within superpathways
+subpath_within_superpath(sub_analysis)
+
+met_within_sub(sub_analysis, subpathway = "Aminosugar Metabolism")
+
+
+
+}

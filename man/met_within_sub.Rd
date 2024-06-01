@@ -26,3 +26,28 @@ metabolite within the superpathway specified.
 \description{
 Return the model results for each metabolite within a subpathway.
 }
+\examples{
+data("demoDataSmall", package = "MetabolomicsPipeline")
+dat <- demoDataSmall
+
+# Runsubpathay analysis
+sub_analysis = subpathway_analysis(dat,
+                                  treat_var = "GROUP_NAME",
+                                  block_var = "TIME1",
+                                  strat_var = NULL,
+                                  Assay = "normalized")
+
+################################################################################
+### Results Plots ##############################################################
+################################################################################
+
+# significant subpathways by model type
+subpath_by_model(sub_analysis)
+
+# Percentage of signficant subpathways within superpathways
+subpath_within_superpath(sub_analysis)
+
+met_within_sub(sub_analysis, subpathway = "Aminosugar Metabolism")
+
+
+}

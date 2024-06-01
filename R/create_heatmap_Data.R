@@ -19,7 +19,7 @@
 #' @importFrom SummarizedExperiment rowData
 #' @importFrom SummarizedExperiment assay
 #' 
-#' @export
+#' 
 #' 
 
 

@@ -6,7 +6,7 @@
 \alias{MetabolomicsPipeline-package}
 \title{MetabolomicsPipeline: Metabolomics Pipeline Tools}
 \description{
-This package was developed to provide analysis tools for analyzing metabolomics data produced by Metabolon.
+This package provides analysis tools for analyzing metabolomics data from Metabolon. The tools in this package compliment the analysis from Metabolon. We provide functionality for hypothesis testing at the subpathway level, pairwise comparisons of metabolites, and tools for exploratory analysis.
 }
 \author{
 \strong{Maintainer}: Bonnie Lafleur \email{blafleur@arizona.edu}

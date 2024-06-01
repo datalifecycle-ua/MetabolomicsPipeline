@@ -46,7 +46,8 @@ for each comparison.
 }
 \examples{
 # Load data
-dat = MetabolomicsPipeline::demoDat
+data("demoDat", package = "MetabolomicsPipeline")
+dat = demoDat
 
 # Run pairwise analysis
 strat_pairwise = metabolite_pairwise(dat,form = "GROUP_NAME*TIME1",strat_var = "Gender")

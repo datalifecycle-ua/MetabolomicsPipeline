@@ -6,6 +6,21 @@
 #' 
 #' @return log transformed peak data
 #' 
+#' @examples
+#' data("demoDataSmall", package = "MetabolomicsPipeline")
+#' peak <- assay(demoDataSmall, "peak")
+#' 
+#' # Median standardization
+#' peak_med <- median_standardization(peak_data = peak)
+#' 
+#' # Min value imputation
+#' peakImpute <- min_val_impute(peak_data = peak_med)
+#' 
+#' # log transformation
+#' peak_log <- log_transformation(peak_data = peakImpute)
+#' 
+
+#' 
 #' @importFrom dplyr mutate_if
 #' @importFrom magrittr `%>%`
 #' @export

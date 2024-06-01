@@ -42,7 +42,8 @@ Create heatmaps which are arranged by the experimental conditions.
 }
 \examples{
 # load data
-dat = MetabolomicsPipeline::demoDat
+data("demoDat", package = "MetabolomicsPipeline")
+dat = demoDat
 
 # Heatmap with one group
 treat_heatmap <- metabolite_heatmap(dat,top_mets = 50,

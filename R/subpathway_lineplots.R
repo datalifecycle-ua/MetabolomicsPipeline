@@ -24,8 +24,8 @@
 #' 
 #' 
 #' @examples
-#' #' # load data
-#' dat = MetabolomicsPipeline::demoDat
+#' data("demoDat", package = "MetabolomicsPipeline")
+#' dat = demoDat
 #' 
 #' ################################################################################
 #' ### BoxPlots ###################################################################

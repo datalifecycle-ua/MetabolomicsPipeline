@@ -23,7 +23,8 @@ Computes and plots the first two components of the PCA from the metabolite data.
 \examples{
 
 # load data
-dat = MetabolomicsPipeline::demoDat
+data("demoDat", package = "MetabolomicsPipeline")
+dat = demoDat
 
 # Define PCA label from metadata
  meta_var = "Gender"

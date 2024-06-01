@@ -16,3 +16,19 @@ Median standardized peak data.
 \description{
 This function standardizes the metabolites by the median of the metabolite.
 }
+\examples{
+data("demoDataSmall", package = "MetabolomicsPipeline")
+peak <- assay(demoDataSmall, "peak")
+
+# Median standardization
+peak_med <- median_standardization(peak_data = peak)
+
+# Min value imputation
+peakImpute <- min_val_impute(peak_data = peak_med)
+
+# log transformation
+peak_log <- log_transformation(peak_data = peakImpute)
+
+
+
+}
