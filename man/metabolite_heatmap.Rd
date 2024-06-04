@@ -34,8 +34,8 @@ automatically include the stratum with the tile.}
 This parameter will order the columns of the heatmap.}
 }
 \value{
-A gtable class with all of the information to build the heatmap. To view
-the heatmap use ggplotify::as.ggplot().
+A gtable class with all of the information to build the heatmap.
+To view the heatmap use ggplotify::as.ggplot().
 }
 \description{
 Create heatmaps which are arranged by the experimental conditions.

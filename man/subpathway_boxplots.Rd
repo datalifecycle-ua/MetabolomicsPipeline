@@ -19,15 +19,17 @@ subpathway_boxplots(
 \item{subpathway}{Character value of the subpathway of interest. This is case
 sensitive and must be in the chemical annotation file.}
 
-\item{block_var}{This the the name of the variable in the meta data that is used for the
-X axis of the box plots. We recommend using the "block_var" from the subpathway
-analysis.}
+\item{block_var}{This the the name of the variable in the meta data that is
+used for the X axis of the box plots. We recommend using the "block_var"
+from the subpathway analysis.}
 
-\item{treat_var}{This is a grouping variable. As a recommendation the treatment
-groups should be used in the treat_var argument as this will provide a different color
-for each of the treatments making it easier to identify.}
+\item{treat_var}{This is a grouping variable. As a recommendation the
+treatment groups should be used in the treat_var argument as this will
+provide a different color for each of the treatments making it easier to
+identify.}
 
-\item{Assay}{Name of the assay to be used for the pairwise analysis (default='normalized')}
+\item{Assay}{Name of the assay to be used for the pairwise analysis
+(default='normalized')}
 
 \item{...}{Additional arguments to filter the analysis data by.}
 }
@@ -45,24 +47,26 @@ Creates boxplots for each metabolite within a specified subpathway.
 data("demoDat", package = "MetabolomicsPipeline")
 dat = demoDat
 
-################################################################################
-### BoxPlots ###################################################################
-################################################################################
+#############################################################################
+### BoxPlots ###############################################################
+############################################################################
 
-subpathway_boxplots(dat, subpathway = "Lactoyl Amino Acid", block_var = TIME1,
-                   treat_var = GROUP_NAME, Assay = "normalized",Gender =="Female")
+subpathway_boxplots(dat, subpathway = "Lactoyl Amino Acid", block_var =TIME1,
+                   treat_var = GROUP_NAME, Assay = "normalized",
+                   Gender =="Female")
 
 
-################################################################################
-## Line plots ##################################################################
-################################################################################
+############################################################################
+## Line plots ##############################################################
+############################################################################
 
 # Set up data
 dat$TIME1 <- as.numeric(factor(dat$TIME1,
                               levels = c("PreSymp","Onset","End")))
 # Create line plots 
 subpathway_lineplots(dat, subpathway = "Lactoyl Amino Acid",
-                    block_var = TIME1,treat_var = GROUP_NAME, Assay = "normalized",Gender=="Female" ) 
+                    block_var = TIME1,treat_var = GROUP_NAME, 
+                    Assay = "normalized",Gender=="Female" ) 
 
 
 

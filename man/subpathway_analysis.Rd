@@ -18,7 +18,8 @@ subpathway_analysis(
 \arguments{
 \item{data}{SummarizedExperiment with Metabolon experiment data.}
 
-\item{treat_var}{This is the name of the variable in the analysis data that is the main variable of interest.}
+\item{treat_var}{This is the name of the variable in the analysis data that
+is the main variable of interest.}
 
 \item{block_var}{This is the name of the blocking variable in the dataset.
 If the the experimental design does not include a blocking variable, then the
@@ -27,16 +28,22 @@ value of block_var=NULL.}
 \item{strat_var}{Variable to stratify the subpathway analysis by. This is set
 to NULL by default and will not stratify the analysis unless specified.}
 
-\item{Assay}{Name of the assay to be used for the pairwise analysis (default='normalized')}
+\item{Assay}{Name of the assay to be used for the pairwise analysis
+(default='normalized')}
 
-\item{subPathwayName}{Column name for subpathway variable as defined in the chemical annotation worksheet.}
+\item{subPathwayName}{Column name for subpathway variable as defined in the
+chemical annotation worksheet.}
 
-\item{chemName}{Column name for chemical name variable as defined in the chemical annotation worksheet.}
+\item{chemName}{Column name for chemical name variable as defined in the
+chemical annotation worksheet.}
 
-\item{superPathwayName}{Column name for super-pathway variable as defined in the chemical annotation worksheet.}
+\item{superPathwayName}{Column name for super-pathway variable as defined in
+the chemical annotation worksheet.}
 }
 \value{
-A data frame with "CHEM_ID","sub_pathway","chem_name","interaction_pval","interaction_fisher","parallel_pval","parallel_fisher","single_pval","single_fisher",and "model" for each metabolite.
+A data frame with "CHEM_ID","sub_pathway","chem_name",
+"interaction_pval","interaction_fisher","parallel_pval","parallel_fisher",
+"single_pval","single_fisher",and "model" for each metabolite.
 }
 \description{
 Subpathway analysis for metabolite data.
@@ -55,11 +62,11 @@ For each metabolite, we test three models using using ANOVA.
 
 For the interaction model, we are focusing only on the interaction term
 "Treatment*block" to test if there is a significant interaction between our
-treatment and the block variable. The parallel model tests if the block variable
-explains a significant amount of the metabolite variance, and the treatment model
-tests if the treatment explains a significant proportion of the variance for
-each metabolite. Then, we use the Combined Fisher probability to test each model
-at the subpathway level.
+treatment and the block variable. The parallel model tests if the block
+variable explains a significant amount of the metabolite variance, and the
+treatment model tests if the treatment explains a significant proportion of
+the variance for each metabolite. Then, we use the Combined Fisher
+probability to test each model at the subpathway level.
 
 \deqn{\tilde{X} = -2\sum_{i=1}^k ln(p_i)}
 
@@ -80,9 +87,9 @@ sub_analysis <- subpathway_analysis(dat,
                                   strat_var = NULL,
                                   Assay = "normalized")
 
-################################################################################
-### Results Plots ##############################################################
-################################################################################
+##############################################################################
+### Results Plots ###########################################################
+#############################################################################
 
 # significant subpathways by model type
 subpath_by_model(sub_analysis)

@@ -6,12 +6,14 @@
 #' 
 #' @param heatmap_variables A vector of variable names that are NOT metabolites.
 #' 
-#' @param Assay Name of assay data to be used for heatmaps. Default="normalized".
+#' @param Assay Name of assay data to be used for heatmaps.
+#'  Default="normalized".
 #' 
 #' @param ... Additional arguments that can be passed into the arrange function. 
 #' This parameter will order the columns of the heatmap data. 
 #' 
-#' @return A list of matrices including the heatmap variable (meta data for heatmap)
+#' @return A list of matrices including the heatmap variable 
+#' (meta data for heatmap)
 #' and the values for the heatmap.
 #' 
 #' 
@@ -34,7 +36,7 @@ create_heatmap_Data <- function(data,heatmap_variables,Assay="normalized",...){
   analysis_data <- merge(meta,ass,by="row.names")
   
   
-  heatmap_data =analysis_data %>%
+  heatmap_data <- analysis_data %>%
    arrange(...)
   
   heatmap_meta_data <- heatmap_data %>%
@@ -47,7 +49,8 @@ create_heatmap_Data <- function(data,heatmap_variables,Assay="normalized",...){
     column_to_rownames("Row.names") %>%
     as.matrix() %>% t()
   
-  return(list( heatmap_variables = heatmap_meta_data, heatmap_data_vals = heatmap_data2))
+  return(list( heatmap_variables = heatmap_meta_data,
+               heatmap_data_vals = heatmap_data2))
   
 }
 

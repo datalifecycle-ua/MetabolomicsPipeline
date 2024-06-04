@@ -38,9 +38,11 @@ median_standardization <- function(peak_data){
     dplyr::summarise_all(median, na.rm = TRUE) 
   
   
-  # 3. Divide each value for each metabolite by the median value of that metabolite
+  # 3. Divide each value for each metabolite by the median value of that
+  # metabolite
   for(i in colnames(peak_data_med)){  
-    peak_data_std[,i] <- as.matrix(peak_data_std[,i])/as.numeric(peak_data_med[,i]) 
+    peak_data_std[,i]<- as.matrix(
+      peak_data_std[,i])/as.numeric(peak_data_med[,i]) 
   }  
   
   return(peak_data_std)

@@ -2,8 +2,8 @@
 #' 
 #' Automatically load metabolomic data from Metabolon
 #' 
-#' @param path Path to Metabolon .xlsx file containg peak data, chemical annotations,
-#'  sample meta data, and (optionally) the normalized peak counts
+#' @param path Path to Metabolon .xlsx file containg peak data, chemical
+#'  annotations, sample meta data, and (optionally) the normalized peak counts
 #'  
 #' @param raw_sheet Sheet name for the raw peak data.
 #'
@@ -11,14 +11,16 @@
 #' 
 #' @param sample_meta Sheet name for sample meta data.
 #' 
-#' @param normalized_peak Sheet name for the normalized peak data. If you are not
-#'  adding the normalized data from the excel file then set normalized_peak=NA. 
+#' @param normalized_peak Sheet name for the normalized peak data.
+#'  If you are not adding the normalized data from the excel file then set 
+#'  normalized_peak=NA. 
 #'  
-#' @param sample_names Column name in the meta data containing the sample names. This must correspond to
-#'  the row names of the raw peak data in the excel file.
+#' @param sample_names Column name in the meta data containing the sample names.
+#'  This must correspond to the row names of the raw peak data in the excel
+#'  file.
 #'  
-#' @param chemicalID Column name in the meta data containing the sample names. This must correspond to
-#'  the column names of the raw peak data.
+#' @param chemicalID Column name in the meta data containing the sample names.
+#'  This must correspond to the column names of the raw peak data.
 #' 
 #' @returns A SummarizedExperiment containing Metabolon expirement data. 
 #' 
@@ -56,30 +58,33 @@ loadMetabolon <- function(path, raw_sheet = "Peak Area Data",
   normalized <- readxl::read_excel(path, sheet = "Log Transformed Data")
   }
   # Make row names align for summarized expirement
-  meta = tibble::column_to_rownames(meta, sample_names)
-  chem_data = tibble::column_to_rownames(chem_data, chemicalID)
-  raw_data = tibble::column_to_rownames(raw_data, sample_names)
+  meta <- tibble::column_to_rownames(meta, sample_names)
+  chem_data <- tibble::column_to_rownames(chem_data, chemicalID)
+  raw_data <- tibble::column_to_rownames(raw_data, sample_names)
   
   if(!is.na(normalized_peak)){
-    normalized = tibble::column_to_rownames(normalized, sample_names)
+    normalized <- tibble::column_to_rownames(normalized, sample_names)
   }
   
   # Align row and column names
-  raw_data = raw_data[rownames(meta), rownames(chem_data)]
+  raw_data <- raw_data[rownames(meta), rownames(chem_data)]
   
   if(!is.na(normalized_peak)){
-    normalized = normalized[rownames(meta), rownames(chem_data)]
+    normalized <- normalized[rownames(meta), rownames(chem_data)]
   }
   
   # Load summarized expirement
   if(!is.na(normalized_peak)){
-  exp = SummarizedExperiment::SummarizedExperiment(assays = list(peak=t(raw_data), normalized=t(normalized)),
-                                             colData = meta, rowData = chem_data)
+  exp <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(peak=t(raw_data), 
+                  normalized=t(normalized)), 
+    colData = meta, rowData = chem_data)
   }
   
   if(is.na(normalized_peak)){
-    exp = SummarizedExperiment::SummarizedExperiment(assays = list(peak=t(raw_data)),
-                                                     colData = meta, rowData = chem_data)
+    exp <- SummarizedExperiment::SummarizedExperiment(
+      assays = list(peak=t(raw_data)), 
+      colData = meta, rowData = chem_data)
   }
   
   

@@ -9,16 +9,18 @@ metabolite_pca(data, Assay = "normalized", meta_var)
 \arguments{
 \item{data}{SummarizedExperiment with Metabolon experiment data.}
 
-\item{Assay}{Name of the assay to be used for the pairwise analysis (default='normalized')}
+\item{Assay}{Name of the assay to be used for the pairwise analysis
+(default='normalized')}
 
 \item{meta_var}{A metadata variable to color code the PCA plot by.}
 }
 \value{
-A PCA plot of the first two principal components, colored by the metadata
-variable.
+A PCA plot of the first two principal components, colored by the
+metadata variable.
 }
 \description{
-Computes and plots the first two components of the PCA from the metabolite data.
+Computes and plots the first two components of the PCA from the metabolite
+data.
 }
 \examples{
 

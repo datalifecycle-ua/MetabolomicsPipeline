@@ -15,33 +15,38 @@ metabolite_pairwise(
 \arguments{
 \item{data}{SummarizedExperiment with Metabolon experiment data.}
 
-\item{form}{This is a character string the resembles the right hand side of a
-simple linear regression model in R. For example form = "Group1 + Group2".}
+\item{form}{This is a character string the resembles the right hand side of
+a simple linear regression model in R. For example form = "Group1 + Group2".}
 
-\item{Assay}{Name of the assay to be used for the pairwise analysis (default='normalized')}
+\item{Assay}{Name of the assay to be used for the pairwise analysis
+(default='normalized')}
 
-\item{strat_var}{A variable in the analysis data to stratify the model by. If this
-is specified, a list of results will be returned.}
+\item{strat_var}{A variable in the analysis data to stratify the model by.
+If this is specified, a list of results will be returned.}
 
-\item{mets}{Chemical ID for the metabolites of interest. If NULL then the pairwise analysis
-is completed for all metabololites.}
+\item{mets}{Chemical ID for the metabolites of interest. If NULL then the
+pairwise analysis is completed for all metabololites.}
 }
 \value{
-The overall F-test p-value, and the estimate and pvalue for each pairwise comparison.
+The overall F-test p-value, and the estimate and pvalue for each
+pairwise comparison.
 }
 \description{
 Computes the pairwise comparison estimates and p-values for each metabolite.
 }
 \details{
-This function will analyze each metabolite individually. For each metabolite, the metabolite_pairwise function
+This function will analyze each metabolite individually. For each
+metabolite, the metabolite_pairwise function
 will first test whether the model explained a significant proportion
-of the variance in the metabolite using an F-test. Since we will be looking at
-multiple comparisons for the metabolite, it is good practice to first look at the
-overall p-value from the F-test before looking at the pairwise comparisons.
-The metabolite_pairwise function then looks at all pairwise comparisons utilizing
-the \href{https://cran.r-project.org/web/packages/emmeans/index.html}{emmeans} package.
-The metabolite_pairwise function returns a data frame with the metabolite overall
-p-value, log fold change for each group, and the p-value
+of the variance in the metabolite using an F-test. Since we will be looking
+at multiple comparisons for the metabolite, it is good practice to first look
+at the overall p-value from the F-test before looking at the pairwise
+comparisons.
+The metabolite_pairwise function then looks at all pairwise comparisons
+utilizing the
+\href{https://cran.r-project.org/web/packages/emmeans/index.html}{emmeans}
+package. The metabolite_pairwise function returns a data frame with the
+metabolite overall p-value, log fold change for each group, and the p-value
 for each comparison.
 }
 \examples{
@@ -50,7 +55,8 @@ data("demoDat", package = "MetabolomicsPipeline")
 dat = demoDat
 
 # Run pairwise analysis
-strat_pairwise = metabolite_pairwise(dat,form = "GROUP_NAME*TIME1",strat_var = "Gender")
+strat_pairwise = metabolite_pairwise(dat,form = "GROUP_NAME*TIME1",
+strat_var = "Gender")
 
 
 }

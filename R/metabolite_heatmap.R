@@ -20,8 +20,8 @@
 #' @param ...  Additional arguments can be passed into the arrange function. 
 #' This parameter will order the columns of the heatmap.  
 #' 
-#' @return A gtable class with all of the information to build the heatmap. To view
-#' the heatmap use ggplotify::as.ggplot().
+#' @return A gtable class with all of the information to build the heatmap.
+#'  To view the heatmap use ggplotify::as.ggplot().
 #' 
 #' 
 #' @examples
@@ -58,7 +58,9 @@ metabolite_heatmap<- function(data, top_mets=50, group_vars, strat_var = NULL,
   select_variables <- SummarizedExperiment::assay(data,Assay) %>% 
     apply(1, mean)
   
-  select_variables = select_variables[order(select_variables, decreasing = T)][1:top_mets]
+  select_variables <-
+    select_variables[order(select_variables,
+                           decreasing = TRUE)][seq_len(top_mets)]
   
 
   
@@ -72,13 +74,13 @@ metabolite_heatmap<- function(data, top_mets=50, group_vars, strat_var = NULL,
       merge(t(SummarizedExperiment::assay(data,Assay)), by="row.names") %>%
       dplyr::rename(PARENT_SAMPLE_NAME=Row.names)
     
-    heatmap_data = analysis%>%
+    heatmap_data <- analysis%>%
         dplyr::select(all_of(c("PARENT_SAMPLE_NAME",
                                   group_vars,names(select_variables)))) %>%
         dplyr::arrange(...)
       
       
-      rownames(heatmap_data) = NULL
+      rownames(heatmap_data) <- NULL
       
       heatmap_meta_data <- heatmap_data %>%
         tibble::column_to_rownames("PARENT_SAMPLE_NAME") %>%
@@ -86,7 +88,8 @@ metabolite_heatmap<- function(data, top_mets=50, group_vars, strat_var = NULL,
       
       
       heatmap_data2 <- heatmap_data %>%
-        dplyr::select(PARENT_SAMPLE_NAME,dplyr::all_of(names(select_variables))) %>%
+        dplyr::select(PARENT_SAMPLE_NAME,
+                      dplyr::all_of(names(select_variables))) %>%
         tibble::column_to_rownames("PARENT_SAMPLE_NAME") %>%
         as.matrix() %>% t()
       
@@ -94,13 +97,16 @@ metabolite_heatmap<- function(data, top_mets=50, group_vars, strat_var = NULL,
       # Create heatamp
       
       # Heat map colors 
-      palette <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdBu")))(256) 
+      palette <- 
+        grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdBu")))(256) 
       
       
       # Create heatmap 
-      map <- pheatmap::pheatmap(mat = heatmap_data2,cluster_cols = F, cluster_rows = F, color = palette, 
-                      annotation_col = heatmap_meta_data, show_rownames = F, border_color = NA, show_colnames = F,
-                      main = caption, silent = T) 
+      map <- pheatmap::pheatmap(mat = heatmap_data2,cluster_cols = FALSE,
+                                cluster_rows = FALSE, color = palette, 
+                      annotation_col = heatmap_meta_data, show_rownames = FALSE,
+                      border_color = NA, show_colnames = FALSE,
+                      main = caption, silent = TRUE) 
       
       
       # return plot
@@ -119,7 +125,7 @@ metabolite_heatmap<- function(data, top_mets=50, group_vars, strat_var = NULL,
       merge(t(SummarizedExperiment::assay(data,Assay)), by="row.names") %>%
       dplyr::rename(PARENT_SAMPLE_NAME=Row.names)
     
-    heatmap_data = analysis%>%
+    heatmap_data <- analysis%>%
       dplyr::select(all_of(c("PARENT_SAMPLE_NAME",
                              group_vars,names(select_variables)))) %>%
       dplyr::arrange(...)
@@ -127,7 +133,7 @@ metabolite_heatmap<- function(data, top_mets=50, group_vars, strat_var = NULL,
     
     
     # Get stratas
-    strats = split(analysis,analysis[[strat_var]])
+    strats <-  split(analysis,analysis[[strat_var]])
     
     
     tabs <- lapply(names(strats),FUN = function(X){
@@ -138,7 +144,7 @@ metabolite_heatmap<- function(data, top_mets=50, group_vars, strat_var = NULL,
                                group_vars, names(select_variables)))) %>%
         dplyr::arrange(...)
       
-      rownames(heatmap_data) = NULL
+      rownames(heatmap_data) <- NULL
       
       heatmap_meta_data <- heatmap_data %>%
         tibble::column_to_rownames("PARENT_SAMPLE_NAME") %>%
@@ -146,7 +152,8 @@ metabolite_heatmap<- function(data, top_mets=50, group_vars, strat_var = NULL,
       
       
       heatmap_data2 <- heatmap_data %>%
-        dplyr::select(PARENT_SAMPLE_NAME,dplyr::all_of(names(select_variables))) %>%
+        dplyr::select(PARENT_SAMPLE_NAME,
+                      dplyr::all_of(names(select_variables))) %>%
         tibble::column_to_rownames("PARENT_SAMPLE_NAME") %>%
         as.matrix() %>% t()
       
@@ -159,9 +166,13 @@ metabolite_heatmap<- function(data, top_mets=50, group_vars, strat_var = NULL,
       
       # Create heatmap 
       
-      map <- pheatmap::pheatmap(mat = heatmap_data2,cluster_cols = F, cluster_rows = F, color = palette, 
-                                annotation_col = heatmap_meta_data, show_rownames = F, border_color = NA, show_colnames = F,
-                                main = paste0(caption," (",X,")"),silent = T)
+      map <- pheatmap::pheatmap(mat = heatmap_data2,
+                                cluster_cols = FALSE, cluster_rows = FALSE, 
+                                color = palette, 
+                                annotation_col = heatmap_meta_data,
+                                show_rownames = FALSE, border_color = NA,
+                                show_colnames = FALSE,
+                                main = paste0(caption," (",X,")"),silent = TRUE)
       
       return( map$gtable)
       

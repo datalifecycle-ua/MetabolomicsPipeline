@@ -56,15 +56,16 @@ all_sig_subpath <- function(path_results){
     cases <- expression( dplyr::case_when(model == "Single" ~ single_fisher)) 
   }
   if(!sum(grepl("interaction",names(path_results)))==0){ 
-    levs =  c("Interaction", "Parallel", "Single", "None") 
+    levs <-  c("Interaction", "Parallel", "Single", "None") 
     
-    cases <- expression( dplyr::case_when(model == "Interaction" ~ interaction_fisher, 
+    cases <- expression(dplyr::case_when(
+                                   model == "Interaction" ~ interaction_fisher, 
                                    model == "Parallel" ~ parallel_fisher, 
                                    model == "Single" ~ single_fisher)) 
   }
   
   
-  
+                                                                                  
   # Create pathway table
   pathway_table <- path_results %>% # 
     dplyr::mutate(model = factor(model, levels = levs)) %>% 

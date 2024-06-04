@@ -8,6 +8,10 @@
 #' 
 #' @param data data used for modeling
 #' 
+#' 
+#' @returns Pairwise comparisons for a single metabolite. 
+#' 
+#' 
 #' @importFrom emmeans emmeans
 #' @importFrom stats anova
 
@@ -21,14 +25,14 @@ pairwise <- function(out,form,data){
   )
   
   # define outcome
-  outcome = out
+  outcome <- out
   
   # Run model
   mod <- lm(model, data = data)
   
   mod2 <- lm(outcome~1,data=data)
   
-  anov = stats::anova(mod, mod2)
+  anov <- stats::anova(mod, mod2)
   
   # Get the F statistic pvalue
   overall <- anov$`Pr(>F)`[2]
@@ -48,13 +52,14 @@ pairwise <- function(out,form,data){
   
  
  
-  cols <- c("Overall_pval",paste0(summary(pairs)[,1],"_ESTS"),paste0(summary(pairs)[,1],"_PVALS"))
+  cols <- c("Overall_pval",paste0(summary(pairs)[,1],"_ESTS"),
+            paste0(summary(pairs)[,1],"_PVALS"))
   
   results <- data.frame(matrix(nrow = 1,ncol = length(cols)))
   
   colnames(results) <- cols
   
-  results[1,"Overall_pval"] = overall
+  results[1,"Overall_pval"] <- overall
   
   results[1,paste0(summary(pairs)[,1],"_ESTS")] <- summary(pairs)[,"estimate"]
   

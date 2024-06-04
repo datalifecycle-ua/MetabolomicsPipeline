@@ -11,13 +11,15 @@ create_heatmap_Data(data, heatmap_variables, Assay = "normalized", ...)
 
 \item{heatmap_variables}{A vector of variable names that are NOT metabolites.}
 
-\item{Assay}{Name of assay data to be used for heatmaps. Default="normalized".}
+\item{Assay}{Name of assay data to be used for heatmaps.
+Default="normalized".}
 
 \item{...}{Additional arguments that can be passed into the arrange function.
 This parameter will order the columns of the heatmap data.}
 }
 \value{
-A list of matrices including the heatmap variable (meta data for heatmap)
+A list of matrices including the heatmap variable
+(meta data for heatmap)
 and the values for the heatmap.
 }
 \description{

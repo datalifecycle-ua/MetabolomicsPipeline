@@ -15,8 +15,8 @@ loadMetabolon(
 )
 }
 \arguments{
-\item{path}{Path to Metabolon .xlsx file containg peak data, chemical annotations,
-sample meta data, and (optionally) the normalized peak counts}
+\item{path}{Path to Metabolon .xlsx file containg peak data, chemical
+annotations, sample meta data, and (optionally) the normalized peak counts}
 
 \item{raw_sheet}{Sheet name for the raw peak data.}
 
@@ -24,14 +24,16 @@ sample meta data, and (optionally) the normalized peak counts}
 
 \item{sample_meta}{Sheet name for sample meta data.}
 
-\item{normalized_peak}{Sheet name for the normalized peak data. If you are not
-adding the normalized data from the excel file then set normalized_peak=NA.}
+\item{normalized_peak}{Sheet name for the normalized peak data.
+If you are not adding the normalized data from the excel file then set
+normalized_peak=NA.}
 
-\item{sample_names}{Column name in the meta data containing the sample names. This must correspond to
-the row names of the raw peak data in the excel file.}
+\item{sample_names}{Column name in the meta data containing the sample names.
+This must correspond to the row names of the raw peak data in the excel
+file.}
 
-\item{chemicalID}{Column name in the meta data containing the sample names. This must correspond to
-the column names of the raw peak data.}
+\item{chemicalID}{Column name in the meta data containing the sample names.
+This must correspond to the column names of the raw peak data.}
 }
 \value{
 A SummarizedExperiment containing Metabolon expirement data.

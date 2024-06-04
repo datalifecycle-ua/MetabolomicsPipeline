@@ -1,15 +1,17 @@
 #' Metabolite PCA
 #' 
-#' Computes and plots the first two components of the PCA from the metabolite data.
+#' Computes and plots the first two components of the PCA from the metabolite
+#'  data.
 #' 
 #' @param data SummarizedExperiment with Metabolon experiment data.
 #' 
-#' @param Assay Name of the assay to be used for the pairwise analysis (default='normalized')
+#' @param Assay Name of the assay to be used for the pairwise analysis
+#'  (default='normalized')
 #
 #' @param meta_var A metadata variable to color code the PCA plot by.  
 #' 
-#' @returns A PCA plot of the first two principal components, colored by the metadata
-#' variable. 
+#' @returns A PCA plot of the first two principal components, colored by the
+#'  metadata variable. 
 #' 
 #' @examples
 #' 
@@ -46,7 +48,7 @@ metabolite_pca <- function(data, Assay ="normalized",meta_var){
   
   # Run PCA of the pca_dat matrix containing only the metabolites.   
   res.pca <- FactoMineR::PCA(analysis[,rownames(data)], 
-                 graph = F)
+                 graph = FALSE)
   
   
   # Create figure 

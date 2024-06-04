@@ -1,15 +1,17 @@
 #' Metabolite Pairwise P-Value Interactive Heatmap.
 #' 
-#' Produce an interactive heatmap of the p-values produced in \code{\link{metabolite_pairwise}}.
+#' Produce an interactive heatmap of the p-values produced in 
+#' \code{\link{metabolite_pairwise}}.
 #' 
-#' @param results_data Results data frame of the pairwise comparisons produced by \code{\link{metabolite_pairwise}}.
+#' @param results_data Results data frame of the pairwise comparisons produced
+#'  by \code{\link{metabolite_pairwise}}.
 #' 
 #' @param data A SummarizedExperiment containing Metabolon experiment data.
 #' 
 #' @details
-#' For the metabolites which had a significant overall p-value (which tested if the
-#' treatment group means were equal under the null hypothesis), we will produce a 
-#' heatmap of the p-values.
+#' For the metabolites which had a significant overall p-value (which tested if 
+#' the treatment group means were equal under the null hypothesis), we will
+#' produce a heatmap of the p-values.
 #'
 #'
 #' @returns An interactive heatmap of pairwise p-values. 
@@ -29,7 +31,8 @@
 
 met_p_heatmap <- function(results_data, data){
 
-  # 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
+  # 2. Merge the chemical annotation fill with the results from the pairwise 
+  #    comparisons.
   dat <- rowData(data) %>% 
     as.data.frame() %>%
     tibble::rownames_to_column("CHEM_ID") %>%
@@ -40,10 +43,11 @@ met_p_heatmap <- function(results_data, data){
   
   
   # 3. Produce Heatmap
-  p = dat %>% 
-    dplyr::select(CHEM_ID,SUB_PATHWAY,CHEMICAL_NAME, all_of(names(dat)[grepl("PVALS",names(dat))])) %>%  
-    reshape2::melt(id.vars = c("CHEM_ID","SUB_PATHWAY","CHEMICAL_NAME"), variable.name = "Contrast",  
-         value.name = "P_value") %>%  
+  p <- dat %>% 
+    dplyr::select(CHEM_ID,SUB_PATHWAY,CHEMICAL_NAME,
+                  all_of(names(dat)[grepl("PVALS",names(dat))])) %>%  
+    reshape2::melt(id.vars = c("CHEM_ID","SUB_PATHWAY","CHEMICAL_NAME"),
+                   variable.name = "Contrast", value.name = "P_value") %>%  
     dplyr::mutate(Contrast = gsub("_PVALS","",Contrast), 
            P_value = ifelse(P_value<0.05,round(P_value,3), NA)) %>% 
     dplyr::arrange(SUB_PATHWAY) %>% 

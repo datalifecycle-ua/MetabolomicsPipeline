@@ -46,3 +46,4 @@ Depends:
 Author: Joel Parker <joelparker@arizona.edu>
 Maintainer: Bonnie Lafleur <blafleur@arizona.edu>
 VignetteBuilder: knitr
+BugReports: https://github.com/JoelParkerUofA/MetabolomicsPipeline/issues

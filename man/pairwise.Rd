@@ -13,6 +13,9 @@ pairwise(out, form, data)
 
 \item{data}{data used for modeling}
 }
+\value{
+Pairwise comparisons for a single metabolite.
+}
 \description{
 This is the main function for metabolite_pairwise
 }

@@ -36,11 +36,12 @@ met_est_heatmap <- function(results_data, data){
     dplyr::filter(Overall_pval < 0.05) 
   
   # get chemical annotation file
-  chem = SummarizedExperiment::rowData(data) %>%
+  chem <- SummarizedExperiment::rowData(data) %>%
     as.data.frame() %>%
     tibble::rownames_to_column(var = "CHEM_ID")
   
-  # 2. Merge the chemical annotation fill with the results from the pairwise comparisons.
+  # 2. Merge the chemical annotation fill with the results from the pairwise
+  #    comparisons.
   data <- chem %>% 
     dplyr::select(SUB_PATHWAY,CHEMICAL_NAME,CHEM_ID) %>% 
     merge(results_data, by.x = "CHEM_ID",by.y = "metabolite") %>% 
@@ -48,12 +49,14 @@ met_est_heatmap <- function(results_data, data){
   
   
   # 3. Produce Heatmap
-  p =data %>% 
-    dplyr::select(CHEM_ID,SUB_PATHWAY,CHEMICAL_NAME, all_of(names(data)[grepl("EST",names(data))])) %>%
-    reshape2::melt(id.vars = c("CHEM_ID","SUB_PATHWAY","CHEMICAL_NAME"), variable.name = "Contrast", 
+  p <- data %>% 
+    dplyr::select(CHEM_ID,SUB_PATHWAY,CHEMICAL_NAME,
+                  all_of(names(data)[grepl("EST",names(data))])) %>%
+    reshape2::melt(id.vars = c("CHEM_ID","SUB_PATHWAY","CHEMICAL_NAME"),
+                   variable.name = "Contrast", 
          value.name = "logFoldChange") %>%
     dplyr::mutate(Contrast = gsub("_ESTS","",Contrast),
-           logFoldChange =  ifelse(logFoldChange < log(0.5) | logFoldChange > log(2),
+      logFoldChange = ifelse(logFoldChange < log(0.5) | logFoldChange > log(2),
                                    round(logFoldChange,3), NA)) %>% 
     plotly::plot_ly(
       type = "heatmap",

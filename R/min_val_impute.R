@@ -34,7 +34,7 @@ min_val_impute <- function(peak_data){
   # 2. Find the minimum value for each metabolite and compute 1/5 of that value
   peak_data_mins <- peak_data_imputed %>%  
    # dplyr::select(-PARENT_SAMPLE_NAME) %>%  
-    dplyr::summarise_all(min, na.rm = T)  
+    dplyr::summarise_all(min, na.rm = TRUE)  
   
   
   # 3. Impute the value
