@@ -449,6 +449,21 @@ significant. We use the met_p_heatmap function to create an interactive p-value
 heatmap. 
 
 
+For both the log fold-change heatmap and the p-value heatmap, there is an option
+to produce an interactive plot using plotly or to create a static heatmap using
+pheatmap. To produce these heatmaps we use the following arguments:
+
+
+*  results_data: Results data frame of the pairwise comparisons produced by \code{\link{metabolite_pairwise}}.
+ 
+*  data: A SummarizedExperiment containing the Metabolon experiment data.
+ 
+*  interactive: boolean (T/F) for whether or not the plot should be
+     interactive. Use interactive=T to produce an interactive plot using 
+     plotly. Use interactive=F to produce a static heatmap using pheatmap.
+
+* ...: Additional arguments that can be passed to pheatmap.   
+
 ```{r PairwiseAnalysis}
 ################################################################################
 #### Run Pairwise Comparisons ##################################################
@@ -461,15 +476,16 @@ strat_pairwise = metabolite_pairwise(dat,form = "GROUP_NAME*TIME1",strat_var = "
 ## Create Estimate Heatmap #####################################################
 ################################################################################
 
-met_est_heatmap(strat_pairwise$Female, dat)
+met_est_heatmap(strat_pairwise$Female, dat, interactive = FALSE,
+  main="Log fold change heatmap", show_rownames=FALSE)
 
 
 ################################################################################
 ## Create P-value Heatmap ######################################################
 ################################################################################
-
 # Female
-met_p_heatmap(strat_pairwise$Female, dat)
+met_p_heatmap(strat_pairwise$Female, dat, interactive = F, show_rownames=FALSE,
+              main = "Pvalue Heatmap")
 
 ```
 

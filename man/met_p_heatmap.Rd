@@ -4,13 +4,19 @@
 \alias{met_p_heatmap}
 \title{Metabolite Pairwise P-Value Interactive Heatmap.}
 \usage{
-met_p_heatmap(results_data, data)
+met_p_heatmap(results_data, data, interactive = FALSE, ...)
 }
 \arguments{
 \item{results_data}{Results data frame of the pairwise comparisons produced
 by \code{\link{metabolite_pairwise}}.}
 
 \item{data}{A SummarizedExperiment containing Metabolon experiment data.}
+
+\item{interactive}{boolean (T/F) for whether or not the plot should be
+interactive. Use interactive=T to produce an interactive plot using
+plotly. Use interactive=F to produce a static heatmap using pheatmap.}
+
+\item{...}{Additional arguments that can be passed to pheatmap.}
 }
 \value{
 An interactive heatmap of pairwise p-values.
