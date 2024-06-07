@@ -44,8 +44,6 @@ Imports:
     tidyr (>= 1.3.0)
 Depends: 
     R (>= 4.4.0)
-Maintainer: Joel Parker <joelparker@arizona.edu>
-Author: Bonnie Lafleur <blafleur@arizona.edu>
 VignetteBuilder: knitr
 URL: https://github.com/JoelParkerUofA/MetabolomicsPipeline
 BugReports: https://github.com/JoelParkerUofA/MetabolomicsPipeline/issues
