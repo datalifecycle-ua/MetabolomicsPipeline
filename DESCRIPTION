@@ -45,5 +45,5 @@ Imports:
 Depends: 
     R (>= 4.4.0)
 VignetteBuilder: knitr
-URL: https://github.com/JoelParkerUofA/MetabolomicsPipeline
-BugReports: https://github.com/JoelParkerUofA/MetabolomicsPipeline/issues
+URL: https://github.com/datalifecycle-ua/MetabolomicsPipeline
+BugReports: https://github.com/datalifecycle-ua/MetabolomicsPipeline/issues
