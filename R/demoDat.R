@@ -7,6 +7,8 @@
 #' @name demoDat
 #' @keywords data
 #' @format  SummarizedExperiment object
+#' 
+#' @usage data(demoDat)
 #'
 #' @returns  A SummarizedExperiment object with 86 samples
 #'

@@ -1,0 +1,27 @@
+all_sig_subpath         Table of Significant Subpathways
+create_heatmap_Data     Create metadata and matricies for metabolite
+                        heatmaps
+demoDat                 Demo data for the MetabolomicsPipeline,
+demoDataSmall           Subset of Demo data for the
+                        MetabolomicsPipeline ,
+loadMetabolon           Load Metabolomic Data as SummarizedExperiment
+log_transformation      Log transformation of metabolite data
+median_standardization
+                        Median standardization for metabolite data
+met_est_heatmap         Metabolite Pairwise Estimate Interactive
+                        Heatmap.
+met_p_heatmap           Metabolite Pairwise P-Value Interactive
+                        Heatmap.
+met_within_sub          Metabolites within Subpathway Table
+metabolite_heatmap      Create metabolite heatmap
+metabolite_pairwise     Metabolite Pairwise Comparisons.
+metabolite_pca          Metabolite PCA
+min_val_impute          Minimum Value Imputation
+pairwise                Pairwise function
+subpath_by_model        Subpathway model type table
+subpath_within_superpath
+                        Proportion of the Significant Subpathways
+                        Within Superpathways
+subpathway_analysis     Subpathway Analysis
+subpathway_boxplots     Subpathway Boxplots
+subpathway_lineplots    Subpathway Lineplots

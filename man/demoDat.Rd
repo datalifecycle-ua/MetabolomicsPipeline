@@ -8,7 +8,7 @@
 SummarizedExperiment object
 }
 \usage{
-demoDat
+data(demoDat)
 }
 \value{
 A SummarizedExperiment object with 86 samples

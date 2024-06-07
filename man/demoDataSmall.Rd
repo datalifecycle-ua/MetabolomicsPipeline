@@ -8,7 +8,7 @@
 Rd
 }
 \usage{
-demoDataSmall
+data(demoDataSmall)
 }
 \value{
 A subset of the metabolites in the DemoData.

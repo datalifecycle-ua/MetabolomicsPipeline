@@ -8,6 +8,9 @@
 #' @keywords data
 #' @format  Rd
 #'
+#'
+#' @usage data(demoDataSmall) 
+#' 
 #' @returns A subset of the metabolites in the DemoData.
 #'
 "demoDataSmall"
