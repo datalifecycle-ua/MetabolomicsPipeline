@@ -17,7 +17,7 @@ The purpose of the MetabolomicsPipeline is to provide tools for
 additional analyses to complement the metabolomic analysis done by
 Metabolon. The MetabolomicsPipeline organizes Metabolon data in a
 [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html)
-to allow for easy integration with with other packages available on
+to allow for easy integration with other packages available on
 Bioconductor.
 
 <img src="WorkflowIMGs/SEOrganization.png" style="width:60.0%" />
