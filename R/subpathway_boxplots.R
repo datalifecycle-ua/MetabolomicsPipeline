@@ -19,16 +19,16 @@
 #'
 #' @param Assay Name of the assay to be used for the pairwise analysis
 #'  (default='normalized')
-#'  
+#'
 #' @param CHEMICAL_NAME Column name in the chemical annotation worksheet which
-#' contains the chemical name. 
-#' 
+#' contains the chemical name.
+#'
 #' @param CHEM_ID Column name in the chemical annotation worksheet that contains
-#' the chemical ID. 
-#' 
+#' the chemical ID.
+#'
 #' @param SUB_PATHWAY Column name in chemical annotation file which contains
 #' the SUB_PATHWAY information
-#' 
+#'
 #'
 #' @param ... Additional arguments to filter the analysis data by.
 #'
@@ -43,11 +43,12 @@
 #' ############################################################################
 #'
 #' subpathway_boxplots(dat,
-#'                  subpathway = "Lactoyl Amino Acid", block_var = TIME1,
-#'                  treat_var = GROUP_NAME, Assay = "normalized",
-#'                  CHEMICAL_NAME = "CHEMICAL_NAME",
-#'                  CHEM_ID="CHEM_ID",
-#'                  SUB_PATHWAY="SUB_PATHWAY",Gender == "Female")
+#'     subpathway = "Lactoyl Amino Acid", block_var = TIME1,
+#'     treat_var = GROUP_NAME, Assay = "normalized",
+#'     CHEMICAL_NAME = "CHEMICAL_NAME",
+#'     CHEM_ID = "CHEM_ID",
+#'     SUB_PATHWAY = "SUB_PATHWAY", Gender == "Female"
+#' )
 #'
 #'
 #' ############################################################################
@@ -86,9 +87,9 @@
 
 subpathway_boxplots <- function(data, subpathway, block_var, treat_var,
                                 Assay = "normalized",
-                                CHEMICAL_NAME="CHEMICAL_NAME",
-                                CHEM_ID="CHEM_ID",
-                                SUB_PATHWAY="SUB_PATHWAY", ...) {
+                                CHEMICAL_NAME = "CHEMICAL_NAME",
+                                CHEM_ID = "CHEM_ID",
+                                SUB_PATHWAY = "SUB_PATHWAY", ...) {
     # Create analysis data
     analysis <- SummarizedExperiment::colData(data) %>%
         merge(t(SummarizedExperiment::assay(data, Assay)), by = "row.names") %>%
@@ -105,15 +106,17 @@ subpathway_boxplots <- function(data, subpathway, block_var, treat_var,
             dplyr::filter(...) %>%
             dplyr::select(
                 group = {{ treat_var }}, X = {{ block_var }},
-                as.character(chem[which(chem[,SUB_PATHWAY] == subpathway),CHEM_ID])
+                as.character(chem[which(chem[, SUB_PATHWAY] == subpathway),
+                                CHEM_ID])
             ) %>%
             tidyr::pivot_longer(cols = -c(group, X)) %>%
             dplyr::mutate(X = factor(X)) %>%
             merge(chem, by.x = "name", by.y = CHEM_ID) %>%
             ggplot2::ggplot(aes(x = X, y = value, color = group)) +
             ggplot2::geom_boxplot(outlier.shape = NA) +
-            ggplot2::geom_point(position = position_jitterdodge(jitter.width = 0.2)) +
-            ggplot2::facet_wrap(as.formula(paste0("~",CHEMICAL_NAME))) +
+            ggplot2::geom_point(
+               position = position_jitterdodge(jitter.width = 0.2)) +
+            ggplot2::facet_wrap(as.formula(paste0("~", CHEMICAL_NAME))) +
             ggplot2::theme_bw()
     )
 }

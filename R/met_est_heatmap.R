@@ -12,26 +12,60 @@
 #'     interactive. Use interactive=T to produce an interactive plot using
 #'     plotly. Use interactive=F to produce a static heatmap using pheatmap.
 #'
-#' 
+#'
 #' @param CHEM_ID Column name in the chemical annotation worksheet that contains
-#' the chemical ID. 
-#' 
-#' @param SUB_PATHWAY Column name in the chemical annotation worksheet which 
+#' the chemical ID.
+#'
+#' @param SUB_PATHWAY Column name in the chemical annotation worksheet which
 #' contains the subpathway information.
-#' 
+#'
 #' @param CHEMICAL_NAME Column name in the chemical annotation worksheet which
-#' contains the chemical name. 
-#' 
+#' contains the chemical name.
+#'
 #' @param ... Additional arguments that can be passed to pheatmap.
 #'
+#'
+#'
+#'
 #' @details
-
 #' This function will produce a heatmap of the log fold changes for the
 #' metabolites with a significant overall p-value (which tested if the treatment
 #'  group means were equal under the null hypothesis). The heatmap colors will
 #'  only show if the log fold-change is greater than log(2) or less than
 #'  log(.5). Therefore, this heatmap will only focus on comparisons with a
 #'  fold change of two or greater.
+#'
+#' @examples
+#' # Load data
+#' data("demoDataSmall", package = "MetabolomicsPipeline")
+#' dat <- demoDataSmall
+#'
+#' # Run pairwise analysis
+#' strat_pairwise <- metabolite_pairwise(dat,
+#'     form = "GROUP_NAME*TIME1",
+#'     strat_var = "Gender"
+#' )
+#' 
+#' #############################################################################
+#' ## Create Estimate Heatmap ##################################################
+#' #############################################################################
+#'
+#' met_est_heatmap(strat_pairwise$Female, dat,
+#'                interactive = FALSE,
+#'                CHEM_ID = "CHEM_ID", SUB_PATHWAY = "SUB_PATHWAY",
+#'                CHEMICAL_NAME = "CHEMICAL_NAME",
+#'                main = "Log fold change heatmap", show_rownames = FALSE
+#' )
+#'
+#'
+#'##############################################################################
+#'## Create P-value Heatmap ####################################################
+#'##############################################################################
+#' # Female
+#' met_p_heatmap(strat_pairwise$Female, dat,
+#'              interactive = FALSE, show_rownames = FALSE,
+#'              main = "Pvalue Heatmap"
+#' )
 #'
 #'
 #' @returns An interactive heatmap of pairwise estimates.
@@ -50,8 +84,8 @@
 
 
 met_est_heatmap <- function(results_data, data, interactive = FALSE,
-                            CHEM_ID="CHEM_ID",SUB_PATHWAY="SUB_PATHWAY",
-                            CHEMICAL_NAME = "CHEMICAL_NAME",...) {
+                            CHEM_ID = "CHEM_ID", SUB_PATHWAY = "SUB_PATHWAY",
+                            CHEMICAL_NAME = "CHEMICAL_NAME", ...) {
     # 2. Merge the chemical annotation fill with the results from the pairwise
     #    comparisons.
     dat <- rowData(data) %>%
@@ -63,8 +97,10 @@ met_est_heatmap <- function(results_data, data, interactive = FALSE,
         dplyr::arrange(!!as.name(SUB_PATHWAY)) %>%
         dplyr::select(
             dplyr::all_of(c(CHEM_ID, SUB_PATHWAY, CHEMICAL_NAME)),
-            dplyr::all_of(names(results_data)[grepl("ESTS",
-                                                    names(results_data))])
+            dplyr::all_of(names(results_data)[grepl(
+                "ESTS",
+                names(results_data)
+            )])
         ) %>%
         reshape2::melt(
             id.vars = c(CHEM_ID, SUB_PATHWAY, CHEMICAL_NAME),
@@ -73,7 +109,7 @@ met_est_heatmap <- function(results_data, data, interactive = FALSE,
         dplyr::mutate(
             Contrast = gsub("_ESTS", "", Contrast),
             logFoldChange = ifelse(
-              logFoldChange < log(0.5) | logFoldChange > log(2),
+                logFoldChange < log(0.5) | logFoldChange > log(2),
                 round(logFoldChange, 3), NA
             )
         ) %>%
@@ -85,18 +121,21 @@ met_est_heatmap <- function(results_data, data, interactive = FALSE,
     if (interactive == FALSE) {
         # Create matrix for heatmap
         matr <- dat %>%
-            reshape2::dcast(as.formula(paste0(CHEMICAL_NAME,"~","Contrast")),
-                            value.var = "logFoldChange")
+            reshape2::dcast(as.formula(paste0(CHEMICAL_NAME, "~", "Contrast")),
+                value.var = "logFoldChange"
+            )
 
         rownames(matr) <- matr[, 1]
 
         matr <- matr[, -1]
 
         # Create heatmap
-        pal <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdBu")))(256)
+        pal <- grDevices::colorRampPalette(
+            rev(RColorBrewer::brewer.pal(10, "RdBu"))
+        )(256)
 
         p <- pheatmap::pheatmap(matr,
-            cluster_rows = F, cluster_cols = F,
+            cluster_rows = FALSE, cluster_cols = FALSE,
             color = pal, ...
         )
     }
@@ -109,9 +148,9 @@ met_est_heatmap <- function(results_data, data, interactive = FALSE,
             plotly::plot_ly(
                 type = "heatmap",
                 x = ~Contrast,
-                y = as.formula(paste0("~",CHEMICAL_NAME)),
+                y = as.formula(paste0("~", CHEMICAL_NAME)),
                 z = ~logFoldChange,
-                text = as.formula(paste0("~",SUB_PATHWAY)),
+                text = as.formula(paste0("~", SUB_PATHWAY)),
                 hovertemplate = paste(
                     "<b>Metabolite: %{y}</b><br><br>",
                     "Sub-pathway: %{text}<br>",

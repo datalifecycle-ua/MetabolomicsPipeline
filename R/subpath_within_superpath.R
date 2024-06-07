@@ -25,7 +25,7 @@
 #'
 #' #############################################################################
 #' ### Results Plots ###########################################################
-#' ##############################################################################
+#' #############################################################################
 #'
 #' # significant subpathways by model type
 #' subpath_by_model(sub_analysis)
@@ -51,7 +51,9 @@ subpath_within_superpath <- function(subpath_results) {
         if (sum(grepl("interaction", names(subpath_results))) == 0) {
             levs <- c("Single", "None")
 
-            cases <- expression(dplyr::case_when(model == "Single" ~ single_fisher))
+            cases <- expression(dplyr::case_when(
+                model == "Single" ~ single_fisher
+            ))
         }
         if (!sum(grepl("interaction", names(subpath_results))) == 0) {
             levs <- c("Interaction", "Parallel", "Single", "None")
@@ -67,7 +69,10 @@ subpath_within_superpath <- function(subpath_results) {
         # 3. Create table data
         table_data <- subpath_results %>%
             dplyr::mutate(model = factor(model, levels = levs)) %>%
-            dplyr::select(sub_pathway, super_pathway, ends_with("_fisher"), model) %>%
+            dplyr::select(
+                sub_pathway, super_pathway,
+                ends_with("_fisher"), model
+            ) %>%
             dplyr::distinct()
 
 
@@ -90,7 +95,8 @@ subpath_within_superpath <- function(subpath_results) {
             ) %>%
             knitr::kable(
                 col.names = c("Super Pathway", "Percent Significant"),
-                caption = "Proportion of significant subpathways within super-pathways"
+                caption = 
+                  "Proportion of significant subpathways within super-pathways"
             ) %>%
             kableExtra::kable_paper(full_width = FALSE, html_font = "Cambria")
 
@@ -123,7 +129,10 @@ subpath_within_superpath <- function(subpath_results) {
 
             table_data <- subpath_results[[i]] %>%
                 dplyr::mutate(model = factor(model, levels = levs)) %>%
-                dplyr::select(sub_pathway, super_pathway, ends_with("_fisher"), model) %>%
+                dplyr::select(
+                    sub_pathway, super_pathway,
+                    ends_with("_fisher"), model
+                ) %>%
                 dplyr::distinct()
 
 
@@ -176,7 +185,8 @@ subpath_within_superpath <- function(subpath_results) {
                         names(subpath_results), ")"
                     )
                 ),
-                caption = "Proportion of significant subpathways within super-pathways"
+                caption =
+                  "Proportion of significant subpathways within super-pathways"
             ) %>%
             kableExtra::kable_paper(full_width = FALSE, html_font = "Cambria")
 

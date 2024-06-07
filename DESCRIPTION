@@ -3,7 +3,7 @@ Title: Metabolomics Pipeline Tools
 Version: 0.99.0
 Authors@R: 
     c(person("Joel", "Parker", email = "joelparker@arizona.edu",
-    role = c("aut", "cre"), comment =c(ORCID="https://orcid.org/0000-0002-3411-3818")),
+    role = c("aut", "cre"), comment =c(ORCID="0000-0002-3411-3818")),
     person("Bonnie", "Lafleur", email = "blafleur@arizona.edu", role = c("aut")))
 Description: This package provides analysis tools for analyzing metabolomics data from Metabolon. The tools
  in this package compliment the analysis from Metabolon. We provide functionality for hypothesis testing at

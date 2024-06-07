@@ -77,7 +77,7 @@
 #'     Assay = "normalized"
 #' )
 #'
-#' ##############################################################################
+#' #############################################################################
 #' ### Results Plots ###########################################################
 #' #############################################################################
 #'
@@ -139,9 +139,12 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
                 ))
 
 
-            # For each pathways run the models for each metabolite within the pathway.
+            # For each pathways run the models for each metabolite within the
+            #  pathway.
             for (pathway in unique(path_data$sub_pathway)) {
-                var_names <- path_data$CHEM_ID[which(path_data$sub_pathway == pathway)]
+                var_names <- path_data$CHEM_ID[which(
+                    path_data$sub_pathway == pathway
+                )]
 
 
                 # Calculate p values for each linear model
@@ -153,7 +156,11 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
                     # This Generalizes Model formulation
                     inter_formula <- as.formula(
                         paste("outcome",
-                            paste(c(treat_var, block_var, paste0(treat_var, "*", block_var)),
+                            paste(
+                                c(
+                                    treat_var, block_var,
+                                    paste0(treat_var, "*", block_var)
+                                ),
                                 collapse = " + "
                             ),
                             sep = "~"
@@ -165,15 +172,23 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
                     # TryCatch for Anova Modeling
                     tryCatch(
                         {
-                            path_data$interaction_pval[which(path_data$CHEM_ID == var)] <-
-                                anova(int_mod)[paste0(treat_var, ":", block_var), 5]
+                            path_data$interaction_pval[
+                                which(path_data$CHEM_ID == var)
+                            ] <-
+                                anova(int_mod)[
+                                    paste0(treat_var, ":", block_var), 5
+                                ]
                         },
                         warning = function(w) {
                             warning(w, " for CHEM ID ", var)
                         },
                         finally = {
-                            path_data$interaction_pval[which(path_data$CHEM_ID == var)] <-
-                                anova(int_mod)[paste0(treat_var, ":", block_var), 5]
+                            path_data$interaction_pval[
+                                which(path_data$CHEM_ID == var)
+                            ] <-
+                                anova(int_mod)[
+                                    paste0(treat_var, ":", block_var), 5
+                                ]
                         }
                     )
 
@@ -189,14 +204,18 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
                     # Anova modling for the parallel model.
                     tryCatch(
                         {
-                            path_data$parallel_pval[which(path_data$CHEM_ID == var)] <-
+                            path_data$parallel_pval[which(
+                                path_data$CHEM_ID == var
+                            )] <-
                                 anova(par_mod)[block_var, 5]
                         },
                         warning = function(w) {
                             warning(w, " for CHEM ID ", var)
                         },
                         finally = {
-                            path_data$parallel_pval[which(path_data$CHEM_ID == var)] <-
+                            path_data$parallel_pval[
+                                which(path_data$CHEM_ID == var)
+                            ] <-
                                 anova(par_mod)[block_var, 5]
                         }
                     )
@@ -213,14 +232,18 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
                     # Anova model for treatment.
                     tryCatch(
                         {
-                            path_data$single_pval[which(path_data$CHEM_ID == var)] <-
+                            path_data$single_pval[
+                                which(path_data$CHEM_ID == var)
+                            ] <-
                                 anova(treat_mod)[treat_var, 5]
                         },
                         warning = function(w) {
                             warning(w, " for CHEM ID ", var)
                         },
                         finally = {
-                            path_data$single_pval[which(path_data$CHEM_ID == var)] <-
+                            path_data$single_pval[
+                                which(path_data$CHEM_ID == var)
+                            ] <-
                                 anova(treat_mod)[treat_var, 5]
                         }
                     )
@@ -228,10 +251,14 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
 
                 # Compute combined fisher probabilities for each model.
                 if (length(var_names) == 1) {
-                    path_data$interaction_fisher[which(path_data$CHEM_ID == var)] <-
+                    path_data$interaction_fisher[
+                        which(path_data$CHEM_ID == var)
+                    ] <-
                         anova(int_mod)[paste0(treat_var, ":", block_var), 5]
 
-                    path_data$parallel_fisher[which(path_data$CHEM_ID == var)] <-
+                    path_data$parallel_fisher[
+                        which(path_data$CHEM_ID == var)
+                    ] <-
                         anova(par_mod)[block_var, 5]
 
                     path_data$single_fisher[which(path_data$CHEM_ID == var)] <-
@@ -239,27 +266,63 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
 
                     path_data$model[which(path_data$sub_pathway == pathway)] <-
                         case_when(
-                            anova(int_mod)[paste0(treat_var, ":", block_var), 5] < 0.05 ~ "Interaction",
+                            anova(int_mod)[
+                                paste0(treat_var, ":", block_var), 5
+                            ] < 0.05 ~
+                                "Interaction",
                             anova(par_mod)[2, 5] < 0.05 ~ "Parallel",
                             anova(treat_mod)[1, 5] < 0.05 ~ "Single",
                             TRUE ~ "None"
                         )
                 } else {
-                    interaction_fisher <- -2 * sum(log(path_data$interaction_pval[which(path_data$sub_pathway == pathway)]), na.rm = TRUE)
+                    interaction_fisher <- -2 * sum(
+                        log(path_data$interaction_pval[
+                            which(path_data$sub_pathway == pathway)
+                        ]),
+                        na.rm = TRUE
+                    )
 
-                    interaction_p <- round(pchisq(interaction_fisher, 2 * length(var_names),
+                    interaction_p <- round(
+                        pchisq(interaction_fisher, 2 * length(var_names),
+                            lower.tail = FALSE
+                        ), 2
+                    )
+
+                    path_data$interaction_fisher[
+                        which(path_data$sub_pathway == pathway)
+                    ] <- interaction_p
+
+                    parallel_fisher <- -2 * sum(log(path_data$parallel_pval[
+                        which(path_data$sub_pathway == pathway)
+                    ]), na.rm = TRUE)
+
+                    parallel_p <- round(
+                        pchisq(parallel_fisher, 2 * length(var_names),
+                            lower.tail = FALSE
+                        ), 2
+                    )
+
+                    path_data$parallel_fisher[
+                        which(path_data$sub_pathway == pathway)
+                    ] <- parallel_p
+
+                    single_fisher <- -2 * sum(
+                        log(path_data$single_pval[
+                            which(path_data$sub_pathway == pathway)
+                        ]),
+                        na.rm = TRUE
+                    )
+
+
+                    single_p <- round(pchisq(single_fisher,
+                        2 * length(var_names),
                         lower.tail = FALSE
                     ), 2)
 
-                    path_data$interaction_fisher[which(path_data$sub_pathway == pathway)] <- interaction_p
 
-                    parallel_fisher <- -2 * sum(log(path_data$parallel_pval[which(path_data$sub_pathway == pathway)]), na.rm = TRUE)
-                    parallel_p <- round(pchisq(parallel_fisher, 2 * length(var_names), lower.tail = FALSE), 2)
-                    path_data$parallel_fisher[which(path_data$sub_pathway == pathway)] <- parallel_p
-
-                    single_fisher <- -2 * sum(log(path_data$single_pval[which(path_data$sub_pathway == pathway)]), na.rm = TRUE)
-                    single_p <- round(pchisq(single_fisher, 2 * length(var_names), lower.tail = FALSE), 2)
-                    path_data$single_fisher[which(path_data$sub_pathway == pathway)] <- single_p
+                    path_data$single_fisher[
+                        which(path_data$sub_pathway == pathway)
+                    ] <- single_p
 
                     path_data$model[which(path_data$sub_pathway == pathway)] <-
                         case_when(
@@ -289,7 +352,9 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
                 ))
 
             for (pathway in unique(path_data$sub_pathway)) {
-                var_names <- path_data$CHEM_ID[which(path_data$sub_pathway == pathway)]
+                var_names <- path_data$CHEM_ID[
+                    which(path_data$sub_pathway == pathway)
+                ]
 
 
                 # Calculate p values for each linear model
@@ -310,14 +375,18 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
 
                     tryCatch(
                         {
-                            path_data$single_pval[which(path_data$CHEM_ID == var)] <-
+                            path_data$single_pval[
+                                which(path_data$CHEM_ID == var)
+                            ] <-
                                 anova(treat_mod)[treat_var, 5]
                         },
                         warning = function(w) {
                             warning(w, " for CHEM ID ", var)
                         },
                         finally = {
-                            path_data$single_pval[which(path_data$CHEM_ID == var)] <-
+                            path_data$single_pval[
+                                which(path_data$CHEM_ID == var)
+                            ] <-
                                 anova(treat_mod)[treat_var, 5]
                         }
                     )
@@ -333,14 +402,27 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
                             TRUE ~ "None"
                         )
                 } else {
-                    single_fisher <- -2 * sum(log(path_data$single_pval[which(path_data$sub_pathway == pathway)]), na.rm = TRUE)
-                    single_p <- round(pchisq(single_fisher, 2 * length(var_names), lower.tail = FALSE), 2)
-                    path_data$single_fisher[which(path_data$sub_pathway == pathway)] <- single_p
-
-                    path_data$model[which(path_data$sub_pathway == pathway)] <- dplyr::case_when(
-                        single_p < 0.05 ~ "Single",
-                        TRUE ~ "None"
+                    single_fisher <- -2 * sum(
+                        log(path_data$single_pval[
+                            which(path_data$sub_pathway == pathway)
+                        ]),
+                        na.rm = TRUE
                     )
+
+                    single_p <- round(pchisq(single_fisher,
+                        2 * length(var_names),
+                        lower.tail = FALSE
+                    ), 2)
+
+                    path_data$single_fisher[
+                        which(path_data$sub_pathway == pathway)
+                    ] <- single_p
+
+                    path_data$model[which(path_data$sub_pathway == pathway)] <-
+                        dplyr::case_when(
+                            single_p < 0.05 ~ "Single",
+                            TRUE ~ "None"
+                        )
                 }
             }
         }
@@ -383,9 +465,12 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
                     ))
 
 
-                # For each pathways run the models for each metabolite within the pathway.
+                # For each pathways run the models for each metabolite
+                # within the pathway.
                 for (pathway in unique(path_data$sub_pathway)) {
-                    var_names <- path_data$CHEM_ID[which(path_data$sub_pathway == pathway)]
+                    var_names <- path_data$CHEM_ID[
+                        which(path_data$sub_pathway == pathway)
+                    ]
 
 
                     # Calculate p values for each linear model
@@ -413,22 +498,32 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
                         # TryCatch for Anova Modeling
                         tryCatch(
                             {
-                                path_data$interaction_pval[which(path_data$CHEM_ID == var)] <-
-                                    anova(int_mod)[paste0(treat_var, ":", block_var), 5]
+                                path_data$interaction_pval[
+                                    which(path_data$CHEM_ID == var)
+                                ] <-
+                                    anova(int_mod)[
+                                        paste0(treat_var, ":", block_var), 5
+                                    ]
                             },
                             warning = function(w) {
                                 warning(w, " for CHEM ID ", var)
                             },
                             finally = {
-                                path_data$interaction_pval[which(path_data$CHEM_ID == var)] <-
-                                    anova(int_mod)[paste0(treat_var, ":", block_var), 5]
+                                path_data$interaction_pval[
+                                    which(path_data$CHEM_ID == var)
+                                ] <-
+                                    anova(int_mod)[
+                                        paste0(treat_var, ":", block_var), 5
+                                    ]
                             }
                         )
 
                         # Parallel model, this generalizes the model formulation
                         par_formula <- as.formula(
                             paste("outcome",
-                                paste(c(treat_var, block_var), collapse = " + "),
+                                paste(c(treat_var, block_var),
+                                    collapse = " + "
+                                ),
                                 sep = "~"
                             )
                         )
@@ -437,14 +532,18 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
                         # Anova modling for the parallel model.
                         tryCatch(
                             {
-                                path_data$parallel_pval[which(path_data$CHEM_ID == var)] <-
+                                path_data$parallel_pval[
+                                    which(path_data$CHEM_ID == var)
+                                ] <-
                                     anova(par_mod)[block_var, 5]
                             },
                             warning = function(w) {
                                 warning(w, " for CHEM ID ", var)
                             },
                             finally = {
-                                path_data$parallel_pval[which(path_data$CHEM_ID == var)] <-
+                                path_data$parallel_pval[
+                                    which(path_data$CHEM_ID == var)
+                                ] <-
                                     anova(par_mod)[block_var, 5]
                             }
                         )
@@ -461,14 +560,18 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
                         # Anova model for treatment.
                         tryCatch(
                             {
-                                path_data$single_pval[which(path_data$CHEM_ID == var)] <-
+                                path_data$single_pval[
+                                    which(path_data$CHEM_ID == var)
+                                ] <-
                                     anova(treat_mod)[treat_var, 5]
                             },
                             warning = function(w) {
                                 warning(w, " for CHEM ID ", var)
                             },
                             finally = {
-                                path_data$single_pval[which(path_data$CHEM_ID == var)] <-
+                                path_data$single_pval[
+                                    which(path_data$CHEM_ID == var)
+                                ] <-
                                     anova(treat_mod)[treat_var, 5]
                             }
                         )
@@ -476,36 +579,89 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
 
                     # Compute combined fisher probabilities for each model.
                     if (length(var_names) == 1) {
-                        path_data$interaction_fisher[which(path_data$CHEM_ID == var)] <-
+                        path_data$interaction_fisher[
+                            which(path_data$CHEM_ID == var)
+                        ] <-
                             anova(int_mod)[paste0(treat_var, ":", block_var), 5]
 
-                        path_data$parallel_fisher[which(path_data$CHEM_ID == var)] <-
+                        path_data$parallel_fisher[
+                            which(path_data$CHEM_ID == var)
+                        ] <-
                             anova(par_mod)[block_var, 5]
 
-                        path_data$single_fisher[which(path_data$CHEM_ID == var)] <-
+                        path_data$single_fisher[
+                            which(path_data$CHEM_ID == var)
+                        ] <-
                             anova(treat_mod)[treat_var, 5]
 
-                        path_data$model[which(path_data$sub_pathway == pathway)] <-
+                        path_data$model[
+                            which(path_data$sub_pathway == pathway)
+                        ] <-
                             case_when(
-                                anova(int_mod)[paste0(treat_var, ":", block_var), 5] < 0.05 ~ "Interaction",
+                                anova(int_mod)[
+                                    paste0(
+                                        treat_var, ":", block_var
+                                    ), 5
+                                ] < 0.05 ~ "Interaction",
                                 anova(par_mod)[2, 5] < 0.05 ~ "Parallel",
                                 anova(treat_mod)[1, 5] < 0.05 ~ "Single",
                                 TRUE ~ "None"
                             )
                     } else {
-                        interaction_fisher <- -2 * sum(log(path_data$interaction_pval[which(path_data$sub_pathway == pathway)]), na.rm = TRUE)
-                        interaction_p <- round(pchisq(interaction_fisher, 2 * length(var_names), lower.tail = FALSE), 2)
-                        path_data$interaction_fisher[which(path_data$sub_pathway == pathway)] <- interaction_p
+                        interaction_fisher <- -2 * sum(
+                            log(path_data$interaction_pval[
+                                which(path_data$sub_pathway == pathway)
+                            ]),
+                            na.rm = TRUE
+                        )
 
-                        parallel_fisher <- -2 * sum(log(path_data$parallel_pval[which(path_data$sub_pathway == pathway)]), na.rm = TRUE)
-                        parallel_p <- round(pchisq(parallel_fisher, 2 * length(var_names), lower.tail = FALSE), 2)
-                        path_data$parallel_fisher[which(path_data$sub_pathway == pathway)] <- parallel_p
+                        interaction_p <- round(pchisq(
+                            interaction_fisher, 2 * length(var_names),
+                            lower.tail = FALSE
+                        ), 2)
 
-                        single_fisher <- -2 * sum(log(path_data$single_pval[which(path_data$sub_pathway == pathway)]), na.rm = TRUE)
-                        single_p <- round(pchisq(single_fisher, 2 * length(var_names), lower.tail = FALSE), 2)
-                        path_data$single_fisher[which(path_data$sub_pathway == pathway)] <- single_p
+                        path_data$interaction_fisher[
+                            which(path_data$sub_pathway == pathway)
+                        ] <-
+                            interaction_p
 
-                        path_data$model[which(path_data$sub_pathway == pathway)] <- case_when(
+                        parallel_fisher <- -2 * sum(
+                            log(path_data$parallel_pval[
+                                which(path_data$sub_pathway == pathway)
+                            ]),
+                            na.rm = TRUE
+                        )
+
+                        parallel_p <- round(
+                            pchisq(parallel_fisher,
+                                2 * length(var_names),
+                                lower.tail = FALSE
+                            ), 2
+                        )
+
+                        path_data$parallel_fisher[
+                            which(path_data$sub_pathway == pathway)
+                        ] <- parallel_p
+
+                        single_fisher <- -2 * sum(
+                            log(path_data$single_pval[
+                                which(path_data$sub_pathway == pathway)
+                            ]),
+                            na.rm = TRUE
+                        )
+
+                        single_p <- round(pchisq(single_fisher,
+                            2 * length(var_names),
+                            lower.tail = FALSE
+                        ), 2)
+
+                        path_data$single_fisher[which(
+                            path_data$sub_pathway == pathway
+                        )] <- single_p
+
+                        path_data$model[which(
+                            path_data$sub_pathway == pathway
+                        )] <- case_when(
                             interaction_p < 0.05 ~ "Interaction",
                             parallel_p < 0.05 ~ "Parallel",
                             single_p < 0.05 ~ "Single",
@@ -532,7 +688,9 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
                     ))
 
                 for (pathway in unique(path_data$sub_pathway)) {
-                    var_names <- path_data$CHEM_ID[which(path_data$sub_pathway == pathway)]
+                    var_names <- path_data$CHEM_ID[
+                        which(path_data$sub_pathway == pathway)
+                    ]
 
 
                     # Calculate p values for each linear model
@@ -553,34 +711,57 @@ subpathway_analysis <- function(data, treat_var, block_var = NULL,
 
                         tryCatch(
                             {
-                                path_data$single_pval[which(path_data$CHEM_ID == var)] <-
+                                path_data$single_pval[which(
+                                    path_data$CHEM_ID == var
+                                )] <-
                                     anova(treat_mod)[treat_var, 5]
                             },
                             warning = function(w) {
                                 warning(w, " for CHEM ID ", var)
                             },
                             finally = {
-                                path_data$single_pval[which(path_data$CHEM_ID == var)] <-
+                                path_data$single_pval[
+                                    which(path_data$CHEM_ID == var)
+                                ] <-
                                     anova(treat_mod)[treat_var, 5]
                             }
                         )
                     }
 
                     if (length(var_names) == 1) {
-                        path_data$single_fisher[which(path_data$CHEM_ID == var)] <-
+                        path_data$single_fisher[
+                            which(path_data$CHEM_ID == var)
+                        ] <-
                             anova(treat_mod)[treat_var, 5]
 
-                        path_data$model[which(path_data$sub_pathway == pathway)] <-
+                        path_data$model[
+                            which(path_data$sub_pathway == pathway)
+                        ] <-
                             dplyr::case_when(
                                 anova(treat_mod)[1, 5] < 0.05 ~ "Single",
                                 TRUE ~ "None"
                             )
                     } else {
-                        single_fisher <- -2 * sum(log(path_data$single_pval[which(path_data$sub_pathway == pathway)]), na.rm = TRUE)
-                        single_p <- round(pchisq(single_fisher, 2 * length(var_names), lower.tail = FALSE), 2)
-                        path_data$single_fisher[which(path_data$sub_pathway == pathway)] <- single_p
+                        single_fisher <- -2 * sum(
+                            log(path_data$single_pval[
+                                which(path_data$sub_pathway == pathway)
+                            ]),
+                            na.rm = TRUE
+                        )
 
-                        path_data$model[which(path_data$sub_pathway == pathway)] <-
+                        single_p <- round(
+                            pchisq(single_fisher, 2 * length(var_names),
+                                lower.tail = FALSE
+                            ), 2
+                        )
+
+                        path_data$single_fisher[
+                            which(path_data$sub_pathway == pathway)
+                        ] <- single_p
+
+                        path_data$model[
+                            which(path_data$sub_pathway == pathway)
+                        ] <-
                             dplyr::case_when(
                                 single_p < 0.05 ~ "Single",
                                 TRUE ~ "None"

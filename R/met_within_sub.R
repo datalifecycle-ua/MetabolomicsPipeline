@@ -51,11 +51,13 @@
 
 
 met_within_sub <- function(subpath_results, subpathway,
-                           mod = c("interaction", "parallel", "single")) {
+                        mod = c("interaction", "parallel", "single")) {
     if (inherits(subpath_results, "data.frame")) {
         # Get model results in dataframe
         mod_res <-
-            paste0(mod, "_pval")[paste0(mod, "_pval") %in% names(subpath_results)]
+            paste0(mod, "_pval")[
+                paste0(mod, "_pval") %in% names(subpath_results)
+            ]
 
         # create table
         table <- subpath_results %>%
@@ -82,7 +84,9 @@ met_within_sub <- function(subpath_results, subpathway,
             stratum <- subpath_results[[name]]
 
             # Get model results in dataframe
-            mod_res <- paste0(mod, "_pval")[paste0(mod, "_pval") %in% names(stratum)]
+            mod_res <- paste0(mod, "_pval")[
+                paste0(mod, "_pval") %in% names(stratum)
+            ]
 
             stratum %>%
                 dplyr::filter(sub_pathway == subpathway) %>%
@@ -99,7 +103,10 @@ met_within_sub <- function(subpath_results, subpathway,
                         " (", name, ")"
                     )
                 ) %>%
-                kableExtra::kable_paper(full_width = FALSE, html_font = "Cambria")
+                kableExtra::kable_paper(
+                    full_width = FALSE,
+                    html_font = "Cambria"
+                )
         })
 
         return(tables)

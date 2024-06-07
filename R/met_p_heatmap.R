@@ -13,14 +13,14 @@
 #'     plotly. Use interactive=F to produce a static heatmap using pheatmap.
 #'
 #' @param CHEM_ID Column name in the chemical annotation worksheet that contains
-#' the chemical ID. 
-#' 
-#' @param SUB_PATHWAY Column name in the chemical annotation worksheet which 
+#' the chemical ID.
+#'
+#' @param SUB_PATHWAY Column name in the chemical annotation worksheet which
 #' contains the subpathway information.
-#' 
+#'
 #' @param CHEMICAL_NAME Column name in the chemical annotation worksheet which
-#' contains the chemical name. 
-#' 
+#' contains the chemical name.
+#'
 #' @param ... Additional arguments that can be passed to pheatmap.
 #'
 #' @details
@@ -32,6 +32,40 @@
 #' @returns An interactive heatmap of pairwise p-values.
 #'
 #'
+#' @examples
+#' # Load data
+#' data("demoDataSmall", package = "MetabolomicsPipeline")
+#' dat <- demoDataSmall
+#'
+#' # Run pairwise analysis
+#' strat_pairwise <- metabolite_pairwise(dat,
+#'     form = "GROUP_NAME*TIME1",
+#'     strat_var = "Gender"
+#' )
+#' 
+#' #############################################################################
+#' ## Create Estimate Heatmap ##################################################
+#' ############################################################################
+#'
+#' met_est_heatmap(strat_pairwise$Female, dat,
+#'                interactive = FALSE,
+#'                CHEM_ID = "CHEM_ID", SUB_PATHWAY = "SUB_PATHWAY",
+#'                CHEMICAL_NAME = "CHEMICAL_NAME",
+#'                main = "Log fold change heatmap", show_rownames = FALSE
+#' )
+#'
+#'
+#'##############################################################################
+#'## Create P-value Heatmap ####################################################
+#'##############################################################################
+#' # Female
+#' met_p_heatmap(strat_pairwise$Female, dat,
+#'              interactive = FALSE, show_rownames = FALSE,
+#'              main = "Pvalue Heatmap"
+#')
+#'
+#'
+#'
 #' @importFrom dplyr filter
 #' @importFrom dplyr arrange
 #' @importFrom dplyr mutate
@@ -40,26 +74,26 @@
 #' @importFrom plotly plot_ly
 #' @importFrom SummarizedExperiment rowData
 #' @importFrom stats as.formula
-#' 
+#'
 #'
 #' @export
 #'
 
 
 met_p_heatmap <- function(results_data, data, interactive = FALSE,
-                          CHEM_ID="CHEM_ID",SUB_PATHWAY="SUB_PATHWAY",
-                          CHEMICAL_NAME = "CHEMICAL_NAME",...) {
+                        CHEM_ID = "CHEM_ID", SUB_PATHWAY = "SUB_PATHWAY",
+                        CHEMICAL_NAME = "CHEMICAL_NAME", ...) {
     # 2. Merge the chemical annotation fill with the results from the pairwise
     #    comparisons.
-    dat <-  rowData(data) %>%
-      as.data.frame() %>%
-      tibble::rownames_to_column(CHEM_ID) %>%
-      dplyr::select(dplyr::all_of(c(SUB_PATHWAY, CHEMICAL_NAME, CHEM_ID))) %>%
-      merge(results_data, by.x = CHEM_ID, by.y = "metabolite") %>%
-      dplyr::filter(Overall_pval < 0.05) %>%
-      dplyr::arrange(!!as.name(SUB_PATHWAY)) %>%
-      dplyr::select(
-        dplyr::all_of(c(CHEM_ID, SUB_PATHWAY, CHEMICAL_NAME)),
+    dat <- rowData(data) %>%
+        as.data.frame() %>%
+        tibble::rownames_to_column(CHEM_ID) %>%
+        dplyr::select(dplyr::all_of(c(SUB_PATHWAY, CHEMICAL_NAME, CHEM_ID))) %>%
+        merge(results_data, by.x = CHEM_ID, by.y = "metabolite") %>%
+        dplyr::filter(Overall_pval < 0.05) %>%
+        dplyr::arrange(!!as.name(SUB_PATHWAY)) %>%
+        dplyr::select(
+            dplyr::all_of(c(CHEM_ID, SUB_PATHWAY, CHEMICAL_NAME)),
             all_of(names(results_data)[grepl("PVALS", names(results_data))])
         ) %>%
         reshape2::melt(
@@ -70,7 +104,7 @@ met_p_heatmap <- function(results_data, data, interactive = FALSE,
             Contrast = gsub("_PVALS", "", Contrast),
             P_value = ifelse(P_value < 0.05, round(P_value, 3), NA)
         ) %>%
-      dplyr::arrange(!!as.name(SUB_PATHWAY))
+        dplyr::arrange(!!as.name(SUB_PATHWAY))
 
 
 
@@ -78,8 +112,9 @@ met_p_heatmap <- function(results_data, data, interactive = FALSE,
     if (interactive == FALSE) {
         # Create matrix for heatmap
         matr <- dat %>%
-          reshape2::dcast(as.formula(paste0(CHEMICAL_NAME,"~","Contrast")),
-                          value.var = "P_value")
+            reshape2::dcast(as.formula(paste0(CHEMICAL_NAME, "~", "Contrast")),
+                value.var = "P_value"
+            )
 
         rownames(matr) <- matr[, 1]
 
@@ -87,14 +122,16 @@ met_p_heatmap <- function(results_data, data, interactive = FALSE,
 
 
         # Create row annotation
-       # rowAnno <- dat %>%
-         #   dplyr::select(CHEMICAL_NAME, SUB_PATHWAY)
+        # rowAnno <- dat %>%
+        #   dplyr::select(CHEMICAL_NAME, SUB_PATHWAY)
 
         # Create heatmap
-        pal <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdBu")))(256)
+        pal <- grDevices::colorRampPalette(
+            rev(RColorBrewer::brewer.pal(10, "RdBu"))
+        )(256)
 
         p <- pheatmap::pheatmap(matr,
-            cluster_rows = F, cluster_cols = F,
+            cluster_rows = FALSE, cluster_cols = FALSE,
             color = pal, ...
         )
     }
@@ -102,15 +139,14 @@ met_p_heatmap <- function(results_data, data, interactive = FALSE,
 
 
     # 3. Produce interactive Heatmap
-    if(interactive == TRUE){
-        
-      p <- dat %>%
+    if (interactive == TRUE) {
+        p <- dat %>%
             plotly::plot_ly(
                 type = "heatmap",
                 x = ~Contrast,
-                y = as.formula(paste0("~",CHEMICAL_NAME)),
+                y = as.formula(paste0("~", CHEMICAL_NAME)),
                 z = ~P_value,
-                text = as.formula(paste0("~",SUB_PATHWAY)),
+                text = as.formula(paste0("~", SUB_PATHWAY)),
                 hovertemplate = paste(
                     "<b>Metabolite: %{y}</b><br><br>",
                     "Sub-pathway: %{text}<br>",

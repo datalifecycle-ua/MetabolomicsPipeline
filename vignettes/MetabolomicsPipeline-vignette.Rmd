@@ -93,8 +93,8 @@ dataset is on within the Metabolon Excel file.
 The MetabolomicsPipeline package provides a convenient way to load each
 of these datasets together as a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html) using loadMetabolon().
 However, for this vignette we are using the demo data provided with the package.
-This data is accessed using MetabolomicsPipeline::demoDat. In the following chunk 
-we:
+This data is accessed using data(demoDat, package = "MetabolomicsPipeline").
+In the following chunk we:
 
 1. Load the demo data
 
@@ -154,7 +154,7 @@ function has three arguments:
 * data: SummarizedExperiment with Metabolon experiment data.
 
 * Assay: Name of the assay to be used for the pairwise analysis
-  (default='normalized')
+    (default='normalized')
 
 * meta_var: A metadata variable to color code the PCA plot by.
 
@@ -197,13 +197,13 @@ requires the following arguments.
 * data: SummarizedExperiment with Metabolon experiment data.
 
 * top_mets: The number of metabolites to include in the heatmap. The metabolites
-  are chosen based on the metabolites with the highest variability. 
+    are chosen based on the metabolites with the highest variability. 
 
 * group_vars: The variables to group the samples by.
-caption: The title of the heatmap.
+    caption: The title of the heatmap.
 
 * caption: A title for the heatmap. If strat_var is used, the title will 
-  automatically include the stratum with the tile.
+    automatically include the stratum with the tile.
 
 * Assay: Which assay data to use for the heatmap (default="normalized").
 
@@ -350,17 +350,17 @@ function, which requires the following arguments.
 * data: SummarizedExperiment with Metabolon experiment data.
 
 * treat_var: This is the name of the variable in the analysis data that is the 
-  main variable of interest.
+    main variable of interest.
 
 * block_var: This is the name of the blocking variable in the dataset. If the
-  experimental design does not include a blocking variable, then the value of 
-  block_var=NULL.
+    experimental design does not include a blocking variable, then the value of 
+    block_var=NULL.
 
 * strat_var: Variable to stratify the subpathway analysis by. This is set to 
-  NULL by default and will not stratify the analysis unless specified.
+    NULL by default and will not stratify the analysis unless specified.
 
 * Assay: Name of the assay to be used for the pairwise analysis 
-  (default='normalized')
+    (default='normalized')
 
 
 #### Results Summaries
@@ -424,16 +424,16 @@ MetabolomicsPipeline package, which requires the following arguments:
 * data: SummarizedExperiment with Metabolon experiment data.
 
 * Assay: Name of the assay to be used for the pairwise analysis 
-  (default='normalized')
+    (default='normalized')
 
 * mets: Chemical ID for the metabolites of interest. If NULL then the pairwise
-  analysis is completed for all metabololites.
+    analysis is completed for all metabololites.
 
 * form: This is a character string the resembles the right hand side of a simple
-  linear regression model in R. For example form = "Group1 + Group2".
+    linear regression model in R. For example form = "Group1 + Group2".
 
 * strat_var: A variable in the analysis data to stratify the model by. If this 
-  is specified, a list of results will be returned.
+    is specified, a list of results will be returned.
 
 #### Log Fold-Change Heatmap
 
@@ -443,7 +443,8 @@ equal under the null hypothesis). The
 heatmap colors will only show if the log fold-change is greater than
 log(2) or less than log(.5). Therefore, this heatmap will only focus on
 comparisons with a fold change of two or greater. The met_est_heatmap function 
-will produce an interactive heatmap using the results from the pairwise analysis.  
+will produce an interactive heatmap using the results from the pairwise
+analysis.  
 
 #### P-Value Heatmap
 
@@ -459,13 +460,14 @@ to produce an interactive plot using plotly or to create a static heatmap using
 pheatmap. To produce these heatmaps we use the following arguments:
 
 
-*  results_data: Results data frame of the pairwise comparisons produced by \code{\link{metabolite_pairwise}}.
- 
+*  results_data: Results data frame of the pairwise comparisons produced by
+    \code{\link{metabolite_pairwise}}.
+
 *  data: A SummarizedExperiment containing the Metabolon experiment data.
- 
+
 *  interactive: boolean (T/F) for whether or not the plot should be
-     interactive. Use interactive=T to produce an interactive plot using 
-     plotly. Use interactive=F to produce a static heatmap using pheatmap.
+    interactive. Use interactive=T to produce an interactive plot using 
+    plotly. Use interactive=F to produce a static heatmap using pheatmap.
 
 * ...: Additional arguments that can be passed to pheatmap.   
 
@@ -474,7 +476,10 @@ pheatmap. To produce these heatmaps we use the following arguments:
 #### Run Pairwise Comparisons ##################################################
 ################################################################################
 
-strat_pairwise <- metabolite_pairwise(dat, form = "GROUP_NAME*TIME1", strat_var = "Gender")
+strat_pairwise <- metabolite_pairwise(dat,
+    form = "GROUP_NAME*TIME1",
+    strat_var = "Gender"
+)
 
 
 ###############################################################################
@@ -483,8 +488,8 @@ strat_pairwise <- metabolite_pairwise(dat, form = "GROUP_NAME*TIME1", strat_var 
 
 met_est_heatmap(strat_pairwise$Female, dat,
     interactive = FALSE,
-     CHEM_ID="CHEM_ID",SUB_PATHWAY="SUB_PATHWAY",
-                            CHEMICAL_NAME = "CHEMICAL_NAME",
+    CHEM_ID = "CHEM_ID", SUB_PATHWAY = "SUB_PATHWAY",
+    CHEMICAL_NAME = "CHEMICAL_NAME",
     main = "Log fold change heatmap", show_rownames = FALSE
 )
 
@@ -513,18 +518,18 @@ a subpathway. For both functions, the arguments are:
 * data: SummarizedExperiment with Metabolon experiment data.
 
 * subpathway:	Character value of the subpathway of interest. This is case
-  sensitive and must be in the chemical annotation file.
+    sensitive and must be in the chemical annotation file.
 
 * block_var: This the the name of the variable in the meta data that is used for
-  the X axis of the box plots. We recommend using the "block_var" from the 
-  subpathway analysis.
+    the X axis of the box plots. We recommend using the "block_var" from the 
+    subpathway analysis.
 
 * treat_var: This is a grouping variable. As a recommendation the treatment 
-  groups should be used in the treat_var argument as this will provide a 
-  different color for each of the treatments making it easier to identify.
+    groups should be used in the treat_var argument as this will provide a 
+    different color for each of the treatments making it easier to identify.
 
 * Assay: Name of the assay to be used for the pairwise analysis 
-  (default='normalized')
+    (default='normalized')
 
 * ... : Additional arguments to filter the analysis data by.
 
@@ -539,7 +544,8 @@ subpathway_boxplots(dat,
     subpathway = "Lactoyl Amino Acid", block_var = TIME1,
     treat_var = GROUP_NAME, Assay = "normalized",
     CHEMICAL_NAME = "CHEMICAL_NAME",
-    CHEM_ID="CHEM_ID",SUB_PATHWAY="SUB_PATHWAY",Gender == "Female")
+    CHEM_ID = "CHEM_ID", SUB_PATHWAY = "SUB_PATHWAY", Gender == "Female"
+)
 
 
 ################################################################################
@@ -557,9 +563,9 @@ subpathway_lineplots(dat,
     block_var = TIME1, treat_var = GROUP_NAME,
     Assay = "normalized",
     CHEMICAL_NAME = "CHEMICAL_NAME",
-    CHEM_ID="CHEM_ID",SUB_PATHWAY="SUB_PATHWAY",Gender == "Female"
+    CHEM_ID = "CHEM_ID", SUB_PATHWAY = "SUB_PATHWAY", Gender == "Female"
 ) +
-    xlab("Time") 
+    xlab("Time")
 ```
 
 ### Session Info

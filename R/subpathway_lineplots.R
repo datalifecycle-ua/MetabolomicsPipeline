@@ -17,15 +17,15 @@
 #'
 #' @param Assay Name of the assay to be used for the pairwise analysis
 #'  (default='normalized')
-#'  
+#'
 #' @param CHEM_ID Column name in the chemical annotation worksheet that contains
-#' the chemical ID. 
-#' 
-#' @param SUB_PATHWAY Column name in the chemical annotation worksheet which 
+#' the chemical ID.
+#'
+#' @param SUB_PATHWAY Column name in the chemical annotation worksheet which
 #' contains the subpathway information.
-#' 
+#'
 #' @param CHEMICAL_NAME Column name in the chemical annotation worksheet which
-#' contains the chemical name. 
+#' contains the chemical name.
 #'
 #' @param ... Additional arguments to filter the analysis data by.
 #'
@@ -42,11 +42,12 @@
 #' ############################################################################
 #'
 #' subpathway_boxplots(dat,
-#'                  subpathway = "Lactoyl Amino Acid", block_var = TIME1,
-#'                  treat_var = GROUP_NAME, Assay = "normalized",
-#'                  CHEMICAL_NAME = "CHEMICAL_NAME",
-#'                  CHEM_ID="CHEM_ID",
-#'                  SUB_PATHWAY="SUB_PATHWAY",Gender == "Female")
+#'     subpathway = "Lactoyl Amino Acid", block_var = TIME1,
+#'     treat_var = GROUP_NAME, Assay = "normalized",
+#'     CHEMICAL_NAME = "CHEMICAL_NAME",
+#'     CHEM_ID = "CHEM_ID",
+#'     SUB_PATHWAY = "SUB_PATHWAY", Gender == "Female"
+#' )
 #'
 #'
 #' ############################################################################
@@ -60,15 +61,13 @@
 #'
 #' # Create line plots
 #' subpathway_lineplots(dat,
-#'                     subpathway = "Lactoyl Amino Acid",
-#'                     block_var = TIME1, treat_var = GROUP_NAME,
-#'                     Assay = "normalized",
-#'                     CHEMICAL_NAME = "CHEMICAL_NAME",
-#'                     CHEM_ID="CHEM_ID",
-#'                     SUB_PATHWAY="SUB_PATHWAY",Gender == "Female")
-#'
-#'
-#'
+#'     subpathway = "Lactoyl Amino Acid",
+#'     block_var = TIME1, treat_var = GROUP_NAME,
+#'     Assay = "normalized",
+#'     CHEMICAL_NAME = "CHEMICAL_NAME",
+#'     CHEM_ID = "CHEM_ID",
+#'     SUB_PATHWAY = "SUB_PATHWAY", Gender == "Female"
+#' )
 #'
 #' @importFrom SummarizedExperiment colData
 #' @importFrom SummarizedExperiment assay
@@ -86,10 +85,10 @@
 
 
 subpathway_lineplots <- function(data, subpathway, block_var, treat_var,
-                                 Assay = "normalized",
-                                 CHEMICAL_NAME="CHEMICAL_NAME",
-                                 CHEM_ID="CHEM_ID",
-                                 SUB_PATHWAY="SUB_PATHWAY",...) {
+                                Assay = "normalized",
+                                CHEMICAL_NAME = "CHEMICAL_NAME",
+                                CHEM_ID = "CHEM_ID",
+                                SUB_PATHWAY = "SUB_PATHWAY", ...) {
     # Create analysis data
     analysis <- SummarizedExperiment::colData(data) %>%
         merge(t(SummarizedExperiment::assay(data, Assay)), by = "row.names") %>%
@@ -107,14 +106,17 @@ subpathway_lineplots <- function(data, subpathway, block_var, treat_var,
             dplyr::filter(...) %>%
             dplyr::select(
                 treat = {{ treat_var }}, X = {{ block_var }},
-                as.character(chem[which(chem[,SUB_PATHWAY] == subpathway),CHEM_ID])
+                as.character(chem[
+                    which(chem[, SUB_PATHWAY] == subpathway),
+                    CHEM_ID
+                ])
             ) %>%
             tidyr::pivot_longer(cols = -c(treat, X)) %>%
             merge(chem, by.x = "name", by.y = CHEM_ID) %>%
             ggplot2::ggplot(aes(x = X, y = value, color = treat)) +
             ggplot2::geom_jitter() +
             ggplot2::geom_smooth(method = "lm") +
-            ggplot2::facet_wrap(as.formula(paste0("~",CHEMICAL_NAME))) +
+            ggplot2::facet_wrap(as.formula(paste0("~", CHEMICAL_NAME))) +
             ggplot2::theme_bw()
     )
 }

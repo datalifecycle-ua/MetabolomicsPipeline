@@ -9,8 +9,8 @@
 #' @format  Rd
 #'
 #'
-#' @usage data(demoDataSmall) 
-#' 
+#' @usage data(demoDataSmall)
+#'
 #' @returns A subset of the metabolites in the DemoData.
 #'
 "demoDataSmall"

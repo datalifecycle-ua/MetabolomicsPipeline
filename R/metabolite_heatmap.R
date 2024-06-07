@@ -51,8 +51,9 @@
 #'
 
 # This function creates heatmap data
-metabolite_heatmap <- function(data, top_mets = 50, group_vars, strat_var = NULL,
-                               caption = NULL, Assay = "normalized", ...) {
+metabolite_heatmap <- function(data, top_mets = 50, group_vars,
+                            strat_var = NULL,
+                            caption = NULL, Assay = "normalized", ...) {
     ## Get top metabolites
     select_variables <- SummarizedExperiment::assay(data, Assay) %>%
         apply(1, mean)
@@ -65,11 +66,13 @@ metabolite_heatmap <- function(data, top_mets = 50, group_vars, strat_var = NULL
 
 
 
-    ############ Non Stratified case ##############################################
+    ############ Non Stratified case ###########################################
     if (is.null(strat_var)) {
         # Create analysis data
         analysis <- SummarizedExperiment::colData(data) %>%
-            merge(t(SummarizedExperiment::assay(data, Assay)), by = "row.names") %>%
+            merge(t(SummarizedExperiment::assay(data, Assay)),
+                by = "row.names"
+            ) %>%
             dplyr::rename(PARENT_SAMPLE_NAME = Row.names)
 
         heatmap_data <- analysis %>%
@@ -101,7 +104,9 @@ metabolite_heatmap <- function(data, top_mets = 50, group_vars, strat_var = NULL
 
         # Heat map colors
         palette <-
-            grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdBu")))(256)
+            grDevices::colorRampPalette(
+                rev(RColorBrewer::brewer.pal(10, "RdBu"))
+            )(256)
 
 
         # Create heatmap
@@ -121,12 +126,14 @@ metabolite_heatmap <- function(data, top_mets = 50, group_vars, strat_var = NULL
 
 
 
-    #################### Stratified case #########################################
+    #################### Stratified case ######################################
 
     if (!is.null(strat_var)) {
         # Create analysis data
         analysis <- SummarizedExperiment::colData(data) %>%
-            merge(t(SummarizedExperiment::assay(data, Assay)), by = "row.names") %>%
+            merge(t(SummarizedExperiment::assay(data, Assay)),
+                by = "row.names"
+            ) %>%
             dplyr::rename(PARENT_SAMPLE_NAME = Row.names)
 
         heatmap_data <- analysis %>%
@@ -172,7 +179,9 @@ metabolite_heatmap <- function(data, top_mets = 50, group_vars, strat_var = NULL
             # Create heatamp
 
             # Heat map colors
-            palette <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdBu")))(256)
+            palette <- grDevices::colorRampPalette(
+                rev(RColorBrewer::brewer.pal(10, "RdBu"))
+            )(256)
 
 
             # Create heatmap

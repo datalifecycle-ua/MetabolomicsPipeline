@@ -63,9 +63,11 @@ pairwise <- function(out, form, data) {
 
     results[1, "Overall_pval"] <- overall
 
-    results[1, paste0(summary(pairs)[, 1], "_ESTS")] <- summary(pairs)[, "estimate"]
+    results[1, paste0(summary(pairs)[, 1], "_ESTS")] <-
+       summary(pairs)[, "estimate"]
 
-    results[1, paste0(summary(pairs)[, 1], "_PVALS")] <- summary(pairs)[, "p.value"]
+    results[1, paste0(summary(pairs)[, 1], "_PVALS")] <-
+       summary(pairs)[, "p.value"]
 
     return(results)
 }

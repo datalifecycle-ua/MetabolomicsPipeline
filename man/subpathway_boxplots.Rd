@@ -64,11 +64,12 @@ dat <- demoDat
 ############################################################################
 
 subpathway_boxplots(dat,
-                 subpathway = "Lactoyl Amino Acid", block_var = TIME1,
-                 treat_var = GROUP_NAME, Assay = "normalized",
-                 CHEMICAL_NAME = "CHEMICAL_NAME",
-                 CHEM_ID="CHEM_ID",
-                 SUB_PATHWAY="SUB_PATHWAY",Gender == "Female")
+    subpathway = "Lactoyl Amino Acid", block_var = TIME1,
+    treat_var = GROUP_NAME, Assay = "normalized",
+    CHEMICAL_NAME = "CHEMICAL_NAME",
+    CHEM_ID = "CHEM_ID",
+    SUB_PATHWAY = "SUB_PATHWAY", Gender == "Female"
+)
 
 
 ############################################################################

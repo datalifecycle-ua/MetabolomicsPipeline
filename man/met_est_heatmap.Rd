@@ -50,3 +50,37 @@ only show if the log fold-change is greater than log(2) or less than
 log(.5). Therefore, this heatmap will only focus on comparisons with a
 fold change of two or greater.
 }
+\examples{
+# Load data
+data("demoDataSmall", package = "MetabolomicsPipeline")
+dat <- demoDataSmall
+
+# Run pairwise analysis
+strat_pairwise <- metabolite_pairwise(dat,
+    form = "GROUP_NAME*TIME1",
+    strat_var = "Gender"
+)
+
+#############################################################################
+## Create Estimate Heatmap ##################################################
+#############################################################################
+
+met_est_heatmap(strat_pairwise$Female, dat,
+               interactive = FALSE,
+               CHEM_ID = "CHEM_ID", SUB_PATHWAY = "SUB_PATHWAY",
+               CHEMICAL_NAME = "CHEMICAL_NAME",
+               main = "Log fold change heatmap", show_rownames = FALSE
+)
+
+
+##############################################################################
+## Create P-value Heatmap ####################################################
+##############################################################################
+# Female
+met_p_heatmap(strat_pairwise$Female, dat,
+             interactive = FALSE, show_rownames = FALSE,
+             main = "Pvalue Heatmap"
+)
+
+
+}

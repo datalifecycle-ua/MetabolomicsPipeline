@@ -27,7 +27,8 @@
 
 
 # This function creates heatmap data
-create_heatmap_Data <- function(data, heatmap_variables, Assay = "normalized", ...) {
+create_heatmap_Data <- function(data,
+                                heatmap_variables, Assay = "normalized", ...) {
     # Create analysis data
     meta <- SummarizedExperiment::colData(data)
     ass <- t(SummarizedExperiment::assay(data, Assay))
