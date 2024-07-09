@@ -11,8 +11,8 @@ This package provides analysis tools for analyzing metabolomics data from Metabo
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/JoelParkerUofA/MetabolomicsPipeline}
-  \item Report bugs at \url{https://github.com/JoelParkerUofA/MetabolomicsPipeline/issues}
+  \item \url{https://github.com/datalifecycle-ua/MetabolomicsPipeline}
+  \item Report bugs at \url{https://github.com/datalifecycle-ua/MetabolomicsPipeline/issues}
 }
 
 }
@@ -21,7 +21,7 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Bonnie Lafleur \email{blafleur@arizona.edu}
+  \item Bonnie LaFleur \email{blafleur@arizona.edu}
 }
 
 }
