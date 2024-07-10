@@ -50,6 +50,10 @@ The MetabolomicsPipeline requires R-version \>= 4.4.0.
 
 ### Install the release version from Bioconductor
 
+Please note, this package is not currently available on BioConductor.
+Therefore, the MetabolomicsPipeline package can only be installed from
+github.
+
 ``` r
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
