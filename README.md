@@ -61,6 +61,14 @@ BiocManager::install("MetabolomicsPipeline")
 
 ### Install from github
 
+The following code will install the MetabolomicsPipeline package from
+github while simultaneously building the vignette. In the vignette we
+use a package called “table1”. If this package is not already installed,
+the vignette will fail to build. We recommend installing the table1
+package using the install.package(“table1”) command if you are going to
+build the vignette. To install the MetabolomicsPipeline package and
+build the vignette. You can use the following command.
+
 ``` r
 if (!requireNamespace("devtools", quietly=TRUE))
     install.packages("devtools")
