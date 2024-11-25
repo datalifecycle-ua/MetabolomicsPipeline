@@ -92,3 +92,8 @@ view the vignette by using:
 ``` r
 browseVignettes("MetabolomicsPipeline")
 ```
+
+If you would like to view this vignette without installing the package,
+you can download the MetabolomicsPipeline-vignette.html file in the
+inst/doc folder. Just click on the file and hit the “Download raw file”
+button in the upper right hand corner.
