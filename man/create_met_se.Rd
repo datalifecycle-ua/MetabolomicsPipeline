@@ -4,17 +4,28 @@
 \alias{create_met_se}
 \title{Create a SummarizedExperiment from Targeted Metabolomics Data}
 \usage{
-create_met_se(chemical_annotation, sample_metadata, peak_data)
+create_met_se(
+  chemical_annotation,
+  sample_metadata,
+  peak_data,
+  sample_names = "PARENT_SAMPLE_NAME",
+  chemical_id = "CHEM_ID"
+)
 }
 \arguments{
-\item{chemical_annotation}{A \code{data.frame} where each row represents a chemical.
-The first column must contain chemical identifiers matching the column names of \code{peak_data}.}
+\item{chemical_annotation}{A \code{data.frame} where each row represents a chemical.}
 
-\item{sample_metadata}{A \code{data.frame} where each row represents a biological sample.
-The first column must contain sample IDs matching the row names of \code{peak_data}.}
+\item{sample_metadata}{A \code{data.frame} where each row represents a biological sample.}
 
 \item{peak_data}{A \code{data.frame} with samples as rows and chemicals as columns.
 Sample names must be the first column.}
+
+\item{sample_names}{Column name in the meta data containing the sample names.
+This must correspond to the row names of the raw peak data in the excel
+file.}
+
+\item{chemicalID}{Column name in the meta data containing the sample names.
+This must correspond to the column names of the raw peak data.}
 }
 \value{
 A \code{SummarizedExperiment} object containing:
@@ -27,10 +38,10 @@ A \code{SummarizedExperiment} object containing:
 \description{
 This function constructs a \code{SummarizedExperiment}
 object from targeted metabolomics data.
-It uses peak intensity data as the assay,
+It uses peak intensity data,
 sample metadata as \code{colData},
-and chemical annotationsas \code{rowData}.
-All inputs must be aligned via identifiers
+and chemical annotations as \code{rowData}.
+All inputs must be aligned via identifiers (sample_names and chemicalID)
 in the first columns of the sample metadata and chemical annotation tables.
 }
 \examples{

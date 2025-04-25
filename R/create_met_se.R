@@ -2,10 +2,10 @@
 #'
 #' This function constructs a `SummarizedExperiment`
 #' object from targeted metabolomics data.
-#' It uses peak intensity data as the assay, 
+#' It uses peak intensity data, 
 #' sample metadata as `colData`, 
-#' and chemical annotationsas `rowData`.
-#' All inputs must be aligned via identifiers
+#' and chemical annotations as `rowData`.
+#' All inputs must be aligned via identifiers (sample_names and chemicalID)
 #' in the first columns of the sample metadata and chemical annotation tables.
 #'
 #' @param chemical_annotation A `data.frame` where each row represents a chemical. 
@@ -29,6 +29,8 @@
 #'
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom S4Vectors DataFrame
+#' @importFrom dplyr select
+#' @importFrom tibble column_to_rownames
 #' @export
 #'
 #' @examples
@@ -38,8 +40,8 @@
 create_met_se <- function(chemical_annotation,
                           sample_metadata,
                           peak_data,
-                          sample_names = NULL,
-                          chem_id = NULL) {
+                          sample_names = "PARENT_SAMPLE_NAME",
+                          chemical_id = "CHEM_ID") {
   
   # Check that all inputs are data.frames
   if (!is.data.frame(chemical_annotation)) {
@@ -52,28 +54,31 @@ create_met_se <- function(chemical_annotation,
     stop("`peak_data` must be a data.frame.")
   }
 
-  # Convert first column to rownames
-  peak_data <- column_to_rownames(peak_data,
-                                  var = colnames(peak_data)[1])
+  # Step 1: Move specified column to rownames
+  peak_data <- peak_data %>%
+    column_to_rownames(var = sample_names)
+
+  # Step 2: Select the column dynamically
+  peak_data <- peak_data %>%
+    select(all_of(as.character(chemical_annotation[[chemical_id]])))
 
   chemical_annotation <- chemical_annotation %>%
-    column_to_rownames(colnames(chemical_annotation)[1])
+    column_to_rownames(chemical_id)
 
   sample_metadata <- sample_metadata %>%
-    column_to_rownames(colnames(sample_metadata)[1])
+    column_to_rownames(sample_names)
 
   # Check if identifiers match dimensions
   if (!all(rownames(chemical_annotation) %in% colnames(peak_data))) {
     stop("Not all chemical identifiers in
-        chemical_annotation are present in peak_data columns.")
+        chemical_annotation (chemcial_id) are present in peak_data columns.")
   }
   if (!all(rownames(sample_metadata) %in% rownames(peak_data))) {
     stop(
       paste(
         "Not all sample IDs in sample_metadata are present
-        in the rownames of peak_data.",
-        "Please ensure first column of the peak data corresponds
-        the first column of the sample_metadata",
+        in peak_data.",
+        "Please ensure sample_names are a column in peak_data",
         sep = " "
       )
     )
@@ -94,6 +99,3 @@ create_met_se <- function(chemical_annotation,
 
   return(exp)
 }
-
-
-# For testing 
