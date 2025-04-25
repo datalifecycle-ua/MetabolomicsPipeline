@@ -2,6 +2,8 @@
 
 export(all_sig_subpath)
 export(create_met_se)
+export(demoChemAnno)
+export(demoPeak)
 export(load_met_excel)
 export(log_transformation)
 export(median_standardization)
