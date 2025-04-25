@@ -9,11 +9,18 @@
 #' in the first columns of the sample metadata and chemical annotation tables.
 #'
 #' @param chemical_annotation A `data.frame` where each row represents a chemical. 
-#'   The first column must contain chemical identifiers matching the column names of `peak_data`.
+#' 
 #' @param sample_metadata A `data.frame` where each row represents a biological sample. 
-#'   The first column must contain sample IDs matching the row names of `peak_data`.
+#' 
 #' @param peak_data A `data.frame` with samples as rows and chemicals as columns. 
-#'   Sample names must be the first column. 
+#'   Sample names must be the first column.
+#' 
+#' @param sample_names Column name in the meta data containing the sample names.
+#'  This must correspond to the row names of the raw peak data in the excel
+#'  file.
+#'
+#' @param chemicalID Column name in the meta data containing the sample names.
+#'  This must correspond to the column names of the raw peak data. 
 #'
 #' @return A `SummarizedExperiment` object containing:
 #'   - assays: the peak data
@@ -30,7 +37,9 @@
 
 create_met_se <- function(chemical_annotation,
                           sample_metadata,
-                          peak_data) {
+                          peak_data,
+                          sample_names = NULL,
+                          chem_id = NULL) {
   
   # Check that all inputs are data.frames
   if (!is.data.frame(chemical_annotation)) {
@@ -85,3 +94,6 @@ create_met_se <- function(chemical_annotation,
 
   return(exp)
 }
+
+
+# For testing 
