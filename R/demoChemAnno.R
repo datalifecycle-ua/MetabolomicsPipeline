@@ -1,4 +1,4 @@
-#' Demo Chemical Annotation
+#' Demo Chemical Annotation Data
 #'
 #' A small example of chemical annotation data for the MetabolomicsPipeline package.
 #'

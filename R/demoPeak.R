@@ -10,5 +10,4 @@
 #'
 #' @returns  A dataframe with peak data for demoDat
 #' 
-#' @export
 "demoPeak"

@@ -3,7 +3,7 @@
 \docType{data}
 \name{demoChemAnno}
 \alias{demoChemAnno}
-\title{Demo Chemical Annotation}
+\title{Demo Chemical Annotation Data}
 \format{
 A data frame with annotation for 1102 metabolites
 }
