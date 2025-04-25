@@ -15,7 +15,7 @@ loadMetabolon(
 )
 }
 \arguments{
-\item{path}{Path to Metabolon .xlsx file containg peak data, chemical
+\item{path}{Path to excel file with peak data, chemical
 annotations, sample meta data, and (optionally) the normalized peak counts}
 
 \item{raw_sheet}{Sheet name for the raw peak data.}
@@ -36,14 +36,14 @@ file.}
 This must correspond to the column names of the raw peak data.}
 }
 \value{
-A SummarizedExperiment containing Metabolon expirement data.
+A SummarizedExperiment containing metabolomics expirement data.
 }
 \description{
-Automatically load metabolomic data from Metabolon
+Automatically load metabolomic data from excel file
 }
 \details{
-The Metabolon experiment data are stored in a SummarizedExperiment.
+The metabolomics experiment data are stored in a SummarizedExperiment.
 }
 \seealso{
-\link[SummarizedExperiment:RangedSummarizedExperiment-class]{SummarizedExperiment::SummarizedExperiment}
+\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment::SummarizedExperiment}
 }

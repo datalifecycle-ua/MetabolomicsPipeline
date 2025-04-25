@@ -1,8 +1,8 @@
 #' Load Metabolomic Data as SummarizedExperiment
 #'
-#' Automatically load metabolomic data from Metabolon
+#' Automatically load metabolomic data from excel file
 #'
-#' @param path Path to Metabolon .xlsx file containg peak data, chemical
+#' @param path Path to excel file with peak data, chemical
 #'  annotations, sample meta data, and (optionally) the normalized peak counts
 #'
 #' @param raw_sheet Sheet name for the raw peak data.
@@ -22,10 +22,10 @@
 #' @param chemicalID Column name in the meta data containing the sample names.
 #'  This must correspond to the column names of the raw peak data.
 #'
-#' @returns A SummarizedExperiment containing Metabolon expirement data.
+#' @returns A SummarizedExperiment containing metabolomics expirement data.
 #'
 #' @details
-#' The Metabolon experiment data are stored in a SummarizedExperiment.
+#' The metabolomics experiment data are stored in a SummarizedExperiment.
 #'
 #' @seealso [SummarizedExperiment::SummarizedExperiment]
 #'
