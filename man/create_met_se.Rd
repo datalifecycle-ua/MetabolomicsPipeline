@@ -42,7 +42,6 @@ It uses peak intensity data,
 sample metadata as \code{colData},
 and chemical annotations as \code{rowData}.
 All inputs must be aligned via identifiers (sample_names and chemicalID)
-in the first columns of the sample metadata and chemical annotation tables.
 }
 \examples{
 # Assuming chemical_annotation_df, sample_metadata_df, and peak_data_df are defined

@@ -125,11 +125,20 @@ In the following chunk we:
 ### Load Data ##################################################################
 ################################################################################
 
-# Load Metabolon data from the Excel file
-# dat <- loadMetabolon(path = "../data/Metabolon.xlsx")
-data("demoDat", package = "MetabolomicsPipeline")
+# if sample metadata, chemical annotation and peak data are stored in .xlsx
+# you can use.
+# dat <- load_met_excel(path = "../data/Metabolon.xlsx")
 
-dat <- demoDat
+# Get demo sample metadata
+data("demoSampleMeta", package = "MetabolomicsPipeline")
+
+# Get demo chemical annotation file
+data("demoChemAnno", package = "MetabolomicsPipeline")
+
+# Get demo peak data
+data("demoPeak", package = "MetabolomicsPipeline")
+
+dat <- create_met_se()
 
 
 ################################################################################

@@ -6,7 +6,6 @@
 #' sample metadata as `colData`, 
 #' and chemical annotations as `rowData`.
 #' All inputs must be aligned via identifiers (sample_names and chemicalID)
-#' in the first columns of the sample metadata and chemical annotation tables.
 #'
 #' @param chemical_annotation A `data.frame` where each row represents a chemical. 
 #' 
