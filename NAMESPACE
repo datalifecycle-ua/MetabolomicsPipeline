@@ -2,7 +2,7 @@
 
 export(all_sig_subpath)
 export(create_met_se)
-export(loadMetabolon)
+export(load_met_excel)
 export(log_transformation)
 export(median_standardization)
 export(met_est_heatmap)

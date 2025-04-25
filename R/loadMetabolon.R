@@ -39,13 +39,13 @@
 #' @export
 #'
 
-loadMetabolon <- function(path,
-                        raw_sheet = "Peak Area Data",
-                        chemical_sheet = "Chemical Annotation",
-                        sample_meta = "Sample Meta Data",
-                        normalized_peak = "Log Transformed Data",
-                        sample_names = "PARENT_SAMPLE_NAME",
-                        chemicalID = "CHEM_ID"
+load_met_excel <- function(path,
+    raw_sheet = "Peak Area Data",
+    chemical_sheet = "Chemical Annotation",
+    sample_meta = "Sample Meta Data",
+    normalized_peak = "Log Transformed Data",
+    sample_names = "PARENT_SAMPLE_NAME",
+    chemicalID = "CHEM_ID"
 ) {
     # Get attributes
     raw_data <- readxl::read_excel(path, sheet = "Peak Area Data")
