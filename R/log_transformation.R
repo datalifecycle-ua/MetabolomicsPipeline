@@ -1,39 +1,56 @@
-#' Log transformation of metabolite data
+#' Log Transformation of Metabolite Data
 #'
-#' This function log transforms each metabolite in the Metabolon data.
+#' This function performs a natural logarithm (log)
+#' transformation on metabolite data stored within a 
+#' `SummarizedExperiment` object. 
+#' All numeric metabolite values are log-transformed,
+#' and the resulting data are added as a new assay named `"normalized"`.
 #'
-#' @param peak_data A matrix of peak data with metabolites in the columns
+#' @param met_se A `SummarizedExperiment` object containing metabolite data.
+#' @param assay A character string specifying the assay 
+#' name within `met_se` to log-transform.
+#' Default is `"min_impute"`.
 #'
-#' @return log transformed peak data
+#' @return The input `SummarizedExperiment` object with a
+#' new assay `"normalized"` containing the log-transformed data.
 #'
 #' @examples
+#' library(SummarizedExperiment)
 #' data("demoDataSmall", package = "MetabolomicsPipeline")
-#' peak <- SummarizedExperiment::assay(demoDataSmall, "peak")
 #'
 #' # Median standardization
-#' peak_med <- median_standardization(peak_data = peak)
+#' demoDataSmall <- median_standardization(met_se = demoDataSmall,
+#'  assay = "peak")
 #'
-#' # Min value imputation
-#' peakImpute <- min_val_impute(peak_data = peak_med)
+#' # Minimum value imputation
+#' demoDataSmall <- min_val_impute(met_se = demoDataSmall, assay = "median_std")
 #'
-#' # log transformation
-#' peak_log <- log_transformation(peak_data = peakImpute)
+#' # Log transformation
+#' demoDataSmall <- log_transformation(met_se = demoDataSmall,
+#'  assay = "min_impute")
 #'
-
+#' # Access log-transformed data
+#' assay(demoDataSmall, "normalized")[1:5, 1:5]
 #'
 #' @importFrom dplyr mutate_if
-#' @importFrom magrittr `%>%`
+#' @importFrom magrittr %>%
+#' @importFrom SummarizedExperiment assay
 #' @export
 #'
 #'
-#'
 
 
-log_transformation <- function(peak_data) {
-    # 1. Log transform all of the values
-    peak_data_log <- peak_data %>%
-        dplyr::mutate_if(is.numeric, log)
+log_transformation <- function(met_se, assay = "min_impute") {
 
-    # Return log tranformed data
-    return(peak_data_log)
+  # Get data for log transformation
+  assay_dat = as.data.frame(t(assay(met_se, assay)))
+
+  # 1. Log transform all of the values
+  peak_data_log <- assay_dat %>%
+    dplyr::mutate_if(is.numeric, log)
+
+  assay(met_se, "normalized") = t(peak_data_log)
+  
+  # Return log tranformed data
+  return(met_se)
 }

@@ -70,9 +70,11 @@ library(ggplot2)
 
 ## Introduction
 
-The purpose of the MetabolomicPipeline package is to provide additional tools to
-complement the analysis done by Metabolon. In this vignette we demonstrate how 
+The purpose of the MetabolomicPipeline package is to streamline the analysis for
+targeted metabolomics experiments. In this vignette we demonstrate how 
 to use MetabolomicsPipeline package for:
+
+* Data Processing
 
 * Exploratory Analysis
 
@@ -83,41 +85,31 @@ to use MetabolomicsPipeline package for:
 * Subpathway box plots and line plots
 
 
-## Data Description
+### Data Description
 
 In this vignette, we will use data which consists of 86 samples (42
 males, 44 females), three treatment groups, and the samples were taken
 at three different time points.
 
 
-## Metabolon data as a SummarizedExperiment
+### Targeted metabolomics data as a SummarizedExperiment
 
-We receive multiple datasets from Metabolon, each on a different tab of
-the Metabolon Excel file. The datasets needed for the downstream
-analysis are the sample metadata, chemical annotation, raw peak data and
-log-transformed peak data. The table below shows the tab that each
-dataset is on within the Metabolon Excel file.
-
-| Data                      | Tab of excel file    |
-|---------------------------|----------------------|
-| Sample metadata           | Sample Meta Data     |
-| Chemical annotation       | Chemical Annotation  |
-| Raw peak data             | Peak Area Data       |
-| Log-transformed peak data | Log Transformed Data |
+Tareted metabolomics experiments leverage multiple data tables for analysis.
+The datasets needed for the downstream
+analysis are the sample metadata, chemical annotation, and peak data.
 
 
-#### Load analysis data
+### Data loading
 
 The MetabolomicsPipeline package provides a convenient way to load each
-of these datasets together as a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html) using loadMetabolon().
-However, for this vignette we are using the demo data provided with the package.
-This data is accessed using data(demoDat, package = "MetabolomicsPipeline").
-In the following chunk we:
+of these datasets together as a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html) using create_met_se(). In this chunk we load the
+demo sample metadata, chemical annotation, and peak data into a SummarizedExperiment.
 
-1. Load the demo data
+1. load the demo sample metadata, chemical annotation, and peak data into a
+SummarizedExperiment.
 
 
-2. Create a table demostring the sample distribution
+2. Create a table of the sample distribution
 
 
 ```{r AnalysisDataCreation}
@@ -138,7 +130,11 @@ data("demoChemAnno", package = "MetabolomicsPipeline")
 # Get demo peak data
 data("demoPeak", package = "MetabolomicsPipeline")
 
-dat <- create_met_se()
+dat <- create_met_se(chemical_annotation = demoChemAnno,
+                     sample_metadata = demoSampleMeta,
+                     peak_data = demoPeak,
+                     chemical_id = "CHEM_ID",
+                     sample_names = "PARENT_SAMPLE_NAME")
 
 
 ################################################################################
@@ -146,11 +142,33 @@ dat <- create_met_se()
 ################################################################################
 # Create table 1
 tbl1 <- table1(~ GROUP_NAME + TIME1 | Gender,
-    data = colData(dat)
+  data = colData(dat)
 )
 
 # Display table 1
 tbl1
+```
+
+
+## Data Processing
+The MetabolomicsPipline package contains tools for processing the peak data
+to prepare it for downstream analysis:
+
+1.) Median standardization (median_standardization())
+
+2.) Minimum value imputation (min_val_impute())
+
+3.) Log transformation (log_transformation())
+
+```{r Data Processing}
+# Median standardization
+peak_med <- median_standardization(peak_data = dat@assays@data$peak)
+
+# Min value imputation
+peakImpute <- min_val_impute(peak_data = peak_med)
+
+# log transformation
+peak_log <- log_transformation(peak_data = peakImpute)
 ```
 
 ## Exploratory Analysis

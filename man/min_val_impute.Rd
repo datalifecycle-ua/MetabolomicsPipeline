@@ -2,30 +2,41 @@
 % Please edit documentation in R/min_val_impute.R
 \name{min_val_impute}
 \alias{min_val_impute}
-\title{Minimum Value Imputation}
+\title{Minimum Value Imputation for Metabolite Data}
 \usage{
-min_val_impute(peak_data)
+min_val_impute(met_se, assay = "median_std")
 }
 \arguments{
-\item{peak_data}{Peak data matrix with metabolites in the columns.}
+\item{met_se}{A \code{SummarizedExperiment} object containing metabolite data.}
+
+\item{assay}{A character string specifying
+the assay name within \code{met_se} to perform minimum value imputation on.
+Default is \code{"median_std"}.}
 }
 \value{
-Metabolite imputed peak data.
+The input \code{SummarizedExperiment} object with a
+new assay \code{"min_impute"} containing the minimum value-imputed data.
 }
 \description{
-Imputes the minimum value for each metabolite
+This function imputes missing values in metabolite
+data stored within a \code{SummarizedExperiment} object.
+For each metabolite, missing values are replaced
+with the minimum observed value for that metabolite.
+The imputed data are added to the \code{SummarizedExperiment}
+object as a new assay named \code{"min_impute"}.
 }
 \examples{
+library(SummarizedExperiment)
 data("demoDataSmall", package = "MetabolomicsPipeline")
-peak <- SummarizedExperiment::assay(demoDataSmall, "peak")
 
 # Median standardization
-peak_med <- median_standardization(peak_data = peak)
+demoDataSmall <- median_standardization(met_se = demoDataSmall,
+ assay = "peak")
 
-# Min value imputation
-peakImpute <- min_val_impute(peak_data = peak_med)
+# Minimum value imputation
+demoDataSmall <- min_val_impute(met_se = demoDataSmall, assay = "median_std")
 
-# log transformation
-peak_log <- log_transformation(peak_data = peakImpute)
+# Access the imputed data
+assay(demoDataSmall, "min_impute")[1:5, 1:5]
 
 }

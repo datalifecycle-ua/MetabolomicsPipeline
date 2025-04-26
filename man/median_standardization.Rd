@@ -4,31 +4,37 @@
 \alias{median_standardization}
 \title{Median standardization for metabolite data}
 \usage{
-median_standardization(peak_data)
+median_standardization(met_se, assay = "peak")
 }
 \arguments{
-\item{peak_data}{Peak data with metabolites in the columns. The data also
-must include the "PARENT_SAMPLE_NAME".}
+\item{met_se}{A \code{SummarizedExperiment} object containing metabolite data.}
+
+\item{assay}{A character string specifying the assay name
+within \code{met_se} to be median standardized.
+Default is \code{"peak"}.}
 }
 \value{
-Median standardized peak data.
+A data frame of median standardized metabolite data.
+The \code{SummarizedExperiment} object is also updated
+internally with a new assay \code{"median_std"}.
 }
 \description{
-This function standardizes the metabolites by the median of the metabolite.
+This function performs median standardization of metabolite
+data stored within a \code{SummarizedExperiment} object.
+For each metabolite, the values are divided by the
+median value of that metabolite across samples.
+The standardized data are returned as a data frame
+and also added to the original \code{SummarizedExperiment}
+object as a new assay named \code{"median_std"}.
 }
 \examples{
+library(SummarizedExperiment)
 data("demoDataSmall", package = "MetabolomicsPipeline")
-peak <- SummarizedExperiment::assay(demoDataSmall, "peak")
 
 # Median standardization
-peak_med <- median_standardization(peak_data = peak)
+peak_med <- median_standardization(met_se = demoDataSmall, assay = "peak")
 
-# Min value imputation
-peakImpute <- min_val_impute(peak_data = peak_med)
-
-# log transformation
-peak_log <- log_transformation(peak_data = peakImpute)
-
-
+# Access the median standardized data within the SummarizedExperiment
+assay(demoDataSmall, "median_std")[1:5, 1:5]
 
 }

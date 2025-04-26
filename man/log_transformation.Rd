@@ -2,31 +2,44 @@
 % Please edit documentation in R/log_transformation.R
 \name{log_transformation}
 \alias{log_transformation}
-\title{Log transformation of metabolite data}
+\title{Log Transformation of Metabolite Data}
 \usage{
-log_transformation(peak_data)
+log_transformation(met_se, assay = "min_impute")
 }
 \arguments{
-\item{peak_data}{A matrix of peak data with metabolites in the columns}
+\item{met_se}{A \code{SummarizedExperiment} object containing metabolite data.}
+
+\item{assay}{A character string specifying the assay
+name within \code{met_se} to log-transform.
+Default is \code{"min_impute"}.}
 }
 \value{
-log transformed peak data
+The input \code{SummarizedExperiment} object with a
+new assay \code{"normalized"} containing the log-transformed data.
 }
 \description{
-This function log transforms each metabolite in the Metabolon data.
+This function performs a natural logarithm (log)
+transformation on metabolite data stored within a
+\code{SummarizedExperiment} object.
+All numeric metabolite values are log-transformed,
+and the resulting data are added as a new assay named \code{"normalized"}.
 }
 \examples{
+library(SummarizedExperiment)
 data("demoDataSmall", package = "MetabolomicsPipeline")
-peak <- SummarizedExperiment::assay(demoDataSmall, "peak")
 
 # Median standardization
-peak_med <- median_standardization(peak_data = peak)
+demoDataSmall <- median_standardization(met_se = demoDataSmall,
+ assay = "peak")
 
-# Min value imputation
-peakImpute <- min_val_impute(peak_data = peak_med)
+# Minimum value imputation
+demoDataSmall <- min_val_impute(met_se = demoDataSmall, assay = "median_std")
 
-# log transformation
-peak_log <- log_transformation(peak_data = peakImpute)
+# Log transformation
+demoDataSmall <- log_transformation(met_se = demoDataSmall,
+ assay = "min_impute")
 
+# Access log-transformed data
+assay(demoDataSmall, "normalized")[1:5, 1:5]
 
 }

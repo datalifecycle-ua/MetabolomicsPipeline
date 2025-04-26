@@ -64,5 +64,5 @@ truePvals <- pairsSummary$p.value
 testPvals <- metPairwise["35", paste0(pairsSummary$contrast, "_PVALS")]
 
 test_that("Non stratified estimates are correct", {
-    expect_equal(as.numeric(truePvals), as.numeric(testPvals))
+  expect_equal(as.numeric(truePvals), as.numeric(testPvals))
 })
