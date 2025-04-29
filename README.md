@@ -43,7 +43,7 @@ Our package provides functionality for:
 
 5.  Pairwise Comparisons (metabolite_pairwise())
 
-6.  Boxplots and Line plots (subpathway_boxplots() and
+6.  Subpathway Boxplots and Line plots (subpathway_boxplots() and
     subpathway_lineplots())
 
 Below is a simple workflow using the MetabolomicsPipeline package.
