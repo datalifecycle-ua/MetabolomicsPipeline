@@ -20,24 +20,24 @@ object, enabling integration with other Bioconductor packages.
 
 <img src="WorkflowIMGs/SEOrganization.png" style="width:60.0%" />
 
-Our package also provides functionality for:
+Our package provides functionality for:
 
 1.  Loading metabolomics data into a Summarized Experiment
     (create_met_se() or load_met_excel())
 
 2.  Data Processing
 
-- Median standardization (median_standardization())
+    - Median standardization (median_standardization())
 
-- Minimum value imputation (min_val_impute())
+    - Minimum value imputation (min_val_impute())
 
-- Log transformation (log_transformation())
+    - Log transformation (log_transformation())
 
 3.  Exploratory analysis
 
-- Heatmaps (metabolite_heatmap())
+    - Heatmaps (metabolite_heatmap())
 
-- PCA plots (metabolite_pca())
+    - PCA plots (metabolite_pca())
 
 4.  Subpathway analysis (subpathway_analysis())
 
