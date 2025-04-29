@@ -7,7 +7,7 @@
 create_heatmap_Data(data, heatmap_variables, Assay = "normalized", ...)
 }
 \arguments{
-\item{data}{A SummarizedExperiment containing Metabolon data.}
+\item{data}{A SummarizedExperiment containing metabolomics data.}
 
 \item{heatmap_variables}{A vector of variable names that are NOT metabolites.}
 

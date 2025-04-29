@@ -6,7 +6,7 @@
 \alias{MetabolomicsPipeline-package}
 \title{MetabolomicsPipeline: Metabolomics Pipeline Tools}
 \description{
-This package provides analysis tools for analyzing metabolomics data from Metabolon. The tools in this package compliment the analysis from Metabolon. We provide functionality for hypothesis testing at the subpathway level, pairwise comparisons of metabolites, and tools for exploratory analysis.
+This package provides analysis tools for analyzing metabolomics data. We provide functionality for hypothesis testing at the subpathway level, pairwise comparisons of metabolites, and tools for exploratory analysis.
 }
 \seealso{
 Useful links:

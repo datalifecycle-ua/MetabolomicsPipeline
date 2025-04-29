@@ -13,7 +13,7 @@ metabolite_pairwise(
 )
 }
 \arguments{
-\item{data}{SummarizedExperiment with Metabolon experiment data.}
+\item{data}{SummarizedExperiment with metabolomics experiment data.}
 
 \item{form}{This is a character string the resembles the right hand side of
 a simple linear regression model in R. For example form = "Group1 + Group2".}

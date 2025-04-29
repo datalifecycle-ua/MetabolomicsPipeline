@@ -16,7 +16,7 @@ metabolite_heatmap(
 )
 }
 \arguments{
-\item{data}{A SummarizedExperiment containing the Metabolon experiment data.}
+\item{data}{A SummarizedExperiment containing the metabolomics experiment data.}
 
 \item{top_mets}{Number of metabolites to include in the heatmap. Metabolites
 are chosen based on the highest variability.}

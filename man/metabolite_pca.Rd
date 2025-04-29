@@ -7,7 +7,7 @@
 metabolite_pca(data, Assay = "normalized", meta_var)
 }
 \arguments{
-\item{data}{SummarizedExperiment with Metabolon experiment data.}
+\item{data}{SummarizedExperiment with metabolomics experiment data.}
 
 \item{Assay}{Name of the assay to be used for the pairwise analysis
 (default='normalized')}

@@ -16,7 +16,7 @@ subpathway_boxplots(
 )
 }
 \arguments{
-\item{data}{SummarizedExperiment with Metabolon experiment data.}
+\item{data}{SummarizedExperiment with metabolomics experiment data.}
 
 \item{subpathway}{Character value of the subpathway of interest. This is case
 sensitive and must be in the chemical annotation file.}

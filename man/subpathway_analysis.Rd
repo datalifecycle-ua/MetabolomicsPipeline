@@ -16,7 +16,7 @@ subpathway_analysis(
 )
 }
 \arguments{
-\item{data}{SummarizedExperiment with Metabolon experiment data.}
+\item{data}{SummarizedExperiment with metabolomics experiment data.}
 
 \item{treat_var}{This is the name of the variable in the analysis data that
 is the main variable of interest.}

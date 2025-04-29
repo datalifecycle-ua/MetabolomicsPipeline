@@ -13,31 +13,37 @@ Commit](https://img.shields.io/github/last-commit/JoelParkerUofA/MetabolomicsPip
 
 ## Overview
 
-The purpose of the MetabolomicsPipeline is to provide tools for
-additional analyses to complement the metabolomic analysis done by
-Metabolon. The MetabolomicsPipeline organizes Metabolon data in a
+The MetabolomicsPipeline provides a suite of tools for analyzing
+metabolomics data. It organizes datasets into a
 [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html)
-to allow for easy integration with other packages available on
-Bioconductor.
+object, enabling integration with other Bioconductor packages.
 
 <img src="WorkflowIMGs/SEOrganization.png" style="width:60.0%" />
 
 Our package also provides functionality for:
 
-1.  Loading Metabolon data into a Summarized Experiment
-    (loadMetabolon())
+1.  Loading metabolomics data into a Summarized Experiment
+    (create_met_se() or load_met_excel())
 
-2.  Exploratory analysis
+2.  Data Processing
+
+- Median standardization (median_standardization())
+
+- Minimum value imputation (min_val_impute())
+
+- Log transformation (log_transformation())
+
+3.  Exploratory analysis
 
 - Heatmaps (metabolite_heatmap())
 
 - PCA plots (metabolite_pca())
 
-3.  Subpathway analysis (subpathway_analysis())
+4.  Subpathway analysis (subpathway_analysis())
 
-4.  Pairwise Comparisons (metabolite_pairwise())
+5.  Pairwise Comparisons (metabolite_pairwise())
 
-5.  Boxplots and Line plots (subpathway_boxplots() and
+6.  Boxplots and Line plots (subpathway_boxplots() and
     subpathway_lineplots())
 
 Below is a simple workflow using the MetabolomicsPipeline package.
@@ -92,8 +98,3 @@ view the vignette by using:
 ``` r
 browseVignettes("MetabolomicsPipeline")
 ```
-
-If you would like to view this vignette without installing the package,
-you can download the MetabolomicsPipeline-vignette.html file in the
-inst/doc folder. Just click on the file and hit the “Download raw file”
-button in the upper right hand corner.
