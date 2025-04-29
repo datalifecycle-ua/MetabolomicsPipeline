@@ -3,7 +3,7 @@
 #' Computes and plots the first two components of the PCA from the metabolite
 #'  data.
 #'
-#' @param data SummarizedExperiment with Metabolon experiment data.
+#' @param data SummarizedExperiment with metabolomics experiment data.
 #'
 #' @param Assay Name of the assay to be used for the pairwise analysis
 #'  (default='normalized')

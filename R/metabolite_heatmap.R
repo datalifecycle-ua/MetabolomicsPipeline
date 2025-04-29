@@ -2,7 +2,7 @@
 #'
 #' Create heatmaps which are arranged by the experimental conditions.
 #'
-#' @param data A SummarizedExperiment containing the Metabolon experiment data.
+#' @param data A SummarizedExperiment containing the metabolomics experiment data.
 #'
 #' @param top_mets Number of metabolites to include in the heatmap. Metabolites
 #' are chosen based on the highest variability.

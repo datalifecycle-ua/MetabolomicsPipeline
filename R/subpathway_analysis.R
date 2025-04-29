@@ -31,7 +31,7 @@
 #' @seealso [Loughin, Thomas M. "A systematic comparison of methods for combining p-values from independent tests." Computational statistics & data analysis 47.3 (2004): 467-485.](https://www.sciencedirect.com/science/article/pii/S0167947303002950)
 
 #'
-#' @param data SummarizedExperiment with Metabolon experiment data.
+#' @param data SummarizedExperiment with metabolomics experiment data.
 #'
 #'
 #' @param treat_var This is the name of the variable in the analysis data that

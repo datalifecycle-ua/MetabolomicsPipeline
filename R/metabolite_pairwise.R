@@ -17,7 +17,7 @@
 #'  metabolite overall p-value, log fold change for each group, and the p-value
 #' for each comparison.
 #'
-#' @param  data SummarizedExperiment with Metabolon experiment data.
+#' @param  data SummarizedExperiment with metabolomics experiment data.
 #'
 #' @param  form This is a character string the resembles the right hand side of
 #'  a simple linear regression model in R. For example form = "Group1 + Group2".

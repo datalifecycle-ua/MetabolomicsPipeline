@@ -2,7 +2,7 @@
 #'
 #' Create line plots for each metabolite within a subpathway.
 #'
-#' @param data SummarizedExperiment with Metabolon experiment data.
+#' @param data SummarizedExperiment with metabolomics experiment data.
 #'
 #' @param subpathway Character value of the subpathway of interest. This is case
 #' sensitive and must be in the chemical annotation file.

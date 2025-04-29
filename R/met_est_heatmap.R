@@ -6,7 +6,7 @@
 #' @param results_data Results data frame of the pairwise comparisons produced
 #'  by \code{\link{metabolite_pairwise}}.
 #'
-#' @param data A SummarizedExperiment containing the Metabolon experiment data.
+#' @param data A SummarizedExperiment containing the metabolomics experiment data.
 #'
 #' @param interactive boolean (T/F) for whether or not the plot should be
 #'     interactive. Use interactive=T to produce an interactive plot using

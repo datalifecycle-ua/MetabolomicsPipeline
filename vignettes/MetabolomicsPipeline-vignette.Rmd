@@ -71,10 +71,10 @@ library(ggplot2)
 ## Introduction
 
 The purpose of the MetabolomicPipeline package is to streamline the analysis for
-targeted metabolomics experiments. In this vignette we demonstrate how 
+metabolomics experiments. In this vignette we demonstrate how 
 to use MetabolomicsPipeline package for:
 
-* Data Processing
+* Peak Processing
 
 * Exploratory Analysis
 
@@ -119,7 +119,7 @@ SummarizedExperiment.
 
 # if sample metadata, chemical annotation and peak data are stored in .xlsx
 # you can use.
-# dat <- load_met_excel(path = "../data/Metabolon.xlsx")
+# dat <- load_met_excel(path = "../data/ExperimentData.xlsx")
 
 # Get demo sample metadata
 data("demoSampleMeta", package = "MetabolomicsPipeline")
@@ -162,14 +162,16 @@ to prepare it for downstream analysis:
 
 ```{r Data Processing}
 # Median standardization
-peak_med <- median_standardization(peak_data = dat@assays@data$peak)
+dat <- median_standardization(dat, assay = "peak")
 
 # Min value imputation
-peakImpute <- min_val_impute(peak_data = peak_med)
+dat <- min_val_impute(dat, assay = "median_std") 
 
 # log transformation
-peak_log <- log_transformation(peak_data = peakImpute)
+dat <- log_transformation(dat, assay = "min_impute")
 ```
+
+For experiments with previously processed data, 
 
 ## Exploratory Analysis
 
@@ -196,7 +198,7 @@ variation in the data. The metabolite_pca function will enable us to specify
 a sample metadata variable to label the points in the plot. The metabolite_pca 
 function has three arguments:
 
-* data: SummarizedExperiment with Metabolon experiment data.
+* data: SummarizedExperiment with metabolomics experiment data.
 
 * Assay: Name of the assay to be used for the pairwise analysis
     (default='normalized')
@@ -239,7 +241,7 @@ another way of visualizing sources of variation within our data.
 We can use the metabolite_heatmap function to create the heatmaps, which 
 requires the following arguments. 
 
-* data: SummarizedExperiment with Metabolon experiment data.
+* data: SummarizedExperiment with metabolomics experiment data.
 
 * top_mets: The number of metabolites to include in the heatmap. The metabolites
     are chosen based on the metabolites with the highest variability. 
@@ -313,8 +315,7 @@ within a sub-pathway, and each subpathway is within a superpathway.
 There are several metabolites within each subpathway and several
 sub-pathways within each Super-pathway. We can utilize an Analysis of
 variance (ANOVA) model to test for a difference in peak intensities
-between the treatment groups at the metabolite level, which is already
-part of the Metabolon analysis. However, since multiple metabolites are
+between the treatment groups at the metabolite level. However, since multiple metabolites are
 within a subpathway, it is challenging to test if the treatment
 affected the peak data at the sub-pathway level. For this, we 
 utilize a combined Fisher probability test. The combined Fisher test
@@ -389,7 +390,7 @@ To run the subpathway analysis, we use the "subpathway_analysis"
 function, which requires the following arguments.  
 
 
-* data: SummarizedExperiment with Metabolon experiment data.
+* data: SummarizedExperiment with metabolomics experiment data.
 
 * treat_var: This is the name of the variable in the analysis data that is the 
     main variable of interest.
@@ -457,13 +458,11 @@ tables[[2]]
 ## Pairwise Analysis
 
 We can look at the pairwise comparisons for all
-experimental groups at the metabolite level. Metabolon includes this as part of 
-their analysis. However, if you need to change the model, you must rerun the
-pairwise analysis. We will use the metabolite_pairwise function within the
+experimental groups at the metabolite level. We will use the metabolite_pairwise function within the
 MetabolomicsPipeline package, which requires the following arguments: 
 
 
-* data: SummarizedExperiment with Metabolon experiment data.
+* data: SummarizedExperiment with metabolomics experiment data.
 
 * Assay: Name of the assay to be used for the pairwise analysis 
     (default='normalized')
@@ -505,7 +504,7 @@ pheatmap. To produce these heatmaps we use the following arguments:
 *  results_data: Results data frame of the pairwise comparisons produced by
     \code{\link{metabolite_pairwise}}.
 
-*  data: A SummarizedExperiment containing the Metabolon experiment data.
+*  data: A SummarizedExperiment containing the metabolomics experiment data.
 
 *  interactive: boolean (T/F) for whether or not the plot should be
     interactive. Use interactive=T to produce an interactive plot using 
@@ -532,11 +531,11 @@ strat_pairwise <- metabolite_pairwise(dat,
 ################################################################################
 
 met_est_heatmap(strat_pairwise$Female, dat,
-    interactive = FALSE,
+    interactive = TRUE,
      SUB_PATHWAY = "SUB_PATHWAY",
     CHEMICAL_NAME = "CHEMICAL_NAME",
     plotlyTitle = "Estimate Heatmap",
-    main = "Log fold change heatmap", show_rownames = FALSE
+    main = "Log fold change heatmap", show_rownames = TRUE
 )
 
 
@@ -545,7 +544,7 @@ met_est_heatmap(strat_pairwise$Female, dat,
 ################################################################################
 # Female
 met_p_heatmap(strat_pairwise$Female, dat,
-    interactive = FALSE, show_rownames = FALSE,
+    interactive = TRUE, show_rownames = TRUE,
     plotlyTitle = "Pvalue Heatmap",
     main = "Pvalue Heatmap"
 )
@@ -562,7 +561,7 @@ utility of these functions is it allows you for focus on the metabolites within
 a subpathway. For both functions, the arguments are:
 
 
-* data: SummarizedExperiment with Metabolon experiment data.
+* data: SummarizedExperiment with metabolomics experiment data.
 
 * subpathway:	Character value of the subpathway of interest. This is case
     sensitive and must be in the chemical annotation file.

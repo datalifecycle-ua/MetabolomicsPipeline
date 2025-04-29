@@ -38,14 +38,15 @@ min_val_impute <- function(met_se, assay = "median_std") {
   peak_data_imputed <- as.data.frame(t(assay(met_se, assay)))
 
 
-  # 2.Find the minimum value for each metabolite and compute 1/5 of that value
-  peak_data_imputed[] <- lapply(peak_data_imputed, function(col) {
+  # 2.Find the minimum value for each metabolite and compute
+  peak_data_imputed <- apply(peak_data_imputed,2, function(col) {
     if (is.numeric(col)) {
       min_val <- min(col, na.rm = TRUE)
       col[is.na(col)] <- min_val
     }
     return(col)
   })
+  
   # Add min_imput assay element
   assay(met_se, "min_impute") = t(peak_data_imputed)
 

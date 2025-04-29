@@ -3,7 +3,7 @@
 #' Creates boxplots for each metabolite within a specified subpathway.
 #'
 #' .
-#' @param data SummarizedExperiment with Metabolon experiment data.
+#' @param data SummarizedExperiment with metabolomics experiment data.
 #'
 #' @param subpathway Character value of the subpathway of interest. This is case
 #' sensitive and must be in the chemical annotation file.

@@ -2,7 +2,7 @@
 #'
 #' This function creates the required matrices for the metabolite heatmaps.
 #'
-#' @param data A SummarizedExperiment containing Metabolon data.
+#' @param data A SummarizedExperiment containing metabolomics data.
 #'
 #' @param heatmap_variables A vector of variable names that are NOT metabolites.
 #'
