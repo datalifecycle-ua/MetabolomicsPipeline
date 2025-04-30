@@ -74,7 +74,7 @@ The purpose of the MetabolomicPipeline package is to streamline the analysis for
 metabolomics experiments. In this vignette we demonstrate how 
 to use MetabolomicsPipeline package for:
 
-* Peak Processing
+* Data Processing
 
 * Exploratory Analysis
 
@@ -92,11 +92,17 @@ males, 44 females), three treatment groups, and the samples were taken
 at three different time points.
 
 
-### Targeted metabolomics data as a SummarizedExperiment
+### Metabolomics data as a SummarizedExperiment
 
-Tareted metabolomics experiments leverage multiple data tables for analysis.
+Metabolomics experiments leverage multiple data tables for analysis.
 The datasets needed for the downstream
-analysis are the sample metadata, chemical annotation, and peak data.
+analysis are:
+
+1.) Sample metadata
+
+2.) Chemical annotation
+
+3.) Peak data (samples x rows).
 
 
 ### Data loading
@@ -119,7 +125,16 @@ SummarizedExperiment.
 
 # if sample metadata, chemical annotation and peak data are stored in .xlsx
 # you can use.
-# dat <- load_met_excel(path = "../data/ExperimentData.xlsx")
+
+# dat <- load_met_excel(
+  # path,
+  # raw_sheet = "Peak Area Data",
+  # chemical_sheet = "Chemical Annotation",
+  # sample_meta = "Sample Meta Data",
+  # normalized_peak = "Log Transformed Data",
+  # sample_names = "PARENT_SAMPLE_NAME",
+  # chemicalID = "CHEM_ID"
+# )
 
 # Get demo sample metadata
 data("demoSampleMeta", package = "MetabolomicsPipeline")
@@ -171,7 +186,6 @@ dat <- min_val_impute(dat, assay = "median_std")
 dat <- log_transformation(dat, assay = "min_impute")
 ```
 
-For experiments with previously processed data, 
 
 ## Exploratory Analysis
 
@@ -531,11 +545,11 @@ strat_pairwise <- metabolite_pairwise(dat,
 ################################################################################
 
 met_est_heatmap(strat_pairwise$Female, dat,
-    interactive = TRUE,
+    interactive = FALSE,
      SUB_PATHWAY = "SUB_PATHWAY",
     CHEMICAL_NAME = "CHEMICAL_NAME",
     plotlyTitle = "Estimate Heatmap",
-    main = "Log fold change heatmap", show_rownames = TRUE
+    main = "Log fold change heatmap", show_rownames = FALSE
 )
 
 
@@ -544,7 +558,7 @@ met_est_heatmap(strat_pairwise$Female, dat,
 ################################################################################
 # Female
 met_p_heatmap(strat_pairwise$Female, dat,
-    interactive = TRUE, show_rownames = TRUE,
+    interactive = FALSE, show_rownames = FALSE,
     plotlyTitle = "Pvalue Heatmap",
     main = "Pvalue Heatmap"
 )

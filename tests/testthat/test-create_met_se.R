@@ -1,5 +1,5 @@
-load("data/demoDat.rda")
-
+data("demoDat")
+library(SummarizedExperiment)
 # Sample metadata
 sample_metadata <- colData(demoDat)
 

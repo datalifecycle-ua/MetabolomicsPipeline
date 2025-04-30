@@ -25,7 +25,7 @@
 #' peak_med <- median_standardization(met_se = demoDataSmall, assay = "peak")
 #'
 #' # Access the median standardized data within the SummarizedExperiment
-#' assay(demoDataSmall, "median_std")[1:5, 1:5]
+#' assay(peak_med, "median_std")[1:5, 1:5]
 #'
 #' @importFrom dplyr summarise_all
 #' @importFrom stats median

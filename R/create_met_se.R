@@ -1,7 +1,7 @@
-#' Create a SummarizedExperiment from Targeted Metabolomics Data
+#' Create a SummarizedExperiment from   Metabolomics Data
 #'
 #' This function constructs a `SummarizedExperiment`
-#' object from targeted metabolomics data.
+#' object from   metabolomics data.
 #' It uses peak intensity data, 
 #' sample metadata as `colData`, 
 #' and chemical annotations as `rowData`.
@@ -18,7 +18,7 @@
 #'  This must correspond to the row names of the raw peak data in the excel
 #'  file.
 #'
-#' @param chemicalID Column name in the meta data containing the sample names.
+#' @param chemical_id Column name in the meta data containing the sample names.
 #'  This must correspond to the column names of the raw peak data. 
 #'
 #' @return A `SummarizedExperiment` object containing:
@@ -33,8 +33,22 @@
 #' @export
 #'
 #' @examples
-#' # Assuming chemical_annotation_df, sample_metadata_df, and peak_data_df are defined
-#' se <- createMetabolomicsSE(chemical_annotation_df, sample_metadata_df, peak_data_df)
+#' #Get demo sample metadata
+#' data("demoSampleMeta", package = "MetabolomicsPipeline")
+#'
+#' #Get demo chemical annotation file
+#' data("demoChemAnno", package = "MetabolomicsPipeline")
+#'
+#' # Get demo peak data
+#' data("demoPeak", package = "MetabolomicsPipeline")
+#'
+#' dat <- create_met_se(chemical_annotation = demoChemAnno,
+#'                     sample_metadata = demoSampleMeta,
+#'                     peak_data = demoPeak,
+#'                     chemical_id = "CHEM_ID",
+#'                     sample_names = "PARENT_SAMPLE_NAME")
+#'
+
 
 create_met_se <- function(chemical_annotation,
                           sample_metadata,

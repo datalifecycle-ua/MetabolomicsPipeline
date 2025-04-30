@@ -1,3 +1,5 @@
+library(SummarizedExperiment)
+
 # Get demo sample metadata
 data("demoSampleMeta", package = "MetabolomicsPipeline")
 

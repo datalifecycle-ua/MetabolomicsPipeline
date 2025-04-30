@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_met_se.R
 \name{create_met_se}
 \alias{create_met_se}
-\title{Create a SummarizedExperiment from Targeted Metabolomics Data}
+\title{Create a SummarizedExperiment from   Metabolomics Data}
 \usage{
 create_met_se(
   chemical_annotation,
@@ -24,7 +24,7 @@ Sample names must be the first column.}
 This must correspond to the row names of the raw peak data in the excel
 file.}
 
-\item{chemicalID}{Column name in the meta data containing the sample names.
+\item{chemical_id}{Column name in the meta data containing the sample names.
 This must correspond to the column names of the raw peak data.}
 }
 \value{
@@ -37,13 +37,26 @@ A \code{SummarizedExperiment} object containing:
 }
 \description{
 This function constructs a \code{SummarizedExperiment}
-object from targeted metabolomics data.
+object from   metabolomics data.
 It uses peak intensity data,
 sample metadata as \code{colData},
 and chemical annotations as \code{rowData}.
 All inputs must be aligned via identifiers (sample_names and chemicalID)
 }
 \examples{
-# Assuming chemical_annotation_df, sample_metadata_df, and peak_data_df are defined
-se <- createMetabolomicsSE(chemical_annotation_df, sample_metadata_df, peak_data_df)
+#Get demo sample metadata
+data("demoSampleMeta", package = "MetabolomicsPipeline")
+
+#Get demo chemical annotation file
+data("demoChemAnno", package = "MetabolomicsPipeline")
+
+# Get demo peak data
+data("demoPeak", package = "MetabolomicsPipeline")
+
+dat <- create_met_se(chemical_annotation = demoChemAnno,
+                    sample_metadata = demoSampleMeta,
+                    peak_data = demoPeak,
+                    chemical_id = "CHEM_ID",
+                    sample_names = "PARENT_SAMPLE_NAME")
+
 }
