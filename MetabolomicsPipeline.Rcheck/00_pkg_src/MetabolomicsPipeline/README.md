@@ -1,0 +1,100 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# MetabolomicsPipeline
+
+<!-- badges: start -->
+
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-experimental-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Last
+Commit](https://img.shields.io/github/last-commit/JoelParkerUofA/MetabolomicsPipeline.svg)](https://github.com/JoelParkerUofA/MetabolomicsPipeline/commits/master)
+<!-- badges: end -->
+
+## Overview
+
+The MetabolomicsPipeline provides a suite of tools for analyzing
+metabolomics data. It organizes datasets into a
+[SummarizedExperiment](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html)
+object, enabling integration with other Bioconductor packages.
+
+<img src="WorkflowIMGs/SEOrganization.png" style="width:60.0%" />
+
+Our package provides functionality for:
+
+1.  Loading metabolomics data into a Summarized Experiment
+    (create_met_se() or load_met_excel())
+
+2.  Data Processing
+
+    - Median standardization (median_standardization())
+
+    - Minimum value imputation (min_val_impute())
+
+    - Log transformation (log_transformation())
+
+3.  Exploratory analysis
+
+    - Heatmaps (metabolite_heatmap())
+
+    - PCA plots (metabolite_pca())
+
+4.  Subpathway analysis (subpathway_analysis())
+
+5.  Pairwise Comparisons (metabolite_pairwise())
+
+6.  Subpathway Boxplots and Line plots (subpathway_boxplots() and
+    subpathway_lineplots())
+
+Below is a simple workflow using the MetabolomicsPipeline package.
+
+<img src="WorkflowIMGs/Workflow.png" style="width:60.0%" />
+
+## Installation
+
+The MetabolomicsPipeline requires R-version \>= 4.4.0.
+
+### Install the release version from Bioconductor
+
+Please note, this package is not currently available on BioConductor.
+Therefore, the MetabolomicsPipeline package can only be installed from
+github.
+
+``` r
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(version="release")
+
+BiocManager::install("MetabolomicsPipeline")
+```
+
+### Install from github
+
+The following code will install the MetabolomicsPipeline package from
+github while simultaneously building the vignette. In the vignette we
+use a package called “table1”. If this package is not already installed,
+the vignette will fail to build. We recommend installing the table1
+package using the install.package(“table1”) command if you are going to
+build the vignette. To install the MetabolomicsPipeline package and
+build the vignette. You can use the following command.
+
+``` r
+if (!requireNamespace("devtools", quietly=TRUE))
+    install.packages("devtools")
+    
+ devtools::install_github("datalifecycle-ua/MetabolomicsPipeline", build_vignettes = TRUE)
+```
+
+## Getting Started
+
+We demonstrate a workflow using the MetabolomicsPipeline in a vignette.
+In this vignette, we use data which consists of 86 samples (42 males, 44
+females), three treatment groups, and the samples were taken at three
+different time points. We walk through each of the above analyses and
+demonstrate additional functionality for displaying the results. You can
+view the vignette by using:
+
+``` r
+browseVignettes("MetabolomicsPipeline")
+```
