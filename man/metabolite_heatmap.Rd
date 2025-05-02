@@ -11,7 +11,6 @@ metabolite_heatmap(
   strat_var = NULL,
   caption = NULL,
   Assay = "normalized",
-  sample_names = "PARENT_SAMPLE_NAME",
   ...
 )
 }
@@ -30,10 +29,6 @@ be grouped by these variables.}
 automatically include the stratum with the tile.}
 
 \item{Assay}{Which assay data to use for the heatmap (default="normalized").}
-
-\item{sample_names}{Column name in the meta data containing the sample names.
-This must correspond to the row names of the raw peak data in the excel
-file.}
 
 \item{...}{Additional arguments can be passed into the arrange function.
 This parameter will order the columns of the heatmap.}

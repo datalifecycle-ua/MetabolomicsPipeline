@@ -264,7 +264,6 @@ requires the following arguments.
 the columns of the heatmap based on a group, you must include them in the 
 group_vars. 
     
-* caption: The title of the heatmap.
 
 * caption: A title for the heatmap. If strat_var is used, the title will 
     automatically include the stratum with the tile.
@@ -289,7 +288,6 @@ metabolite_heatmap(dat,
     strat_var = NULL,
     caption = "Heatmap Arranged By Group",
     Assay = "normalized",
-    sample_names = "PARENT_SAMPLE_NAME",
     GROUP_NAME
 )
 
@@ -303,7 +301,6 @@ metabolite_heatmap(dat,
     strat_var = NULL,
     caption = "Heatmap Arranged By Group and TIME",
     Assay = "normalized",
-    sample_names = "PARENT_SAMPLE_NAME",
     GROUP_NAME, desc(TIME1)
 )
 
@@ -315,7 +312,6 @@ metabolite_heatmap(dat,
     strat_var = "Gender",
     caption = "Heatmap Arranged By Group and TIME",
     Assay = "normalized",
-    sample_names = "PARENT_SAMPLE_NAME",
     GROUP_NAME, desc(TIME1)
 )
 

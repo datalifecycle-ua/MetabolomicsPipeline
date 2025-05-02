@@ -17,9 +17,6 @@
 #'
 #' @param Assay Which assay data to use for the heatmap (default="normalized").
 #' 
-#' @param sample_names Column name in the meta data containing the sample names.
-#'  This must correspond to the row names of the raw peak data in the excel
-#'  file.
 #'
 #' @param ...  Additional arguments can be passed into the arrange function.
 #' This parameter will order the columns of the heatmap.
@@ -59,7 +56,7 @@
 metabolite_heatmap <- function(data, top_mets = 50, group_vars,
                             strat_var = NULL,
                             caption = NULL, Assay = "normalized",
-                            sample_names = "PARENT_SAMPLE_NAME" , ...) {
+                             ...) {
     ## Get top metabolites
     select_variables <- SummarizedExperiment::assay(data, Assay) %>%
         apply(1, mean)
