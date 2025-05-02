@@ -76,7 +76,7 @@ subpath_within_superpath <- function(subpath_results) {
             dplyr::distinct()
 
 
-        # 4. Formulate the Super-pathway results table.
+        # 4. Formulate the Superpathway results table.
         superPath <- table_data %>%
             dplyr::group_by(super_pathway) %>%
             summarise(
@@ -96,7 +96,7 @@ subpath_within_superpath <- function(subpath_results) {
             knitr::kable(
                 col.names = c("Super Pathway", "Percent Significant"),
                 caption = 
-                  "Proportion of significant subpathways within super-pathways"
+                  "Proportion of significant subpathways within superpathways"
             ) %>%
             kableExtra::kable_paper(full_width = FALSE, html_font = "Cambria")
 
@@ -137,7 +137,7 @@ subpath_within_superpath <- function(subpath_results) {
 
 
             if (i == 1) {
-                # 4. Formulate the Super-pathway results table.
+                # 4. Formulate the Superpathway results table.
                 superPath <- table_data %>%
                     dplyr::group_by(super_pathway) %>%
                     dplyr::summarise(
@@ -186,7 +186,7 @@ subpath_within_superpath <- function(subpath_results) {
                     )
                 ),
                 caption =
-                  "Proportion of significant subpathways within super-pathways"
+                  "Proportion of significant subpathways within superpathways"
             ) %>%
             kableExtra::kable_paper(full_width = FALSE, html_font = "Cambria")
 

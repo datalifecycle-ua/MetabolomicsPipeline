@@ -37,7 +37,7 @@ chemical annotation worksheet.}
 \item{chemName}{Column name for chemical name variable as defined in the
 chemical annotation worksheet.}
 
-\item{superPathwayName}{Column name for super-pathway variable as defined in
+\item{superPathwayName}{Column name for superpathway variable as defined in
 the chemical annotation worksheet.}
 }
 \value{

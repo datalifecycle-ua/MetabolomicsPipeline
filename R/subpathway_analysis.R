@@ -53,7 +53,7 @@
 #' @param chemName Column name for chemical name variable as defined in the
 #' chemical annotation worksheet.
 #'
-#' @param superPathwayName Column name for super-pathway variable as defined in
+#' @param superPathwayName Column name for superpathway variable as defined in
 #' the chemical annotation worksheet.
 #'
 #'

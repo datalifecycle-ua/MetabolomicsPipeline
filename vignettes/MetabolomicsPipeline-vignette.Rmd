@@ -321,13 +321,13 @@ metabolite_heatmap(dat,
 ## Subpathway Analysis
 
 In the chemical annotation file, we will see that each metabolite is
-within a sub-pathway, and each subpathway is within a superpathway.
+within a subpathway, and each subpathway is within a superpathway.
 There are several metabolites within each subpathway and several
-sub-pathways within each Super-pathway. We can utilize an Analysis of
+subpathways within each superpathway. We can utilize an Analysis of
 variance (ANOVA) model to test for a difference in peak intensities
 between the treatment groups at the metabolite level. However, since multiple metabolites are
 within a subpathway, it is challenging to test if the treatment
-affected the peak data at the sub-pathway level. For this, we 
+affected the peak data at the subpathway level. For this, we 
 utilize a combined Fisher probability test. The combined Fisher test
 combines the p-values from independent tests to test the hypothesis for
 an overall effect. The Combined Fisher Probability is helpful

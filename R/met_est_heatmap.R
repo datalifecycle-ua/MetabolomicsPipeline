@@ -155,7 +155,7 @@ met_est_heatmap <- function(results_data, data, interactive = FALSE,
                 text = as.formula(paste0("~", SUB_PATHWAY)),
                 hovertemplate = paste(
                     "<b>Metabolite: %{y}</b><br><br>",
-                    "Sub-pathway: %{text}<br>",
+                    "Subpathway: %{text}<br>",
                     "Contrast: %{x}<br>",
                     "Difference: %{z}<br>",
                     "<extra></extra>"
