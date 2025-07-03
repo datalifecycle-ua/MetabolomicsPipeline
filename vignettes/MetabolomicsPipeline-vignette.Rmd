@@ -46,7 +46,7 @@ will being automatically installed (if not already installed) when installing
 the MetabolomicsPipline package using the commands above. 
 
 
-```{r setup, warning=FALSE, message=FALSE , include = TRUE}
+```{r setup}
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>",
