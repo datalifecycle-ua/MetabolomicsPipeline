@@ -1,4 +1,4 @@
-#' Create metadata and matricies for metabolite heatmaps
+#' Create metadata and matrices for metabolite heatmaps
 #'
 #' This function creates the required matrices for the metabolite heatmaps.
 #'

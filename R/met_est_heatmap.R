@@ -8,9 +8,9 @@
 #'
 #' @param data A SummarizedExperiment containing the metabolomics experiment data.
 #'
-#' @param interactive boolean (T/F) for whether or not the plot should be
-#'     interactive. Use interactive=T to produce an interactive plot using
-#'     plotly. Use interactive=F to produce a static heatmap using pheatmap.
+#' @param interactive boolean (TRUE/FALSE) for whether or not the plot should be
+#'     interactive. Use interactive=TRUE to produce an interactive plot using
+#'     plotly. Use interactive=FALSE to produce a static heatmap using pheatmap.
 #'
 #'
 #' @param SUB_PATHWAY Column name in the chemical annotation worksheet which

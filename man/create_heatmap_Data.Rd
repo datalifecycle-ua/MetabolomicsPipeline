@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_heatmap_Data.R
 \name{create_heatmap_Data}
 \alias{create_heatmap_Data}
-\title{Create metadata and matricies for metabolite heatmaps}
+\title{Create metadata and matrices for metabolite heatmaps}
 \usage{
 create_heatmap_Data(data, heatmap_variables, Assay = "normalized", ...)
 }

@@ -20,7 +20,7 @@ by \code{\link{metabolite_pairwise}}.}
 
 \item{data}{A SummarizedExperiment containing metabolomics experiment data.}
 
-\item{interactive}{boolean (T/F) for whether or not the plot should be
+\item{interactive}{boolean (TRUE/FALSE) for whether or not the plot should be
 interactive. Use interactive=T to produce an interactive plot using
 plotly. Use interactive=F to produce a static heatmap using pheatmap.}
 
