@@ -28,6 +28,7 @@ Imports:
     grDevices (>= 3.6.0),
     kableExtra (>= 1.3.4),
     knitr (>= 1.44),
+    magick,
     magrittr,
     methods (>= 4.3.1),
     pheatmap (>= 1.0.12),
