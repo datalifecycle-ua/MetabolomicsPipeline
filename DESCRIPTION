@@ -19,6 +19,7 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
+    car,
     dplyr (>= 1.1.3),
     emmeans (>= 1.8.8),
     factoextra (>= 1.0.7),

@@ -21,7 +21,7 @@ BioConductor.
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
 }
-BiocManager::install("MetabolomicsPipeline")
+BiocManager::install("MetabolomicsPipeline", force = TRUE)
 ```
 
 You can additionally install the current version which is hosted on github using 
@@ -144,7 +144,7 @@ data("demoChemAnno", package = "MetabolomicsPipeline")
 # Get demo peak data
 data("demoPeak", package = "MetabolomicsPipeline")
 
-dat <- create_met_se(chemical_annotation = demoChemAnno,
+dat <- createMetSe(chemical_annotation = demoChemAnno,
                      sample_metadata = demoSampleMeta,
                      peak_data = demoPeak,
                      chemical_id = "CHEM_ID",
@@ -176,13 +176,13 @@ to prepare it for downstream analysis:
 
 ```{r Data Processing}
 # Median standardization
-dat <- median_standardization(dat, assay = "peak")
+dat <- medianStandardization(dat, assay = "peak")
 
 # Min value imputation
-dat <- min_val_impute(dat, assay = "median_std") 
+dat <- minValImpute(dat, assay = "median_std") 
 
 # log transformation
-dat <- log_transformation(dat, assay = "min_impute")
+dat <- logTransformation(dat, assay = "min_impute")
 ```
 
 
@@ -228,7 +228,7 @@ function has three arguments:
 meta_var <- "Gender"
 
 # Run PCA
-pca <- metabolite_pca(dat,
+pca <- metabolitePca(dat,
     meta_var = meta_var
 )
 
@@ -281,7 +281,7 @@ heatmaps increasing by complexity.
 ################################################################################
 
 # Heatmap with one group
-metabolite_heatmap(dat,
+metaboliteHeatmap(dat,
     top_mets = 50,
     group_vars = "GROUP_NAME",
     strat_var = NULL,
@@ -294,7 +294,7 @@ metabolite_heatmap(dat,
 
 
 # Heatmap with two groups
-metabolite_heatmap(dat,
+metaboliteHeatmap(dat,
     top_mets = 50,
     group_vars = c("GROUP_NAME", "TIME1"),
     strat_var = NULL,
@@ -305,7 +305,7 @@ metabolite_heatmap(dat,
 
 
 # Heatmap with 2 group and stratified
-metabolite_heatmap(dat,
+metaboliteHeatmap(dat,
     top_mets = 50,
     group_vars = c("GROUP_NAME", "TIME1"),
     strat_var = "Gender",
@@ -428,13 +428,17 @@ summarize the results from the subpathway analysis.
 3.  Metabolite model results within a specified subpathway (met_within_sub)
 
 
+**Note:** If any of the ANOVA models above have a warning or an error, the 
+metabolite is excluded and a warning is printed with the message
+about the warning or error. 
+
 ```{r SubpathwayAnalysis}
 ################################################################################
 ## Stratified Analysis #########################################################
 ################################################################################
 
 # Stratified Analysis
-stratified <- subpathway_analysis(dat,
+stratified <- subpathwayAnalysis(dat,
     treat_var = "GROUP_NAME",
     block_var = "TIME1",
     strat_var = "Gender",
@@ -447,13 +451,13 @@ stratified <- subpathway_analysis(dat,
 ################################################################################
 
 # 1. significant subpathways by model type
-subpath_by_model(stratified)
+subpathByModel(stratified)
 
 # 2. Percentage of signficant subpathways within superpathways
-subpath_within_superpath(stratified)
+subpathWithinSuperpath(stratified)
 
 # 3. Metabolites within subpathway
-tables <- met_within_sub(stratified,
+tables <- metWithinSub(stratified,
     subpathway = "Partially Characterized Molecules"
 )
 
@@ -529,7 +533,7 @@ static heatmap.
 #### Run Pairwise Comparisons ##################################################
 ################################################################################
 
-strat_pairwise <- metabolite_pairwise(dat,
+strat_pairwise <- metabolitePairwise(dat,
     form = "GROUP_NAME*TIME1",
     strat_var = "Gender"
 )
@@ -539,7 +543,7 @@ strat_pairwise <- metabolite_pairwise(dat,
 ## Create Estimate Heatmap #####################################################
 ################################################################################
 
-met_est_heatmap(strat_pairwise$Female, dat,
+metEstHeatmap(strat_pairwise$Female, dat,
     interactive = FALSE,
      SUB_PATHWAY = "SUB_PATHWAY",
     CHEMICAL_NAME = "CHEMICAL_NAME",
@@ -552,7 +556,7 @@ met_est_heatmap(strat_pairwise$Female, dat,
 ## Create P-value Heatmap ######################################################
 ################################################################################
 # Female
-met_p_heatmap(strat_pairwise$Female, dat,
+metPHeatmap(strat_pairwise$Female, dat,
     interactive = FALSE, show_rownames = FALSE,
     plotlyTitle = "Pvalue Heatmap",
     main = "Pvalue Heatmap"
@@ -595,7 +599,7 @@ a subpathway. For both functions, the arguments are:
 ### BoxPlots ###################################################################
 ################################################################################
 
-subpathway_boxplots(dat,
+subpathwayBoxplots(dat,
     subpathway = "Lactoyl Amino Acid", block_var = TIME1,
     treat_var = GROUP_NAME, Assay = "normalized",
     CHEMICAL_NAME = "CHEMICAL_NAME",
@@ -613,7 +617,7 @@ dat$TIME1 <- as.numeric(factor(dat$TIME1,
 ))
 
 # Create line plots
-subpathway_lineplots(dat,
+subpathwayLineplots(dat,
     subpathway = "Lactoyl Amino Acid",
     block_var = TIME1, treat_var = GROUP_NAME,
     Assay = "normalized",
