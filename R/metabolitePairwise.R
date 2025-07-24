@@ -22,7 +22,9 @@
 #' @param  form This is a character string the resembles the right hand side of
 #'  a simple linear regression model in R. For example form = "Group1 + Group2".
 #'
-#'
+#' @param adjust.p  Whether to adjust the p-values for multiple comparisons. If 
+#' adjust.p = TRUE, the p-values will be adjusted using the Tukey method. If
+#' adjust.p = FALSE, the p-values will not be adjusted. Default is TRUE.
 #'
 #' @param Assay Name of the assay to be used for the pairwise analysis
 #'  (default='normalized')
@@ -77,6 +79,7 @@
 
 
 metabolitePairwise <- function(data, form, Assay = "normalized",
+                               adjutst.p = TRUE,
                                 strat_var = NULL, mets = NULL) {
     # Create analysis data
     analysis <- SummarizedExperiment::colData(data) %>%
@@ -93,10 +96,16 @@ metabolitePairwise <- function(data, form, Assay = "normalized",
         # Get metabolites
 
 
+        # If adjust.p is TRUE, use set to NULL if adjust.p is FALSE set to 'none'
+        if (adjutst.p) {
+            adjust <- NULL
+        } else {
+            adjust <- 'none'
+        }
         # Get pairwise comparisons
         res <- apply(analysis[, mets],
             MARGIN = 2, FUN = function(X) {
-                pairwise(X, form = form, data = analysis)
+                pairwise(X, form = form, data = analysis, adjust = adjust)
             }
         )
 
@@ -111,12 +120,18 @@ metabolitePairwise <- function(data, form, Assay = "normalized",
     if (!is.null(strat_var)) {
         # Split data
         data <- split(analysis, f = analysis[, strat_var])
+        
+        if (adjutst.p) {
+          adjust <- NULL
+        } else {
+          adjust <- 'none'
+        }
 
         # Get results
         results <- lapply(data, function(X) {
             # Get pairwise comparisons
             res <- apply(X[, mets], MARGIN = 2, FUN = function(m) {
-                pairwise(m, form = form, data = X)
+                pairwise(m, form = form, data = X, adjust = adjust)
             })
 
             res2 <- do.call(rbind, res)

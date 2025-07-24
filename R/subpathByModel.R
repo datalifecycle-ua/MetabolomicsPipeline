@@ -51,7 +51,8 @@
 #'
 
 subpathByModel <- function(subpath_results) {
-    if (inherits(subpath_results, "data.frame")) {
+    if (inherits(subpath_results, "data.frame") | 
+        inherits(subpath_results, "DFrame")) {
         # 2. Structure levels
         if (sum(grepl("interaction", names(subpath_results))) == 0) {
             levs <- c("Single", "None")
@@ -63,6 +64,7 @@ subpathByModel <- function(subpath_results) {
 
         # 3. Create table data
         table_data <- subpath_results %>%
+            as.data.frame() %>%
             dplyr::mutate(model = factor(model, levels = levs)) %>%
             dplyr::select(sub_pathway, ends_with("_fisher"), model) %>%
             dplyr::distinct()
@@ -93,6 +95,7 @@ subpathByModel <- function(subpath_results) {
         for (i in seq_len(length(names(subpath_results)))) {
             # 3. Create table data for strata
             table_data <- subpath_results[[i]] %>%
+                as.data.frame() %>%
                 dplyr::mutate(model = factor(model, levels = levs)) %>%
                 dplyr::select(sub_pathway, ends_with("_fisher"), model) %>%
                 dplyr::distinct()

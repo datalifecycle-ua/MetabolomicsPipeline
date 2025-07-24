@@ -7,6 +7,7 @@
 metPHeatmap(
   results_data,
   data,
+  pv_cutoff = 0.05,
   interactive = FALSE,
   SUB_PATHWAY = "SUB_PATHWAY",
   CHEMICAL_NAME = "CHEMICAL_NAME",
@@ -19,6 +20,8 @@ metPHeatmap(
 by \code{\link{metabolite_pairwise}}.}
 
 \item{data}{A SummarizedExperiment containing metabolomics experiment data.}
+
+\item{pv_cutoff}{Numeric value for the p-value cutoff. Default is 0.05.}
 
 \item{interactive}{boolean (TRUE/FALSE) for whether or not the plot should be
 interactive. Use interactive=T to produce an interactive plot using

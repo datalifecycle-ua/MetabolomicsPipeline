@@ -42,6 +42,6 @@ subpathByModel(sub_analysis)
 # Percentage of signficant subpathways within superpathways
 subpathWithinSuperpath(sub_analysis)
 
-met_within_sub(sub_analysis, subpathway = "Aminosugar Metabolism")
+metWithinSub(sub_analysis, subpathway = "Aminosugar Metabolism")
 
 }

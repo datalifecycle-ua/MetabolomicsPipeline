@@ -8,6 +8,7 @@ metabolitePairwise(
   data,
   form,
   Assay = "normalized",
+  adjutst.p = TRUE,
   strat_var = NULL,
   mets = NULL
 )
@@ -26,6 +27,10 @@ If this is specified, a list of results will be returned.}
 
 \item{mets}{Chemical ID for the metabolites of interest. If NULL then the
 pairwise analysis is completed for all metabololites.}
+
+\item{adjust.p}{Whether to adjust the p-values for multiple comparisons. If
+adjust.p = TRUE, the p-values will be adjusted using the Tukey method. If
+adjust.p = FALSE, the p-values will not be adjusted. Default is TRUE.}
 }
 \value{
 The overall F-test p-value, and the estimate and pvalue for each

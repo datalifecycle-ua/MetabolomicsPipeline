@@ -4,7 +4,7 @@
 \alias{pairwise}
 \title{Pairwise function}
 \usage{
-pairwise(out, form, data)
+pairwise(out, form, data, adjust = NULL)
 }
 \arguments{
 \item{out}{Outcome used as reponse}

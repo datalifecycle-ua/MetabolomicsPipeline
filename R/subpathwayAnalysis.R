@@ -189,7 +189,7 @@ subpathwayAnalysis <- function(data, treat_var, block_var = NULL,
                                     paste0(treat_var, ":", block_var), 5]
                         },
                         warning = function(w) {
-                            warning(w, " for CHEM ID ", var, ". Metabolite is
+                            warning(w," for CHEM ID ", var, ". Metabolite is
                                     excluded.")
                           path_data$interaction_pval[
                             which(path_data$CHEM_ID == var)] <- NA

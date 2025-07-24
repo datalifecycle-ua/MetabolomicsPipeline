@@ -52,15 +52,26 @@
 
 metWithinSub <- function(subpath_results, subpathway,
                         mod = c("interaction", "parallel", "single")) {
-    if (inherits(subpath_results, "data.frame")) {
-        # Get model results in dataframe
-        mod_res <-
-            paste0(mod, "_pval")[
+  
+  # if parallel is not in the model, remove it and add parallel_treatment, and 
+  # parallel_block
+  if( "parallel" %in% mod) {
+    mod <- c(mod, "parallel_treatment", "parallel_block")
+    mod <- mod[mod != "parallel"]
+    mod <- mod[order(mod)]
+    }
+    
+  if (inherits(subpath_results, "data.frame") |
+      inherits(subpath_results, "DFrame")) {
+        
+    # Get model results in dataframe
+        mod_res <- paste0(mod, "_pval")[
                 paste0(mod, "_pval") %in% names(subpath_results)
             ]
 
         # create table
         table <- subpath_results %>%
+            as.data.frame() %>%
             dplyr::filter(sub_pathway == subpathway) %>%
             dplyr::select(chem_name, all_of(mod_res)) %>%
             knitr::kable(
@@ -89,6 +100,7 @@ metWithinSub <- function(subpath_results, subpathway,
             ]
 
             stratum %>%
+                as.data.frame() %>%
                 dplyr::filter(sub_pathway == subpathway) %>%
                 dplyr::select(chem_name, all_of(mod_res)) %>%
                 knitr::kable(
@@ -108,7 +120,10 @@ metWithinSub <- function(subpath_results, subpathway,
                     html_font = "Cambria"
                 )
         })
-
+        
+        # update the names of the tables. 
+        names(tables) <- names(subpath_results)
+        
         return(tables)
     }
 }

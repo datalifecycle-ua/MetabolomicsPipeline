@@ -1,12 +1,17 @@
 #' Metabolite Pairwise Estimate Interactive Heatmap.
 #'
 #' Produce an interactive heatmap of the estimates produced in
-#'  \code{\link{metabolite_pairwise}}.
+#'  \code{\link{metabolitePairwise}}.
 #'
 #' @param results_data Results data frame of the pairwise comparisons produced
-#'  by \code{\link{metabolite_pairwise}}.
+#'  by \code{\link{metabolitePairwise}}.
 #'
 #' @param data A SummarizedExperiment containing the metabolomics experiment data.
+#'
+#' @param diff_cutoff Numeric value for the difference cutoff. Must be larger
+#' default is .7.
+#' 
+#' @param pv_cutoff Numeric value for the p-value cutoff. Default is 0.05.
 #'
 #' @param interactive boolean (TRUE/FALSE) for whether or not the plot should be
 #'     interactive. Use interactive=TRUE to produce an interactive plot using
@@ -40,7 +45,7 @@
 #' dat <- demoDataSmall
 #'
 #' # Run pairwise analysis
-#' strat_pairwise <- metabolite_pairwise(dat,
+#' strat_pairwise <- metabolitePairwise(dat,
 #'     form = "GROUP_NAME*TIME1",
 #'     strat_var = "Gender"
 #' )
@@ -82,40 +87,59 @@
 #'
 #' @export
 #'
-metEstHeatmap <- function(results_data, data, interactive = FALSE,
+metEstHeatmap <- function(results_data, data, diff_cutoff = .7,
+                          pv_cutoff = 0.05,
+                          interactive = FALSE,
                             SUB_PATHWAY = "SUB_PATHWAY",
                             CHEMICAL_NAME = "CHEMICAL_NAME",
                             plotlyTitle = "Metabolite log fold change", ...) {
   
-    CHEM_ID = "rownames"
+    # Check if FC_cutoff is larger than 1
+    if (diff_cutoff <= 0) {
+        stop("diff cut off must be greater than 0")
+    }
+    # Check if pv_cutoff is >0<1
+    if (pv_cutoff <= 0 || pv_cutoff >= 1) {
+        stop("pv_cutoff must be between 0 and 1.")
+    }
+  
+    # check if data is SummarizedExperiment
+    if (!inherits(data, "SummarizedExperiment")) {
+        stop("data must be a SummarizedExperiment object.")
+    }
+  
+    CHEM_ID = "row.names"
+    
+    # Create data frame with all of the estimates and pvalues
+    pvals <- results_data %>%
+      as.data.frame() %>%
+      dplyr::select(metabolite,Overall_pval,
+                    dplyr::all_of(ends_with("PVALS"))) %>%
+      tidyr::pivot_longer(-c(metabolite,Overall_pval),
+                             names_to = "Contrast", values_to = "pval") %>%
+      dplyr::mutate(Contrast = gsub("_PVALS", "", Contrast)) 
+    
+    
+    ests <- results_data %>%
+      as.data.frame() %>%
+      dplyr::select(metabolite,Overall_pval, all_of(ends_with("ESTS"))) %>%
+      tidyr::pivot_longer(-c(metabolite,Overall_pval), names_to = "Contrast",
+                          values_to = "Difference") %>%
+      dplyr::mutate(Contrast = gsub("_ESTS", "", Contrast))
+    
+    est_pvals <- merge(ests, pvals, by = c("metabolite", "Contrast","Overall_pval")) 
+    
     # 2. Merge the chemical annotation fill with the results from the pairwise
     #    comparisons.
-    dat <- rowData(data) %>%
-        as.data.frame() %>%
-        tibble::rownames_to_column(CHEM_ID) %>%
-        dplyr::select(dplyr::all_of(c(SUB_PATHWAY, CHEMICAL_NAME, CHEM_ID))) %>%
-        merge(results_data, by.x = CHEM_ID, by.y = "metabolite") %>%
-        dplyr::filter(Overall_pval < 0.05) %>%
-        dplyr::arrange(!!as.name(SUB_PATHWAY)) %>%
-        dplyr::select(
-            dplyr::all_of(c(CHEM_ID, SUB_PATHWAY, CHEMICAL_NAME)),
-            dplyr::all_of(names(results_data)[grepl(
-                "ESTS",
-                names(results_data)
-            )])
-        ) %>%
-        reshape2::melt(
-            id.vars = c(CHEM_ID, SUB_PATHWAY, CHEMICAL_NAME),
-            variable.name = "Contrast", value.name = "Difference"
-        ) %>%
-        dplyr::mutate(
-            Contrast = gsub("_ESTS", "", Contrast),
-            Difference = ifelse(
-                Difference < log(0.5) | Difference > log(2),
-                round(Difference, 3), NA
-            )
-        ) %>%
-        dplyr::arrange(!!as.name(SUB_PATHWAY))
+    dat <- est_pvals %>%
+      merge(
+        SummarizedExperiment::rowData(data),
+        by.x = "metabolite", by.y = CHEM_ID) %>%
+      as.data.frame() %>%
+      dplyr::filter(
+        Overall_pval <= pv_cutoff & 
+        pval <= pv_cutoff &
+          abs(Difference) >= diff_cutoff)
 
 
 
@@ -146,27 +170,29 @@ metEstHeatmap <- function(results_data, data, interactive = FALSE,
 
     # 3. Produce interactive Heatmap
     if (interactive == TRUE) {
-        p <- dat %>%
-            plotly::plot_ly(
-                type = "heatmap",
-                x = ~Contrast,
-                y = as.formula(paste0("~", CHEMICAL_NAME)),
-                z = ~Difference,
-                text = as.formula(paste0("~", SUB_PATHWAY)),
-                hovertemplate = paste(
-                    "<b>Metabolite: %{y}</b><br><br>",
-                    "Subpathway: %{text}<br>",
-                    "Contrast: %{x}<br>",
-                    "Difference: %{z}<br>",
-                    "<extra></extra>"
-                ),
-                colorbar = list(title = "<b>Difference</b>")
-            ) %>%
-            plotly::layout(
-                title = paste0("<b>",plotlyTitle,"</b>"),
-                xaxis = list(title = "<b>Contrasts</b>"),
-                yaxis = list(title = "")
-            )
+      p <- dat %>%
+        mutate(
+          text = paste0(
+            "<br><b>Metabolite: ",!!as.name(CHEMICAL_NAME), "</b><br><br>",
+            "<b>Subpathway: </b>", !!as.name(SUB_PATHWAY), "<br>",
+            "<b>Contrast: </b>", Contrast, "<br>",
+            "<b>Difference: </b>", round(Difference,3), "<br>",
+            "<b>P-value:</b> ",round(pval,3)  ,"</b>")
+        ) %>%
+        plotly::plot_ly(
+          type = "heatmap",
+          x = ~Contrast,
+          y = as.formula(paste0("~", CHEMICAL_NAME)),
+          z = ~Difference,
+          text = ~text,
+          hoverinfo = 'text',
+          colorbar = list(title = "<b>Difference</b>")
+        ) %>%
+        plotly::layout(
+          title = paste0("<b>",plotlyTitle,"</b>"),
+          xaxis = alist(title = "<b>Contrasts</b>"),
+          yaxis = list(title = "")
+        )
     }
 
     # Return heatmap

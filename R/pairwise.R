@@ -15,7 +15,7 @@
 #' @importFrom emmeans emmeans
 #' @importFrom stats anova
 
-pairwise <- function(out, form, data) {
+pairwise <- function(out, form, data, adjust = NULL) {
     # Define model
     model <- as.formula(
         paste("outcome",
@@ -48,7 +48,7 @@ pairwise <- function(out, form, data) {
 
 
     # Find pairwise comparisons
-    pairs <- emmeans::emmeans(mod, means_mod, adjust = "none")$contrasts
+    pairs <- emmeans::emmeans(mod, means_mod, adjust = adjust)$contrasts
 
 
 

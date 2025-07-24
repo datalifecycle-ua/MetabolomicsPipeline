@@ -168,11 +168,11 @@ tbl1
 The MetabolomicsPipline package contains tools for processing the peak data
 to prepare it for downstream analysis:
 
-1.) Median standardization (median_standardization())
+1.) Median standardization (medianStandardization())
 
-2.) Minimum value imputation (min_val_impute())
+2.) Minimum value imputation (minValImpute())
 
-3.) Log transformation (log_transformation())
+3.) Log transformation (logTransformation())
 
 ```{r Data Processing}
 # Median standardization
@@ -208,7 +208,7 @@ the largest remaining variance, and so on. Additionally, each
 of the PCs produced by PCA is uncorrelated with 
 the other principal components. PCA can allow us to visualize sources of
 variation in the data. The metabolite_pca function will enable us to specify
-a sample metadata variable to label the points in the plot. The metabolite_pca 
+a sample metadata variable to label the points in the plot. The metabolitePca 
 function has three arguments:
 
 * data: SummarizedExperiment with metabolomics experiment data.
@@ -251,7 +251,7 @@ metabolite in each observation. We can group the observations by the
 experimental conditions. Grouping the experimental conditions in a heatmap is 
 another way of visualizing sources of variation within our data.
 
-We can use the metabolite_heatmap function to create the heatmaps, which 
+We can use the metaboliteHeatmap function to create the heatmaps, which 
 requires the following arguments. 
 
 * data: SummarizedExperiment with metabolomics experiment data.
@@ -395,7 +395,13 @@ variance for each metabolite.
 
 We test at the subpathway level using the Combined Fisher Probability method to 
 combine the p-values from each model for all metabolites within the subpathway. 
-To run the subpathway analysis, we use the "subpathway_analysis"
+
+Model selection is based on the combined Fisher p-value. The interaction model is
+selected if the interaction term in Model 1 is significant. If the blocking factor
+(TIME1) is significant in Model 2, the parallel model is chosen. If only the 
+treatment term is significant, the single-factor model is selected.
+
+To run the subpathway analysis, we use the "subpathwayAnalysis"
 function, which requires the following arguments.  
 
 
@@ -420,17 +426,20 @@ function, which requires the following arguments.
 With the MetabolomicsPipeline package, we provide three different ways to
 summarize the results from the subpathway analysis.
 
-1.  Number of significant subpathways by model type (subpath_by_model)
+1.  Number of significant subpathways by model type (subpathByModel)
 
 2.  Percentage of significant subpathways within superpathways 
-    (subpath_within_superpath)
+    (subpathWithinSuperpath)
+    
+3. Subpathway results within a specified superpathway (subWithinSuperResults)
 
-3.  Metabolite model results within a specified subpathway (met_within_sub)
+4.  Metabolite model results within a specified subpathway (metWithinSub)
 
 
 **Note:** If any of the ANOVA models above have a warning or an error, the 
 metabolite is excluded and a warning is printed with the message
-about the warning or error. 
+about the warning or error. Metabolites with a warning or error are excluded in the 
+subpathway analysis.
 
 ```{r SubpathwayAnalysis}
 ################################################################################
@@ -456,16 +465,20 @@ subpathByModel(stratified)
 # 2. Percentage of signficant subpathways within superpathways
 subpathWithinSuperpath(stratified)
 
+# Show significant subpathways within superpathways
+subWithinSuperResults(stratified, Superpath = "Amino Acid")
+
 # 3. Metabolites within subpathway
 tables <- metWithinSub(stratified,
-    subpathway = "Partially Characterized Molecules"
+    subpathway = "Lysine Metabolism"
 )
 
+
 ### Females
-tables[[1]]
+tables$Female
 
 ### Males
-tables[[2]]
+tables$Male
 ```
 
 ## Pairwise Analysis
@@ -505,7 +518,7 @@ analysis.
 Similar to the pairwise estimate heatmap, we will produce a heatmap where the 
 heatmap will only include metabolites with a significant overall p-value, and 
 the values in the heat map will only be colored if the pairwise comparison is 
-significant. We use the met_p_heatmap function to create an interactive p-value
+significant. We use the metPHeatmap function to create an interactive p-value
 heatmap. 
 
 
@@ -515,9 +528,13 @@ pheatmap. To produce these heatmaps we use the following arguments:
 
 
 *  results_data: Results data frame of the pairwise comparisons produced by
-    \code{\link{metabolite_pairwise}}.
+    \code{\link{metabolitePairwise}}.
 
 *  data: A SummarizedExperiment containing the metabolomics experiment data.
+
+* FC_cutoff: Numeric value for the fold change cutoff. Must be larger than 1. Default is 2.
+
+* pv_cutoff: Numeric value for the p-value cutoff. Default is 0.05.
 
 *  interactive: boolean (TRUE/FALSE) for whether or not the plot should be
     interactive. Use interactive=T to produce an interactive plot using 
@@ -544,7 +561,8 @@ strat_pairwise <- metabolitePairwise(dat,
 ################################################################################
 
 metEstHeatmap(strat_pairwise$Female, dat,
-    interactive = FALSE,
+              diff_cutoff = .7, pv_cutoff = 0.05,
+    interactive = TRUE,
      SUB_PATHWAY = "SUB_PATHWAY",
     CHEMICAL_NAME = "CHEMICAL_NAME",
     plotlyTitle = "Estimate Heatmap",
@@ -557,7 +575,8 @@ metEstHeatmap(strat_pairwise$Female, dat,
 ################################################################################
 # Female
 metPHeatmap(strat_pairwise$Female, dat,
-    interactive = FALSE, show_rownames = FALSE,
+            pv_cutoff = 0.05,
+    interactive = TRUE, show_rownames = FALSE,
     plotlyTitle = "Pvalue Heatmap",
     main = "Pvalue Heatmap"
 )
@@ -569,7 +588,7 @@ metPHeatmap(strat_pairwise$Female, dat,
 
 Visualizations of the data can help us see the underlying trends. Two
 useful visualizations are boxplots and line plots, we will be using the
-subpathway_boxplots and subpathway_lineplots functions to create them. The main 
+subpathwayBoxplots and subpathwayLineplots functions to create them. The main 
 utility of these functions is it allows you for focus on the metabolites within 
 a subpathway. For both functions, the arguments are:
 

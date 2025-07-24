@@ -33,7 +33,7 @@
 #' # Percentage of signficant subpathways within superpathways
 #' subpathWithinSuperpath(sub_analysis)
 #'
-#' met_within_sub(sub_analysis, subpathway = "Aminosugar Metabolism")
+#' metWithinSub(sub_analysis, subpathway = "Aminosugar Metabolism")
 #'
 #' @importFrom dplyr case_when
 #' @importFrom kableExtra kable_paper
@@ -46,7 +46,8 @@
 
 
 subpathWithinSuperpath <- function(subpath_results) {
-    if (inherits(subpath_results, "data.frame")) {
+    if (inherits(subpath_results, "data.frame") |
+        inherits(subpath_results, "DFrame")) {
         # 2. Structure levels
         if (sum(grepl("interaction", names(subpath_results))) == 0) {
             levs <- c("Single", "None")
@@ -68,6 +69,7 @@ subpathWithinSuperpath <- function(subpath_results) {
 
         # 3. Create table data
         table_data <- subpath_results %>%
+            as.data.frame() %>%
             dplyr::mutate(model = factor(model, levels = levs)) %>%
             dplyr::select(
                 sub_pathway, super_pathway,
@@ -128,6 +130,7 @@ subpathWithinSuperpath <- function(subpath_results) {
 
 
             table_data <- subpath_results[[i]] %>%
+                as.data.frame() () %>%
                 dplyr::mutate(model = factor(model, levels = levs)) %>%
                 dplyr::select(
                     sub_pathway, super_pathway,
