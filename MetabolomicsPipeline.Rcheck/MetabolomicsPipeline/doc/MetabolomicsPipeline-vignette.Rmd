@@ -1,0 +1,653 @@
+---
+title: "MetabolomicsPipeline-vignette"
+author: "Joel Parker"
+date: "05/31/2024"
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{MetabolomicsPipeline-vignette}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+## Installation
+You can install the MetabolomicsPipeline package directly from BioConductor 
+using the following code. Note, this package is not yet available on 
+BioConductor. 
+```{r eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+    install.packages("BiocManager")
+}
+BiocManager::install("MetabolomicsPipeline", force = TRUE)
+```
+
+You can additionally install the current version which is hosted on github using 
+the following code.
+
+```{r eval=FALSE}
+if (!requireNamespace("devtools", quietly=TRUE))
+    install.packages("devtools")
+    
+ devtools::install_github("datalifecycle-ua/MetabolomicsPipeline", build_vignettes = TRUE)
+```
+
+
+Once the MetabolomicsPipeline package is installed, we can load it into the 
+environment. Note we are also loading the "table1" package. This package
+is not required by the MetabolomicPipeline, however, the table1 package contains
+great functions for creating tables. Specifically, it is useful for showing the 
+number of samples in each of our experimental groups. We recommend installing 
+this package using install.packages("table1"). The "SummarizedExperiment" and
+"ggplot2" packages are required to install the MetabolomicsPipeline package and
+will being automatically installed (if not already installed) when installing
+the MetabolomicsPipline package using the commands above. 
+
+
+```{r setup}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    fig.width = 10,
+    fig.height = 10
+)
+
+# Tables
+library(table1)
+
+# Load Metabolomics Pipeline
+library(MetabolomicsPipeline)
+
+library(SummarizedExperiment)
+
+# Figures
+library(ggplot2)
+```
+
+
+## Introduction
+
+The purpose of the MetabolomicPipeline package is to streamline the analysis for
+metabolomics experiments. In this vignette we demonstrate how 
+to use MetabolomicsPipeline package for:
+
+* Data Processing
+
+* Exploratory Analysis
+
+* Subpathway Analysis
+
+* Metabolite pairwise comparisons
+
+* Subpathway box plots and line plots
+
+
+### Data Description
+
+In this vignette, we will use data which consists of 86 samples (42
+males, 44 females), three treatment groups, and the samples were taken
+at three different time points.
+
+
+### Metabolomics data as a SummarizedExperiment
+
+Metabolomics experiments leverage multiple data tables for analysis.
+The datasets needed for the downstream
+analysis are:
+
+1.) Sample metadata
+
+2.) Chemical annotation
+
+3.) Peak data (samples x rows).
+
+
+### Data loading
+
+The MetabolomicsPipeline package provides a convenient way to load each
+of these datasets together as a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html) using create_met_se(). In this chunk we load the
+demo sample metadata, chemical annotation, and peak data into a SummarizedExperiment.
+
+1. load the demo sample metadata, chemical annotation, and peak data into a
+SummarizedExperiment.
+
+
+2. Create a table of the sample distribution
+
+
+```{r AnalysisDataCreation}
+################################################################################
+### Load Data ##################################################################
+################################################################################
+
+# if sample metadata, chemical annotation and peak data are stored in .xlsx
+# you can use.
+
+# dat <- load_met_excel(
+  # path,
+  # raw_sheet = "Peak Area Data",
+  # chemical_sheet = "Chemical Annotation",
+  # sample_meta = "Sample Meta Data",
+  # normalized_peak = "Log Transformed Data",
+  # sample_names = "PARENT_SAMPLE_NAME",
+  # chemicalID = "CHEM_ID"
+# )
+
+# Get demo sample metadata
+data("demoSampleMeta", package = "MetabolomicsPipeline")
+
+# Get demo chemical annotation file
+data("demoChemAnno", package = "MetabolomicsPipeline")
+
+# Get demo peak data
+data("demoPeak", package = "MetabolomicsPipeline")
+
+dat <- createMetSe(chemical_annotation = demoChemAnno,
+                     sample_metadata = demoSampleMeta,
+                     peak_data = demoPeak,
+                     chemical_id = "CHEM_ID",
+                     sample_names = "PARENT_SAMPLE_NAME")
+
+
+################################################################################
+### Create Table 1 #############################################################
+################################################################################
+# Create table 1
+tbl1 <- table1(~ GROUP_NAME + TIME1 | Gender,
+  data = colData(dat)
+)
+
+# Display table 1
+tbl1
+```
+
+
+## Data Processing
+The MetabolomicsPipline package contains tools for processing the peak data
+to prepare it for downstream analysis:
+
+1.) Median standardization (medianStandardization())
+
+2.) Minimum value imputation (minValImpute())
+
+3.) Log transformation (logTransformation())
+
+```{r Data Processing}
+# Median standardization
+dat <- medianStandardization(dat, assay = "peak")
+
+# Min value imputation
+dat <- minValImpute(dat, assay = "median_std") 
+
+# log transformation
+dat <- logTransformation(dat, assay = "min_impute")
+```
+
+
+## Exploratory Analysis
+
+In data exploration, we use several methods to help us better understand
+the underlying patterns in the data without using a formal hypothesis
+test. In this pipeline, we are going to focus on two methods of data
+exploration:
+
+A.) Principal component analysis
+
+B.) Heatmaps
+
+#### Principal Component Analysis (PCA)
+
+In general, Principal component analysis (PCA) reduces the number of
+variables in a dataset while preserving as much information from the
+data as possible. At a high level, PCA is constructed such that the
+first principal component (PC) accounts for the largest amount of
+variance within the data. The second PC accounts for
+the largest remaining variance, and so on. Additionally, each
+of the PCs produced by PCA is uncorrelated with 
+the other principal components. PCA can allow us to visualize sources of
+variation in the data. The metabolite_pca function will enable us to specify
+a sample metadata variable to label the points in the plot. The metabolitePca 
+function has three arguments:
+
+* data: SummarizedExperiment with metabolomics experiment data.
+
+* Assay: Name of the assay to be used for the pairwise analysis
+    (default='normalized')
+
+* meta_var: A metadata variable to color code the PCA plot by.
+
+
+```{r ExploratoryAnalysis_PCA}
+###############################################################################
+### Run PCA ###################################################################
+###############################################################################
+
+# Define PCA label from metadata
+meta_var <- "Gender"
+
+# Run PCA
+pca <- metabolitePca(dat,
+    meta_var = meta_var
+)
+
+
+# Show PCA
+pca
+```
+
+Suppose you notice a variable with clearly separated groups that is not a 
+variable of interest. In that case, consider stratifying your downstream
+analysis by the values of that variable. For example, we will stratify the 
+downstream analysis by male/female in our vignette data. 
+
+#### Heatmaps
+
+For our heatmap, the
+x-axis will be the samples, and the y-axis will be the metabolites. The
+values determining the colors will be the log normalized peak values for each
+metabolite in each observation. We can group the observations by the 
+experimental conditions. Grouping the experimental conditions in a heatmap is 
+another way of visualizing sources of variation within our data.
+
+We can use the metaboliteHeatmap function to create the heatmaps, which 
+requires the following arguments. 
+
+* data: SummarizedExperiment with metabolomics experiment data.
+
+* top_mets: The number of metabolites to include in the heatmap. The metabolites
+    are chosen based on the metabolites with the highest variability. 
+
+* group_vars: The variables to group the samples by.Note, if you want to order
+the columns of the heatmap based on a group, you must include them in the 
+group_vars. 
+    
+
+* caption: A title for the heatmap. If strat_var is used, the title will 
+    automatically include the stratum with the tile.
+
+* Assay: Which assay data to use for the heatmap (default="normalized").
+
+* ... : You can add additional arguments to order the samples
+
+
+In the chunk below, we create a PCA plot labeled by Gender. Then, we make three
+heatmaps increasing by complexity. 
+
+```{r ExploratoryAnalysis_heatmap}
+################################################################################
+### Run Heatmaps ###############################################################
+################################################################################
+
+# Heatmap with one group
+metaboliteHeatmap(dat,
+    top_mets = 50,
+    group_vars = "GROUP_NAME",
+    strat_var = NULL,
+    caption = "Heatmap Arranged By Group",
+    Assay = "normalized",
+    GROUP_NAME
+)
+
+
+
+
+# Heatmap with two groups
+metaboliteHeatmap(dat,
+    top_mets = 50,
+    group_vars = c("GROUP_NAME", "TIME1"),
+    strat_var = NULL,
+    caption = "Heatmap Arranged By Group and TIME",
+    Assay = "normalized",
+    GROUP_NAME, desc(TIME1)
+)
+
+
+# Heatmap with 2 group and stratified
+metaboliteHeatmap(dat,
+    top_mets = 50,
+    group_vars = c("GROUP_NAME", "TIME1"),
+    strat_var = "Gender",
+    caption = "Heatmap Arranged By Group and TIME",
+    Assay = "normalized",
+    GROUP_NAME, desc(TIME1)
+)
+
+
+```
+
+## Subpathway Analysis
+
+In the chemical annotation file, we will see that each metabolite is
+within a subpathway, and each subpathway is within a superpathway.
+There are several metabolites within each subpathway and several
+subpathways within each superpathway. We can utilize an Analysis of
+variance (ANOVA) model to test for a difference in peak intensities
+between the treatment groups at the metabolite level. However, since multiple metabolites are
+within a subpathway, it is challenging to test if the treatment
+affected the peak data at the subpathway level. For this, we 
+utilize a combined Fisher probability test. The combined Fisher test
+combines the p-values from independent tests to test the hypothesis for
+an overall effect. The Combined Fisher Probability is helpful
+for testing a model at the subpathway level based on the pvalues from 
+the model at the metabolite level.
+
+### Combined Fished Analysis
+
+We will test at the subpathway level by combining the p-values for each
+metabolite within the subpathway for each model. We use a combination
+function given by $\tilde{X}$ which combines the pvalues, resulting in a
+chi-squared test statistic.
+
+$$
+\tilde{X} = -2\sum_{i=1}^k ln(p_i)
+$$
+where $k$ is the number of metabolites in the subpathway. We can
+get a p-value from $P(X \geq\tilde{X})$, knowing that
+$\tilde{X}\sim \chi^2_{2k}$. You will notice that smaller p-values will
+lead to a larger $\tilde{X}$.
+
+##### Assumptions
+
+Since we are first testing each metabolite utilizing ANOVA, we make the
+following assumptions for each metabolite,
+
+-   *Independence:* Each observation is independent of all other
+    observations. Therefore, if you have collected multiple samples from
+    the same subject then this assumption may be violated.
+
+-   *Normality:* The metabolite log-scaled intensities follow a normal
+    distribution within each of the treatment groups.
+
+-   *Homoscedasticity:* Equal variance between treatment groups.
+
+In addition to the assumptions in the ANOVA models at the metabolite
+level, the Fisher's Combined probability places an independence
+assumption between the metabolites within the subpathway. 
+
+For more about the Combined Fisher Probability and other methods that
+can address this problem, see:
+
+Loughin, Thomas M. "A systematic comparison of methods for combining
+p-values from independent tests." Computational statistics & data
+analysis 47.3 (2004): 467-485.
+
+#### Models
+
+To test our hypothesis at the subpathway level, we first have to form
+our hypothesis at the metabolite level. For each metabolite, we test
+three models.
+
+1.) Interaction: $log Peak = Treatment Group + Time + Treatment*Time$
+
+2.) Parallel: $log Peak = Treatment Group + Time$
+
+3.) Single: $log Peak = Treatment$
+
+For the interaction model, we are focusing only on the interaction term
+"Treatment\*Time" to test if there is a significant
+interaction between our treatment and the time variable. The parallel
+model is testing if the time variable is explaining a significant
+amount of the metabolite variance with treatment included, and the treatment
+model is testing if the treatment explains a significant proportion of the 
+variance for each metabolite.  
+
+We test at the subpathway level using the Combined Fisher Probability method to 
+combine the p-values from each model for all metabolites within the subpathway. 
+
+Model selection is based on the combined Fisher p-value. The interaction model is
+selected if the interaction term in Model 1 is significant. If the blocking factor
+(TIME1) is significant in Model 2, the parallel model is chosen. If only the 
+treatment term is significant, the single-factor model is selected.
+
+To run the subpathway analysis, we use the "subpathwayAnalysis"
+function, which requires the following arguments.  
+
+
+* data: SummarizedExperiment with metabolomics experiment data.
+
+* treat_var: This is the name of the variable in the analysis data that is the 
+    main variable of interest.
+
+* block_var: This is the name of the blocking variable in the dataset. If the
+    experimental design does not include a blocking variable, then the value of 
+    block_var=NULL.
+
+* strat_var: Variable to stratify the subpathway analysis by. This is set to 
+    NULL by default and will not stratify the analysis unless specified.
+
+* Assay: Name of the assay to be used for the pairwise analysis 
+    (default='normalized')
+
+
+#### Results Summaries
+
+With the MetabolomicsPipeline package, we provide three different ways to
+summarize the results from the subpathway analysis.
+
+1.  Number of significant subpathways by model type (subpathByModel)
+
+2.  Percentage of significant subpathways within superpathways 
+    (subpathWithinSuperpath)
+    
+3. Subpathway results within a specified superpathway (subWithinSuperResults)
+
+4.  Metabolite model results within a specified subpathway (metWithinSub)
+
+
+**Note:** If any of the ANOVA models above have a warning or an error, the 
+metabolite is excluded and a warning is printed with the message
+about the warning or error. Metabolites with a warning or error are excluded in the 
+subpathway analysis.
+
+```{r SubpathwayAnalysis}
+################################################################################
+## Stratified Analysis #########################################################
+################################################################################
+
+# Stratified Analysis
+stratified <- subpathwayAnalysis(dat,
+    treat_var = "GROUP_NAME",
+    block_var = "TIME1",
+    strat_var = "Gender",
+    Assay = "normalized"
+)
+
+
+################################################################################
+### Results Plots ##############################################################
+################################################################################
+
+# 1. significant subpathways by model type
+subpathByModel(stratified)
+
+# 2. Percentage of signficant subpathways within superpathways
+subpathWithinSuperpath(stratified)
+
+# Show significant subpathways within superpathways
+subWithinSuperResults(stratified, Superpath = "Amino Acid")
+
+# 3. Metabolites within subpathway
+tables <- metWithinSub(stratified,
+    subpathway = "Lysine Metabolism"
+)
+
+
+### Females
+tables$Female
+
+### Males
+tables$Male
+```
+
+## Pairwise Analysis
+
+We can look at the pairwise comparisons for all
+experimental groups at the metabolite level. We will use the metabolite_pairwise function within the
+MetabolomicsPipeline package, which requires the following arguments: 
+
+
+* data: SummarizedExperiment with metabolomics experiment data.
+
+* Assay: Name of the assay to be used for the pairwise analysis 
+    (default='normalized')
+
+* mets: Chemical ID for the metabolites of interest. If NULL then the pairwise
+    analysis is completed for all metabololites.
+
+* form: This is a character string the resembles the right hand side of a simple
+    linear regression model in R. For example form = "Group1 + Group2".
+
+* strat_var: A variable in the analysis data to stratify the model by. If this 
+    is specified, a list of results will be returned.
+
+#### Log Fold-Change Heatmap
+
+We will produce a heatmap of the log fold changes for the metabolites with a 
+significant overall p-value (which tested if the treatment group means were 
+equal under the null hypothesis). The
+heatmap colors will only show if the log fold-change is greater than
+log(2) or less than log(.5). Therefore, this heatmap will only focus on
+comparisons with a fold change of two or greater. The met_est_heatmap function 
+will produce an interactive heatmap using the results from the pairwise
+analysis.  
+
+#### P-Value Heatmap
+
+Similar to the pairwise estimate heatmap, we will produce a heatmap where the 
+heatmap will only include metabolites with a significant overall p-value, and 
+the values in the heat map will only be colored if the pairwise comparison is 
+significant. We use the metPHeatmap function to create an interactive p-value
+heatmap. 
+
+
+For both the log fold-change heatmap and the p-value heatmap, there is an option
+to produce an interactive plot using plotly or to create a static heatmap using
+pheatmap. To produce these heatmaps we use the following arguments:
+
+
+*  results_data: Results data frame of the pairwise comparisons produced by
+    \code{\link{metabolitePairwise}}.
+
+*  data: A SummarizedExperiment containing the metabolomics experiment data.
+
+* FC_cutoff: Numeric value for the fold change cutoff. Must be larger than 1. Default is 2.
+
+* pv_cutoff: Numeric value for the p-value cutoff. Default is 0.05.
+
+*  interactive: boolean (TRUE/FALSE) for whether or not the plot should be
+    interactive. Use interactive=T to produce an interactive plot using 
+    plotly. Use interactive=FALSE to produce a static heatmap using pheatmap.
+    
+* plotlyTitle: Title for the interactive heatmap
+
+* ...: Additional arguments that can be passed to pheatmap. This is only for the
+static heatmap. 
+
+```{r PairwiseAnalysis}
+################################################################################
+#### Run Pairwise Comparisons ##################################################
+################################################################################
+
+strat_pairwise <- metabolitePairwise(dat,
+    form = "GROUP_NAME*TIME1",
+    strat_var = "Gender"
+)
+
+
+###############################################################################
+## Create Estimate Heatmap #####################################################
+################################################################################
+
+metEstHeatmap(strat_pairwise$Female, dat,
+              diff_cutoff = .7, pv_cutoff = 0.05,
+    interactive = TRUE,
+     SUB_PATHWAY = "SUB_PATHWAY",
+    CHEMICAL_NAME = "CHEMICAL_NAME",
+    plotlyTitle = "Estimate Heatmap",
+    main = "Log fold change heatmap", show_rownames = FALSE
+)
+
+
+################################################################################
+## Create P-value Heatmap ######################################################
+################################################################################
+# Female
+metPHeatmap(strat_pairwise$Female, dat,
+            pv_cutoff = 0.05,
+    interactive = TRUE, show_rownames = FALSE,
+    plotlyTitle = "Pvalue Heatmap",
+    main = "Pvalue Heatmap"
+)
+```
+
+
+
+## Boxplots and Lineplots
+
+Visualizations of the data can help us see the underlying trends. Two
+useful visualizations are boxplots and line plots, we will be using the
+subpathwayBoxplots and subpathwayLineplots functions to create them. The main 
+utility of these functions is it allows you for focus on the metabolites within 
+a subpathway. For both functions, the arguments are:
+
+
+* data: SummarizedExperiment with metabolomics experiment data.
+
+* subpathway:	Character value of the subpathway of interest. This is case
+    sensitive and must be in the chemical annotation file.
+
+* block_var: This the the name of the variable in the meta data that is used for
+    the X axis of the box plots. We recommend using the "block_var" from the 
+    subpathway analysis.
+
+* treat_var: This is a grouping variable. As a recommendation the treatment 
+    groups should be used in the treat_var argument as this will provide a 
+    different color for each of the treatments making it easier to identify.
+
+* Assay: Name of the assay to be used for the pairwise analysis 
+    (default='normalized')
+
+* ... : Additional arguments to filter the analysis data by.
+
+#### Boxplots and Lineplots steps
+
+```{r BoxPlotsAndLinePlots}
+################################################################################
+### BoxPlots ###################################################################
+################################################################################
+
+subpathwayBoxplots(dat,
+    subpathway = "Lactoyl Amino Acid", block_var = TIME1,
+    treat_var = GROUP_NAME, Assay = "normalized",
+    CHEMICAL_NAME = "CHEMICAL_NAME",
+   SUB_PATHWAY = "SUB_PATHWAY", Gender == "Female"
+)
+
+
+################################################################################
+## Line plots ##################################################################
+################################################################################
+
+# Set up data
+dat$TIME1 <- as.numeric(factor(dat$TIME1,
+    levels = c("PreSymp", "Onset", "End")
+))
+
+# Create line plots
+subpathwayLineplots(dat,
+    subpathway = "Lactoyl Amino Acid",
+    block_var = TIME1, treat_var = GROUP_NAME,
+    Assay = "normalized",
+    CHEMICAL_NAME = "CHEMICAL_NAME",
+   SUB_PATHWAY = "SUB_PATHWAY", Gender == "Female"
+) +
+    xlab("Time")
+```
+
+### Session Info
+```{r Session Info }
+sessionInfo()
+```
+

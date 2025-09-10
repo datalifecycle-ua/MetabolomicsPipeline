@@ -1,0 +1,1639 @@
+
+R version 4.5.0 (2025-04-11) -- "How About a Twenty-Six"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "MetabolomicsPipeline"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('MetabolomicsPipeline')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("allSigSubpath")
+> ### * allSigSubpath
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: allSigSubpath
+> ### Title: Table of Significant Subpathways
+> ### Aliases: allSigSubpath
+> 
+> ### ** Examples
+> 
+> # Load data
+> data("demoDataSmall", package = "MetabolomicsPipeline")
+> dat <- demoDataSmall
+> 
+> # Runsubpathay analysis
+> sub_analysis <- subpathwayAnalysis(dat,
++     treat_var = "GROUP_NAME",
++     block_var = "TIME1",
++     strat_var = NULL,
++     Assay = "normalized"
++ )
+> 
+> #############################################################################
+> ### Results Plots ###########################################################
+> #############################################################################
+> 
+> # significant subpathways by model type
+> subpathByModel(sub_analysis)
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Sigificant Pathways by Model</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Model Type </th>
+   <th style="text-align:right;"> Count </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Single </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+</tbody>
+</table>> 
+> # Percentage of signficant subpathways within superpathways
+> subpathWithinSuperpath(sub_analysis)
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Proportion of significant subpathways within superpathways</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Super Pathway </th>
+   <th style="text-align:left;"> Percent Significant </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Amino Acid </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Peptide </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Xenobiotics </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Lipid </td>
+   <td style="text-align:left;"> 2 / 3 (66.67%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Carbohydrate </td>
+   <td style="text-align:left;"> 1 / 2 (50%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Cofactors and Vitamins </td>
+   <td style="text-align:left;"> 1 / 2 (50%) </td>
+  </tr>
+</tbody>
+</table>> 
+> metWithinSub(sub_analysis, subpathway = "Aminosugar Metabolism")
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Metabolites within Aminosugar Metabolism</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Metabolite Name </th>
+   <th style="text-align:right;"> Interaction_pval P-Value </th>
+   <th style="text-align:right;"> Parallel_block_pval P-Value </th>
+   <th style="text-align:right;"> Parallel_treatment_pval P-Value </th>
+   <th style="text-align:right;"> Single_pval P-Value </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> N-acetylneuraminate </td>
+   <td style="text-align:right;"> 0.108 </td>
+   <td style="text-align:right;"> 0.085 </td>
+   <td style="text-align:right;"> 0.625 </td>
+   <td style="text-align:right;"> 0.574 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-acetylglucosaminylasparagine </td>
+   <td style="text-align:right;"> 0.063 </td>
+   <td style="text-align:right;"> 0.718 </td>
+   <td style="text-align:right;"> 0.006 </td>
+   <td style="text-align:right;"> 0.005 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> glucuronate </td>
+   <td style="text-align:right;"> 0.024 </td>
+   <td style="text-align:right;"> 0.598 </td>
+   <td style="text-align:right;"> 0.209 </td>
+   <td style="text-align:right;"> 0.204 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> erythronate* </td>
+   <td style="text-align:right;"> 0.012 </td>
+   <td style="text-align:right;"> 0.405 </td>
+   <td style="text-align:right;"> 0.756 </td>
+   <td style="text-align:right;"> 0.746 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-glycolylneuraminate </td>
+   <td style="text-align:right;"> 0.264 </td>
+   <td style="text-align:right;"> 0.749 </td>
+   <td style="text-align:right;"> 0.602 </td>
+   <td style="text-align:right;"> 0.607 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-acetylglucosamine/N-acetylgalactosamine </td>
+   <td style="text-align:right;"> 0.126 </td>
+   <td style="text-align:right;"> 0.404 </td>
+   <td style="text-align:right;"> 0.931 </td>
+   <td style="text-align:right;"> 0.939 </td>
+  </tr>
+</tbody>
+</table>> 
+> # All signifiicant subpathways
+> allSigSubpath(sub_analysis)
+<table class=" lightable-classic" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Significant Subpathways</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Subpathway </th>
+   <th style="text-align:left;"> Model Type </th>
+   <th style="text-align:right;"> P-value </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Alanine and Aspartate Metabolism </td>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Aminosugar Metabolism </td>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Benzoate Metabolism </td>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Ascorbate and Aldarate Metabolism </td>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Ceramides </td>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 0.02 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Acetylated Peptides </td>
+   <td style="text-align:left;"> Single </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Carnitine Metabolism </td>
+   <td style="text-align:left;"> Single </td>
+   <td style="text-align:right;"> 0.01 </td>
+  </tr>
+</tbody>
+</table>> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("createMetSe")
+> ### * createMetSe
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: createMetSe
+> ### Title: Create a SummarizedExperiment from Metabolomics Data
+> ### Aliases: createMetSe
+> 
+> ### ** Examples
+> 
+> #Get demo sample metadata
+> data("demoSampleMeta", package = "MetabolomicsPipeline")
+> 
+> #Get demo chemical annotation file
+> data("demoChemAnno", package = "MetabolomicsPipeline")
+> 
+> # Get demo peak data
+> data("demoPeak", package = "MetabolomicsPipeline")
+> 
+> dat <- createMetSe(chemical_annotation = demoChemAnno,
++                     sample_metadata = demoSampleMeta,
++                     peak_data = demoPeak,
++                     chemical_id = "CHEM_ID",
++                     sample_names = "PARENT_SAMPLE_NAME")
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("logTransformation")
+> ### * logTransformation
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: logTransformation
+> ### Title: Log Transformation of Metabolite Data
+> ### Aliases: logTransformation
+> 
+> ### ** Examples
+> 
+> library(SummarizedExperiment)
+Loading required package: MatrixGenerics
+Loading required package: matrixStats
+
+Attaching package: ‘MatrixGenerics’
+
+The following objects are masked from ‘package:matrixStats’:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+Loading required package: GenomicRanges
+Loading required package: stats4
+Loading required package: BiocGenerics
+Loading required package: generics
+
+Attaching package: ‘generics’
+
+The following objects are masked from ‘package:base’:
+
+    as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,
+    setequal, union
+
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    Filter, Find, Map, Position, Reduce, anyDuplicated, aperm, append,
+    as.data.frame, basename, cbind, colnames, dirname, do.call,
+    duplicated, eval, evalq, get, grep, grepl, is.unsorted, lapply,
+    mapply, match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    rank, rbind, rownames, sapply, saveRDS, table, tapply, unique,
+    unsplit, which.max, which.min
+
+Loading required package: S4Vectors
+
+Attaching package: ‘S4Vectors’
+
+The following object is masked from ‘package:utils’:
+
+    findMatches
+
+The following objects are masked from ‘package:base’:
+
+    I, expand.grid, unname
+
+Loading required package: IRanges
+Loading required package: GenomeInfoDb
+Warning: package ‘GenomeInfoDb’ was built under R version 4.5.1
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+
+Attaching package: ‘Biobase’
+
+The following object is masked from ‘package:MatrixGenerics’:
+
+    rowMedians
+
+The following objects are masked from ‘package:matrixStats’:
+
+    anyMissing, rowMedians
+
+> data("demoDataSmall", package = "MetabolomicsPipeline")
+> 
+> # Median standardization
+> demoDataSmall <- medianStandardization(met_se = demoDataSmall,
++  assay = "peak")
+> 
+> # Minimum value imputation
+> demoDataSmall <- minValImpute(met_se = demoDataSmall, assay = "median_std")
+> 
+> # Log transformation
+> demoDataSmall <- logTransformation(met_se = demoDataSmall,
++  assay = "min_impute")
+> 
+> # Access log-transformed data
+> assay(demoDataSmall, "normalized")[1:5, 1:5]
+      UNAZ-02793  UNAZ-02796 UNAZ-02797  UNAZ-02801 UNAZ-02803
+234  0.113020768 -0.18818959 -0.3691859 -0.17172717  0.3562708
+251  0.011483616  0.19623506 -0.5833353  0.11301573  0.8714947
+811  0.004088718 -0.01363116 -0.3977332 -0.20641954  0.1355841
+917  0.093575552  0.15486748 -0.6766952 -0.13406808  0.1975909
+1110 0.159574718  0.29220802 -0.4039481 -0.06071454  0.2444033
+> 
+> 
+> 
+> 
+> cleanEx()
+
+detaching ‘package:SummarizedExperiment’, ‘package:Biobase’,
+  ‘package:GenomicRanges’, ‘package:GenomeInfoDb’, ‘package:IRanges’,
+  ‘package:S4Vectors’, ‘package:BiocGenerics’, ‘package:generics’,
+  ‘package:stats4’, ‘package:MatrixGenerics’, ‘package:matrixStats’
+
+> nameEx("medianStandardization")
+> ### * medianStandardization
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: medianStandardization
+> ### Title: Median standardization for metabolite data
+> ### Aliases: medianStandardization
+> 
+> ### ** Examples
+> 
+> library(SummarizedExperiment)
+Loading required package: MatrixGenerics
+Loading required package: matrixStats
+
+Attaching package: ‘MatrixGenerics’
+
+The following objects are masked from ‘package:matrixStats’:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+Loading required package: GenomicRanges
+Loading required package: stats4
+Loading required package: BiocGenerics
+Loading required package: generics
+
+Attaching package: ‘generics’
+
+The following objects are masked from ‘package:base’:
+
+    as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,
+    setequal, union
+
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    Filter, Find, Map, Position, Reduce, anyDuplicated, aperm, append,
+    as.data.frame, basename, cbind, colnames, dirname, do.call,
+    duplicated, eval, evalq, get, grep, grepl, is.unsorted, lapply,
+    mapply, match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    rank, rbind, rownames, sapply, saveRDS, table, tapply, unique,
+    unsplit, which.max, which.min
+
+Loading required package: S4Vectors
+
+Attaching package: ‘S4Vectors’
+
+The following object is masked from ‘package:utils’:
+
+    findMatches
+
+The following objects are masked from ‘package:base’:
+
+    I, expand.grid, unname
+
+Loading required package: IRanges
+Loading required package: GenomeInfoDb
+Warning: package ‘GenomeInfoDb’ was built under R version 4.5.1
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+
+Attaching package: ‘Biobase’
+
+The following object is masked from ‘package:MatrixGenerics’:
+
+    rowMedians
+
+The following objects are masked from ‘package:matrixStats’:
+
+    anyMissing, rowMedians
+
+> data("demoDataSmall", package = "MetabolomicsPipeline")
+> 
+> # Median standardization
+> peak_med <- medianStandardization(met_se = demoDataSmall, assay = "peak")
+> 
+> # Access the median standardized data within the SummarizedExperiment
+> assay(peak_med, "median_std")[1:5, 1:5]
+     UNAZ-02793 UNAZ-02796 UNAZ-02797 UNAZ-02801 UNAZ-02803
+234    1.119655  0.8284576  0.6912969  0.8422089   1.427994
+251    1.011550  1.2168129  0.5580341  1.1196495   2.390481
+811    1.004097  0.9864613  0.6718412  0.8134917   1.145205
+917    1.098094  1.1675032  0.5082940  0.8745305   1.218464
+1110   1.173012  1.3393816  0.6676788  0.9410918   1.276859
+> 
+> 
+> 
+> 
+> cleanEx()
+
+detaching ‘package:SummarizedExperiment’, ‘package:Biobase’,
+  ‘package:GenomicRanges’, ‘package:GenomeInfoDb’, ‘package:IRanges’,
+  ‘package:S4Vectors’, ‘package:BiocGenerics’, ‘package:generics’,
+  ‘package:stats4’, ‘package:MatrixGenerics’, ‘package:matrixStats’
+
+> nameEx("metEstHeatmap")
+> ### * metEstHeatmap
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: metEstHeatmap
+> ### Title: Metabolite Pairwise Estimate Interactive Heatmap.
+> ### Aliases: metEstHeatmap
+> 
+> ### ** Examples
+> 
+> # Load data
+> data("demoDataSmall", package = "MetabolomicsPipeline")
+> dat <- demoDataSmall
+> 
+> # Run pairwise analysis
+> strat_pairwise <- metabolitePairwise(dat,
++     form = "GROUP_NAME*TIME1",
++     strat_var = "Gender"
++ )
+> 
+> #############################################################################
+> ## Create Estimate Heatmap ##################################################
+> #############################################################################
+> 
+> metEstHeatmap(strat_pairwise$Female, dat,
++                interactive = FALSE,
++                 SUB_PATHWAY = "SUB_PATHWAY",
++                CHEMICAL_NAME = "CHEMICAL_NAME",
++                plotlyTitle = "Metabolite log fold change",
++                main = "Log fold change heatmap", show_rownames = FALSE
++ )
+> 
+> 
+> ##############################################################################
+> ## Create P-value Heatmap ####################################################
+> ##############################################################################
+> # Female
+> metPHeatmap(strat_pairwise$Female, dat,
++              interactive = FALSE, show_rownames = FALSE,
++              plotlyTitle = "P-Value Heatmap",
++              main = "Pvalue Heatmap"
++ )
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("metPHeatmap")
+> ### * metPHeatmap
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: metPHeatmap
+> ### Title: Metabolite Pairwise P-Value Interactive Heatmap.
+> ### Aliases: metPHeatmap
+> 
+> ### ** Examples
+> 
+> # Load data
+> data("demoDataSmall", package = "MetabolomicsPipeline")
+> dat <- demoDataSmall
+> 
+> # Run pairwise analysis
+> strat_pairwise <- metabolitePairwise(dat,
++     form = "GROUP_NAME*TIME1",
++     strat_var = "Gender"
++ )
+> 
+> #############################################################################
+> ## Create Estimate Heatmap ##################################################
+> ############################################################################
+> 
+> metEstHeatmap(strat_pairwise$Female, dat,
++                interactive = FALSE,
++                CHEM_ID = "CHEM_ID", SUB_PATHWAY = "SUB_PATHWAY",
++                CHEMICAL_NAME = "CHEMICAL_NAME",
++                plotlyTitle = "Estimate Heatmap", 
++                main = "Log fold change heatmap", show_rownames = FALSE
++ )
+> 
+> 
+> ##############################################################################
+> ## Create P-value Heatmap ####################################################
+> ##############################################################################
+> # Female
+> metPHeatmap(strat_pairwise$Female, dat,
++              interactive = FALSE, show_rownames = FALSE,
++              plotlyTitle = "P-Value Heatmap",
++              main = "Pvalue Heatmap"
++ )
+> 
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("metWithinSub")
+> ### * metWithinSub
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: metWithinSub
+> ### Title: Metabolites within Subpathway Table
+> ### Aliases: metWithinSub
+> 
+> ### ** Examples
+> 
+> data("demoDataSmall", package = "MetabolomicsPipeline")
+> dat <- demoDataSmall
+> 
+> # Runsubpathay analysis
+> sub_analysis <- subpathwayAnalysis(dat,
++     treat_var = "GROUP_NAME",
++     block_var = "TIME1",
++     strat_var = NULL,
++     Assay = "normalized"
++ )
+> 
+> #############################################################################
+> ### Results Plots ###########################################################
+> #############################################################################
+> 
+> # significant subpathways by model type
+> subpathByModel(sub_analysis)
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Sigificant Pathways by Model</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Model Type </th>
+   <th style="text-align:right;"> Count </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Single </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+</tbody>
+</table>> 
+> # Percentage of signficant subpathways within superpathways
+> subpathWithinSuperpath(sub_analysis)
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Proportion of significant subpathways within superpathways</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Super Pathway </th>
+   <th style="text-align:left;"> Percent Significant </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Amino Acid </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Peptide </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Xenobiotics </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Lipid </td>
+   <td style="text-align:left;"> 2 / 3 (66.67%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Carbohydrate </td>
+   <td style="text-align:left;"> 1 / 2 (50%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Cofactors and Vitamins </td>
+   <td style="text-align:left;"> 1 / 2 (50%) </td>
+  </tr>
+</tbody>
+</table>> 
+> metWithinSub(sub_analysis, subpathway = "Aminosugar Metabolism")
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Metabolites within Aminosugar Metabolism</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Metabolite Name </th>
+   <th style="text-align:right;"> Interaction_pval P-Value </th>
+   <th style="text-align:right;"> Parallel_block_pval P-Value </th>
+   <th style="text-align:right;"> Parallel_treatment_pval P-Value </th>
+   <th style="text-align:right;"> Single_pval P-Value </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> N-acetylneuraminate </td>
+   <td style="text-align:right;"> 0.108 </td>
+   <td style="text-align:right;"> 0.085 </td>
+   <td style="text-align:right;"> 0.625 </td>
+   <td style="text-align:right;"> 0.574 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-acetylglucosaminylasparagine </td>
+   <td style="text-align:right;"> 0.063 </td>
+   <td style="text-align:right;"> 0.718 </td>
+   <td style="text-align:right;"> 0.006 </td>
+   <td style="text-align:right;"> 0.005 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> glucuronate </td>
+   <td style="text-align:right;"> 0.024 </td>
+   <td style="text-align:right;"> 0.598 </td>
+   <td style="text-align:right;"> 0.209 </td>
+   <td style="text-align:right;"> 0.204 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> erythronate* </td>
+   <td style="text-align:right;"> 0.012 </td>
+   <td style="text-align:right;"> 0.405 </td>
+   <td style="text-align:right;"> 0.756 </td>
+   <td style="text-align:right;"> 0.746 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-glycolylneuraminate </td>
+   <td style="text-align:right;"> 0.264 </td>
+   <td style="text-align:right;"> 0.749 </td>
+   <td style="text-align:right;"> 0.602 </td>
+   <td style="text-align:right;"> 0.607 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-acetylglucosamine/N-acetylgalactosamine </td>
+   <td style="text-align:right;"> 0.126 </td>
+   <td style="text-align:right;"> 0.404 </td>
+   <td style="text-align:right;"> 0.931 </td>
+   <td style="text-align:right;"> 0.939 </td>
+  </tr>
+</tbody>
+</table>> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("metaboliteHeatmap")
+> ### * metaboliteHeatmap
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: metaboliteHeatmap
+> ### Title: Create metabolite heatmap
+> ### Aliases: metaboliteHeatmap
+> 
+> ### ** Examples
+> 
+> # load data
+> data("demoDat", package = "MetabolomicsPipeline")
+> dat <- demoDat
+> 
+> # Heatmap with one group
+> treat_heatmap <- metaboliteHeatmap(dat,
++     top_mets = 50,
++     group_vars = "GROUP_NAME",
++     strat_var = NULL,
++     caption = "Heatmap Arranged By Group",
++     Assay = "normalized",
++     GROUP_NAME
++ )
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("metabolitePairwise")
+> ### * metabolitePairwise
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: metabolitePairwise
+> ### Title: Metabolite Pairwise Comparisons.
+> ### Aliases: metabolitePairwise
+> 
+> ### ** Examples
+> 
+> # Load data
+> data("demoDataSmall", package = "MetabolomicsPipeline")
+> dat <- demoDataSmall
+> 
+> # Run pairwise analysis
+> strat_pairwise <- metabolitePairwise(dat,
++     form = "GROUP_NAME*TIME1",
++     strat_var = "Gender"
++ )
+> 
+> #############################################################################
+> ## Create Estimate Heatmap #####################################################
+> ################################################################################
+> 
+> metEstHeatmap(strat_pairwise$Female, dat,
++                interactive = FALSE,
++                CHEM_ID = "CHEM_ID", SUB_PATHWAY = "SUB_PATHWAY",
++                CHEMICAL_NAME = "CHEMICAL_NAME",
++                main = "Log fold change heatmap", show_rownames = FALSE
++ )
+> 
+> 
+> ################################################################################
+> ## Create P-value Heatmap ######################################################
+> ################################################################################
+> # Female
+> metPHeatmap(strat_pairwise$Female, dat,
++              interactive = FALSE, show_rownames = FALSE,
++              main = "Pvalue Heatmap"
++ )
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("metabolitePca")
+> ### * metabolitePca
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: metabolitePca
+> ### Title: Metabolite PCA
+> ### Aliases: metabolitePca
+> 
+> ### ** Examples
+> 
+> 
+> # load data
+> data("demoDat", package = "MetabolomicsPipeline")
+> dat <- demoDat
+> 
+> # Define PCA label from metadata
+> meta_var <- "Gender"
+> 
+> # Run PCA
+> pca <- metabolitePca(dat,
++     meta_var = meta_var
++ )
+> 
+> 
+> # Show PCA
+> pca
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("minValImpute")
+> ### * minValImpute
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: minValImpute
+> ### Title: Minimum Value Imputation for Metabolite Data
+> ### Aliases: minValImpute
+> 
+> ### ** Examples
+> 
+> library(SummarizedExperiment)
+Loading required package: MatrixGenerics
+Loading required package: matrixStats
+
+Attaching package: ‘MatrixGenerics’
+
+The following objects are masked from ‘package:matrixStats’:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+Loading required package: GenomicRanges
+Loading required package: stats4
+Loading required package: BiocGenerics
+Loading required package: generics
+
+Attaching package: ‘generics’
+
+The following objects are masked from ‘package:base’:
+
+    as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,
+    setequal, union
+
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    Filter, Find, Map, Position, Reduce, anyDuplicated, aperm, append,
+    as.data.frame, basename, cbind, colnames, dirname, do.call,
+    duplicated, eval, evalq, get, grep, grepl, is.unsorted, lapply,
+    mapply, match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    rank, rbind, rownames, sapply, saveRDS, table, tapply, unique,
+    unsplit, which.max, which.min
+
+Loading required package: S4Vectors
+
+Attaching package: ‘S4Vectors’
+
+The following object is masked from ‘package:utils’:
+
+    findMatches
+
+The following objects are masked from ‘package:base’:
+
+    I, expand.grid, unname
+
+Loading required package: IRanges
+Loading required package: GenomeInfoDb
+Warning: package ‘GenomeInfoDb’ was built under R version 4.5.1
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+
+Attaching package: ‘Biobase’
+
+The following object is masked from ‘package:MatrixGenerics’:
+
+    rowMedians
+
+The following objects are masked from ‘package:matrixStats’:
+
+    anyMissing, rowMedians
+
+> data("demoDataSmall", package = "MetabolomicsPipeline")
+> 
+> # Median standardization
+> demoDataSmall <- medianStandardization(met_se = demoDataSmall,
++  assay = "peak")
+> 
+> # Minimum value imputation
+> demoDataSmall <- minValImpute(met_se = demoDataSmall, assay = "median_std")
+> 
+> # Access the imputed data
+> assay(demoDataSmall, "min_impute")[1:5, 1:5]
+     UNAZ-02793 UNAZ-02796 UNAZ-02797 UNAZ-02801 UNAZ-02803
+234    1.119655  0.8284576  0.6912969  0.8422089   1.427994
+251    1.011550  1.2168129  0.5580341  1.1196495   2.390481
+811    1.004097  0.9864613  0.6718412  0.8134917   1.145205
+917    1.098094  1.1675032  0.5082940  0.8745305   1.218464
+1110   1.173012  1.3393816  0.6676788  0.9410918   1.276859
+> 
+> 
+> 
+> 
+> cleanEx()
+
+detaching ‘package:SummarizedExperiment’, ‘package:Biobase’,
+  ‘package:GenomicRanges’, ‘package:GenomeInfoDb’, ‘package:IRanges’,
+  ‘package:S4Vectors’, ‘package:BiocGenerics’, ‘package:generics’,
+  ‘package:stats4’, ‘package:MatrixGenerics’, ‘package:matrixStats’
+
+> nameEx("subWithinSuperResults")
+> ### * subWithinSuperResults
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: subWithinSuperResults
+> ### Title: Display Subpathways Within a Superpathway
+> ### Aliases: subWithinSuperResults
+> 
+> ### ** Examples
+> 
+> # 
+> data("demoDataSmall", package = "MetabolomicsPipeline")
+> dat <- demoDataSmall
+> 
+> # Runsubpathay analysis
+> sub_analysis <- subpathwayAnalysis(dat,
++     treat_var = "GROUP_NAME",
++     block_var = "TIME1",
++     strat_var = NULL,
++     Assay = "normalized"
++ )
+> #' # Display subpathways within a specific superpathway
+> subWithinSuperResults(sub_analysis, Superpath = "Amino Acid")
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Subpathways within Amino Acid Superpathway</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Subpathway </th>
+   <th style="text-align:left;"> Model </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Alanine and Aspartate Metabolism </td>
+   <td style="text-align:left;"> Interaction </td>
+  </tr>
+</tbody>
+</table>> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("subpathByModel")
+> ### * subpathByModel
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: subpathByModel
+> ### Title: Subpathway model type table
+> ### Aliases: subpathByModel
+> 
+> ### ** Examples
+> 
+> # Load data
+> data("demoDataSmall", package = "MetabolomicsPipeline")
+> dat <- demoDataSmall
+> 
+> # Runsubpathay analysis
+> sub_analysis <- subpathwayAnalysis(dat,
++     treat_var = "GROUP_NAME",
++     block_var = "TIME1",
++     strat_var = NULL,
++     Assay = "normalized"
++ )
+> 
+> #############################################################################
+> ### Results Plots ###########################################################
+> #############################################################################
+> 
+> # significant subpathways by model type
+> subpathByModel(sub_analysis)
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Sigificant Pathways by Model</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Model Type </th>
+   <th style="text-align:right;"> Count </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Single </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+</tbody>
+</table>> 
+> # Percentage of signficant subpathways within superpathways
+> subpathWithinSuperpath(sub_analysis)
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Proportion of significant subpathways within superpathways</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Super Pathway </th>
+   <th style="text-align:left;"> Percent Significant </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Amino Acid </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Peptide </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Xenobiotics </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Lipid </td>
+   <td style="text-align:left;"> 2 / 3 (66.67%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Carbohydrate </td>
+   <td style="text-align:left;"> 1 / 2 (50%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Cofactors and Vitamins </td>
+   <td style="text-align:left;"> 1 / 2 (50%) </td>
+  </tr>
+</tbody>
+</table>> 
+> metWithinSub(sub_analysis, subpathway = "Aminosugar Metabolism")
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Metabolites within Aminosugar Metabolism</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Metabolite Name </th>
+   <th style="text-align:right;"> Interaction_pval P-Value </th>
+   <th style="text-align:right;"> Parallel_block_pval P-Value </th>
+   <th style="text-align:right;"> Parallel_treatment_pval P-Value </th>
+   <th style="text-align:right;"> Single_pval P-Value </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> N-acetylneuraminate </td>
+   <td style="text-align:right;"> 0.108 </td>
+   <td style="text-align:right;"> 0.085 </td>
+   <td style="text-align:right;"> 0.625 </td>
+   <td style="text-align:right;"> 0.574 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-acetylglucosaminylasparagine </td>
+   <td style="text-align:right;"> 0.063 </td>
+   <td style="text-align:right;"> 0.718 </td>
+   <td style="text-align:right;"> 0.006 </td>
+   <td style="text-align:right;"> 0.005 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> glucuronate </td>
+   <td style="text-align:right;"> 0.024 </td>
+   <td style="text-align:right;"> 0.598 </td>
+   <td style="text-align:right;"> 0.209 </td>
+   <td style="text-align:right;"> 0.204 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> erythronate* </td>
+   <td style="text-align:right;"> 0.012 </td>
+   <td style="text-align:right;"> 0.405 </td>
+   <td style="text-align:right;"> 0.756 </td>
+   <td style="text-align:right;"> 0.746 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-glycolylneuraminate </td>
+   <td style="text-align:right;"> 0.264 </td>
+   <td style="text-align:right;"> 0.749 </td>
+   <td style="text-align:right;"> 0.602 </td>
+   <td style="text-align:right;"> 0.607 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-acetylglucosamine/N-acetylgalactosamine </td>
+   <td style="text-align:right;"> 0.126 </td>
+   <td style="text-align:right;"> 0.404 </td>
+   <td style="text-align:right;"> 0.931 </td>
+   <td style="text-align:right;"> 0.939 </td>
+  </tr>
+</tbody>
+</table>> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("subpathWithinSuperpath")
+> ### * subpathWithinSuperpath
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: subpathWithinSuperpath
+> ### Title: Proportion of the Significant Subpathways Within Superpathways
+> ### Aliases: subpathWithinSuperpath
+> 
+> ### ** Examples
+> 
+> 
+> # Load data
+> data("demoDataSmall", package = "MetabolomicsPipeline")
+> dat <- demoDataSmall
+> 
+> # Runsubpathay analysis
+> sub_analysis <- subpathwayAnalysis(dat,
++     treat_var = "GROUP_NAME",
++     block_var = "TIME1",
++     strat_var = NULL,
++     Assay = "normalized"
++ )
+> 
+> #############################################################################
+> ### Results Plots ###########################################################
+> #############################################################################
+> 
+> # significant subpathways by model type
+> subpathByModel(sub_analysis)
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Sigificant Pathways by Model</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Model Type </th>
+   <th style="text-align:right;"> Count </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Single </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+</tbody>
+</table>> 
+> # Percentage of signficant subpathways within superpathways
+> subpathWithinSuperpath(sub_analysis)
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Proportion of significant subpathways within superpathways</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Super Pathway </th>
+   <th style="text-align:left;"> Percent Significant </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Amino Acid </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Peptide </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Xenobiotics </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Lipid </td>
+   <td style="text-align:left;"> 2 / 3 (66.67%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Carbohydrate </td>
+   <td style="text-align:left;"> 1 / 2 (50%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Cofactors and Vitamins </td>
+   <td style="text-align:left;"> 1 / 2 (50%) </td>
+  </tr>
+</tbody>
+</table>> 
+> metWithinSub(sub_analysis, subpathway = "Aminosugar Metabolism")
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Metabolites within Aminosugar Metabolism</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Metabolite Name </th>
+   <th style="text-align:right;"> Interaction_pval P-Value </th>
+   <th style="text-align:right;"> Parallel_block_pval P-Value </th>
+   <th style="text-align:right;"> Parallel_treatment_pval P-Value </th>
+   <th style="text-align:right;"> Single_pval P-Value </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> N-acetylneuraminate </td>
+   <td style="text-align:right;"> 0.108 </td>
+   <td style="text-align:right;"> 0.085 </td>
+   <td style="text-align:right;"> 0.625 </td>
+   <td style="text-align:right;"> 0.574 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-acetylglucosaminylasparagine </td>
+   <td style="text-align:right;"> 0.063 </td>
+   <td style="text-align:right;"> 0.718 </td>
+   <td style="text-align:right;"> 0.006 </td>
+   <td style="text-align:right;"> 0.005 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> glucuronate </td>
+   <td style="text-align:right;"> 0.024 </td>
+   <td style="text-align:right;"> 0.598 </td>
+   <td style="text-align:right;"> 0.209 </td>
+   <td style="text-align:right;"> 0.204 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> erythronate* </td>
+   <td style="text-align:right;"> 0.012 </td>
+   <td style="text-align:right;"> 0.405 </td>
+   <td style="text-align:right;"> 0.756 </td>
+   <td style="text-align:right;"> 0.746 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-glycolylneuraminate </td>
+   <td style="text-align:right;"> 0.264 </td>
+   <td style="text-align:right;"> 0.749 </td>
+   <td style="text-align:right;"> 0.602 </td>
+   <td style="text-align:right;"> 0.607 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-acetylglucosamine/N-acetylgalactosamine </td>
+   <td style="text-align:right;"> 0.126 </td>
+   <td style="text-align:right;"> 0.404 </td>
+   <td style="text-align:right;"> 0.931 </td>
+   <td style="text-align:right;"> 0.939 </td>
+  </tr>
+</tbody>
+</table>> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("subpathwayAnalysis")
+> ### * subpathwayAnalysis
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: subpathwayAnalysis
+> ### Title: Subpathway Analysis
+> ### Aliases: subpathwayAnalysis
+> 
+> ### ** Examples
+> 
+> # Load data
+> data("demoDataSmall", package = "MetabolomicsPipeline")
+> dat <- demoDataSmall
+> 
+> # Runsubpathay analysis
+> sub_analysis <- subpathwayAnalysis(dat,
++     treat_var = "GROUP_NAME",
++     block_var = "TIME1",
++     strat_var = NULL,
++     Assay = "normalized"
++ )
+> 
+> #############################################################################
+> ### Results Plots ###########################################################
+> #############################################################################
+> 
+> # significant subpathways by model type
+> subpathByModel(sub_analysis)
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Sigificant Pathways by Model</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Model Type </th>
+   <th style="text-align:right;"> Count </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Single </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+</tbody>
+</table>> 
+> # Percentage of signficant subpathways within superpathways
+> subpathWithinSuperpath(sub_analysis)
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Proportion of significant subpathways within superpathways</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Super Pathway </th>
+   <th style="text-align:left;"> Percent Significant </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Amino Acid </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Peptide </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Xenobiotics </td>
+   <td style="text-align:left;"> 1 / 1 (100%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Lipid </td>
+   <td style="text-align:left;"> 2 / 3 (66.67%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Carbohydrate </td>
+   <td style="text-align:left;"> 1 / 2 (50%) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Cofactors and Vitamins </td>
+   <td style="text-align:left;"> 1 / 2 (50%) </td>
+  </tr>
+</tbody>
+</table>> 
+> metWithinSub(sub_analysis, subpathway = "Aminosugar Metabolism")
+<table class=" lightable-paper" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Metabolites within Aminosugar Metabolism</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Metabolite Name </th>
+   <th style="text-align:right;"> Interaction_pval P-Value </th>
+   <th style="text-align:right;"> Parallel_block_pval P-Value </th>
+   <th style="text-align:right;"> Parallel_treatment_pval P-Value </th>
+   <th style="text-align:right;"> Single_pval P-Value </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> N-acetylneuraminate </td>
+   <td style="text-align:right;"> 0.108 </td>
+   <td style="text-align:right;"> 0.085 </td>
+   <td style="text-align:right;"> 0.625 </td>
+   <td style="text-align:right;"> 0.574 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-acetylglucosaminylasparagine </td>
+   <td style="text-align:right;"> 0.063 </td>
+   <td style="text-align:right;"> 0.718 </td>
+   <td style="text-align:right;"> 0.006 </td>
+   <td style="text-align:right;"> 0.005 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> glucuronate </td>
+   <td style="text-align:right;"> 0.024 </td>
+   <td style="text-align:right;"> 0.598 </td>
+   <td style="text-align:right;"> 0.209 </td>
+   <td style="text-align:right;"> 0.204 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> erythronate* </td>
+   <td style="text-align:right;"> 0.012 </td>
+   <td style="text-align:right;"> 0.405 </td>
+   <td style="text-align:right;"> 0.756 </td>
+   <td style="text-align:right;"> 0.746 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-glycolylneuraminate </td>
+   <td style="text-align:right;"> 0.264 </td>
+   <td style="text-align:right;"> 0.749 </td>
+   <td style="text-align:right;"> 0.602 </td>
+   <td style="text-align:right;"> 0.607 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N-acetylglucosamine/N-acetylgalactosamine </td>
+   <td style="text-align:right;"> 0.126 </td>
+   <td style="text-align:right;"> 0.404 </td>
+   <td style="text-align:right;"> 0.931 </td>
+   <td style="text-align:right;"> 0.939 </td>
+  </tr>
+</tbody>
+</table>> 
+> # All signifiicant subpathways
+> allSigSubpath(sub_analysis)
+<table class=" lightable-classic" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Significant Subpathways</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Subpathway </th>
+   <th style="text-align:left;"> Model Type </th>
+   <th style="text-align:right;"> P-value </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Alanine and Aspartate Metabolism </td>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Aminosugar Metabolism </td>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Benzoate Metabolism </td>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Ascorbate and Aldarate Metabolism </td>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Ceramides </td>
+   <td style="text-align:left;"> Interaction </td>
+   <td style="text-align:right;"> 0.02 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Acetylated Peptides </td>
+   <td style="text-align:left;"> Single </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Carnitine Metabolism </td>
+   <td style="text-align:left;"> Single </td>
+   <td style="text-align:right;"> 0.01 </td>
+  </tr>
+</tbody>
+</table>> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("subpathwayBoxplots")
+> ### * subpathwayBoxplots
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: subpathwayBoxplots
+> ### Title: Subpathway Boxplots
+> ### Aliases: subpathwayBoxplots
+> 
+> ### ** Examples
+> 
+> # load data
+> data("demoDat", package = "MetabolomicsPipeline")
+> dat <- demoDat
+> 
+> #############################################################################
+> ### BoxPlots ###############################################################
+> ############################################################################
+> 
+> subpathwayBoxplots(dat,
++     subpathway = "Lactoyl Amino Acid", block_var = TIME1,
++     treat_var = GROUP_NAME, Assay = "normalized",
++     CHEMICAL_NAME = "CHEMICAL_NAME",
++     SUB_PATHWAY = "SUB_PATHWAY", Gender == "Female"
++ )
+> 
+> 
+> ############################################################################
+> ## Line plots ##############################################################
+> ############################################################################
+> 
+> # Set up data
+> dat$TIME1 <- as.numeric(factor(dat$TIME1,
++     levels = c("PreSymp", "Onset", "End")
++ ))
+> # Create line plots
+> subpathwayLineplots(dat,
++                     subpathway = "Lactoyl Amino Acid",
++                     block_var = TIME1, treat_var = GROUP_NAME,
++                     Assay = "normalized",
++                     CHEMICAL_NAME = "CHEMICAL_NAME",
++                     SUB_PATHWAY="SUB_PATHWAY",Gender == "Female")
+`geom_smooth()` using formula = 'y ~ x'
+> 
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("subpathwayLineplots")
+> ### * subpathwayLineplots
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: subpathwayLineplots
+> ### Title: Subpathway Lineplots
+> ### Aliases: subpathwayLineplots
+> 
+> ### ** Examples
+> 
+> data("demoDat", package = "MetabolomicsPipeline")
+> dat <- demoDat
+> 
+> #############################################################################
+> ### BoxPlots ###############################################################
+> ############################################################################
+> 
+> subpathwayBoxplots(dat,
++     subpathway = "Lactoyl Amino Acid", block_var = TIME1,
++     treat_var = GROUP_NAME, Assay = "normalized",
++     CHEMICAL_NAME = "CHEMICAL_NAME",
++     SUB_PATHWAY = "SUB_PATHWAY", Gender == "Female"
++ )
+> 
+> 
+> ############################################################################
+> ## Line plots ##############################################################
+> ############################################################################
+> 
+> # Set up data
+> dat$TIME1 <- as.numeric(factor(dat$TIME1,
++     levels = c("PreSymp", "Onset", "End")
++ ))
+> 
+> # Create line plots
+> subpathwayLineplots(dat,
++     subpathway = "Lactoyl Amino Acid",
++     block_var = TIME1, treat_var = GROUP_NAME,
++     Assay = "normalized",
++     CHEMICAL_NAME = "CHEMICAL_NAME",
++     SUB_PATHWAY = "SUB_PATHWAY", Gender == "Female"
++ )
+`geom_smooth()` using formula = 'y ~ x'
+> 
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  8.358 0.119 8.492 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')
