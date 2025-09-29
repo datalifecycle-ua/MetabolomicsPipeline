@@ -566,7 +566,7 @@ strat_pairwise <- metabolitePairwise(dat,
 
 metEstHeatmap(strat_pairwise$Female, dat,
               diff_cutoff = .7, pv_cutoff = 0.05,
-    interactive = TRUE,
+    interactive = FALSE,
      SUB_PATHWAY = "SUB_PATHWAY",
     CHEMICAL_NAME = "CHEMICAL_NAME",
     plotlyTitle = "Estimate Heatmap",
@@ -580,7 +580,7 @@ metEstHeatmap(strat_pairwise$Female, dat,
 # Female
 metPHeatmap(strat_pairwise$Female, dat,
             pv_cutoff = 0.05,
-    interactive = TRUE, show_rownames = FALSE,
+    interactive = FALSE, show_rownames = FALSE,
     plotlyTitle = "Pvalue Heatmap",
     main = "Pvalue Heatmap"
 )
