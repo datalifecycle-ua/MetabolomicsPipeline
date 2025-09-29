@@ -5,8 +5,12 @@ Authors@R:
     c(person("Joel", "Parker", email = "joelparker@arizona.edu",
     role = c("aut", "cre"), comment =c(ORCID="0000-0002-3411-3818")),
     person("Bonnie", "LaFleur", email = "blafleur@arizona.edu", role = c("aut")))
-Description: This package provides analysis tools for analyzing metabolomics data. We provide functionality for hypothesis testing at
- the subpathway level, pairwise comparisons of metabolites, and tools for exploratory analysis. 
+Description: The MetabolomicsPipeline package is designed to streamline 
+workflows after metabolite identification and peak quantification. Unlike other
+tools, it enables hypothesis testing at the subpathway level by leveraging
+univariate ANOVA results at the metabolite level. It also provides a
+straightforward framework for performing pairwise comparisons between
+metabolites. 
 biocViews: Metabolomics, Software
 License: MIT + file LICENSE
 Encoding: UTF-8

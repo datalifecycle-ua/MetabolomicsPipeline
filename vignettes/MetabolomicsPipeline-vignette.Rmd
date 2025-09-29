@@ -69,8 +69,8 @@ library(ggplot2)
 
 ## Introduction
 
-The purpose of the MetabolomicPipeline package is to streamline the analysis for
-metabolomics experiments. In this vignette we demonstrate how 
+The purpose of the MetabolomicPipeline package is to streamline the analysis for targeted
+metabolomics experiments. Targeted metabolomics is useful for hypothesis driven experimental designs, focusing the analysis on specific metabolites or pathways of interest. In this vignette we demonstrate how 
 to use MetabolomicsPipeline package for:
 
 * Data Processing
@@ -83,6 +83,10 @@ to use MetabolomicsPipeline package for:
 
 * Subpathway box plots and line plots
 
+### Comparison with other packages
+Several R packages are available for metabolomics data analysis. The MetabolomicsPipeline package is designed to streamline workflows after metabolite identification and peak quantification. Unlike other tools, it enables hypothesis testing at the subpathway level by leveraging univariate ANOVA results at the metabolite level. It also provides a straightforward framework for performing pairwise comparisons between metabolites.
+
+To our knowledge, MetabolomicsPipeline is the only R package that implements the combined Fisher probability test for detecting differences at the subpathway level. All outputs, including pairwise comparisons, are presented in publication-ready tables, facilitating a seamless transition from analysis to publication.
 
 ### Data Description
 
