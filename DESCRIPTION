@@ -1,16 +1,11 @@
 Package: MetabolomicsPipeline
 Title: Metabolomics Pipeline Tools
-Version: 0.99.1
+Version: 0.99.2
 Authors@R: 
     c(person("Joel", "Parker", email = "joelparker@arizona.edu",
     role = c("aut", "cre"), comment =c(ORCID="0000-0002-3411-3818")),
     person("Bonnie", "LaFleur", email = "blafleur@arizona.edu", role = c("aut")))
-Description: The MetabolomicsPipeline package is designed to streamline 
-workflows after metabolite identification and peak quantification. Unlike other
-tools, it enables hypothesis testing at the subpathway level by leveraging
-univariate ANOVA results at the metabolite level. It also provides a
-straightforward framework for performing pairwise comparisons between
-metabolites. 
+Description: Several R packages are available for metabolomics data analysis. The MetabolomicsPipeline package is designed to streamline workflows after metabolite identification and peak quantification. Unlike other tools, it enables hypothesis testing at the subpathway level by leveraging univariate ANOVA results at the metabolite level. It also provides a straightforward framework for performing pairwise comparisons between metabolites.
 biocViews: Metabolomics, Software
 License: MIT + file LICENSE
 Encoding: UTF-8
